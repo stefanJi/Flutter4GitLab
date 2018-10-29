@@ -67,6 +67,7 @@ class ConfigState extends State<ConfigPage> {
         },
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Theme.of(context).primaryColor,
         onPressed: () {
           if (_token == null ||
               _host == null ||
@@ -76,7 +77,7 @@ class ConfigState extends State<ConfigPage> {
           }
           _testConfig();
         },
-        tooltip: "Save",
+        tooltip: "Test & Save",
         child: Icon(Icons.save),
       ),
     );
@@ -121,6 +122,7 @@ class ConfigState extends State<ConfigPage> {
       final SharedPreferences sp = await SharedPreferences.getInstance();
       sp.setString(KEY_ACCESS_TOKEN, _token);
       sp.setString(KEY_HOST, _host);
+      Navigator.pop(context, true);
     }
 
     setState(() {

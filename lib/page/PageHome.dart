@@ -33,8 +33,6 @@ class HomeState extends State<HomePage> {
   int _currentTab = 0;
   String _barTitle;
 
-  BuildContext _rootContext;
-
   @override
   initState() {
     super.initState();
@@ -67,6 +65,15 @@ class HomeState extends State<HomePage> {
     });
   }
 
+  _navigateToConfig(BuildContext c) async {
+    final success = await Navigator.pushNamed(context, '/config');
+    if (success != null && success) {
+      _loadToken();
+    } else {
+      print("cancel config");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return isLoading
@@ -76,11 +83,23 @@ class HomeState extends State<HomePage> {
             ),
           )
         : user == null
-            ? RaisedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/config');
-                },
-                child: Text("To config Access Token And Host Url."))
+            ? Scaffold(
+                appBar: AppBar(
+                  title: Text(APP_NAME),
+                ),
+                body: Center(
+                  child: RaisedButton(
+                    color: Theme.of(context).primaryColor,
+                    textColor: Colors.white,
+                    onPressed: () {
+                      _navigateToConfig(context);
+                    },
+                    child: Text(
+                      "Config Access_Token & Host 👉",
+                    ),
+                  ),
+                ),
+              )
             : Scaffold(
                 appBar: AppBar(
                   title: Text("$_barTitle"),
@@ -138,7 +157,6 @@ class HomeState extends State<HomePage> {
                   ),
                 ),
                 body: Builder(builder: (context) {
-                  _rootContext = context;
                   switch (_currentTab) {
                     case tabActivity:
                       return Activity();

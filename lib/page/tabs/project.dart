@@ -152,6 +152,7 @@ class ListTabState extends State<ListTab>
                           ),
                     title: Text(item['name_with_namespace']),
                     subtitle: Text(item['description'] ?? ''),
+                    onTap: () {},
                   ),
                 );
               },

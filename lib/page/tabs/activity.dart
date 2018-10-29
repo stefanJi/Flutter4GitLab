@@ -11,7 +11,7 @@ const typeIssue = 'Issues';
 const typeComments = 'Comments';
 const team = 'Team';
 
-const types = [typeMR, typePush, typeIssue, typeComments];
+const types = [typeMR, typeIssue,];
 
 class Activity extends StatelessWidget {
   @override
@@ -43,119 +43,169 @@ class ActivityTab extends StatefulWidget {
       case typeMR:
         return MRState();
         break;
+      case typeIssue:
+        return IssueState();
     }
-    return ActivityTabState();
+    return null;
   }
 }
 
-class ActivityTabState extends State<ActivityTab>
+abstract class ActivityState extends State<ActivityTab>
     with AutomaticKeepAliveClientMixin<ActivityTab> {
   @override
   bool get wantKeepAlive => true;
-  final RefreshController _refreshController = RefreshController();
-
-  _fetchAllEvent() async {
-    final client = GitlabClient.newInstance();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SmartRefresher(
-        controller: _refreshController,
-        enablePullDown: true,
-        enablePullUp: true,
-        child: ListView.builder(
-          itemCount: 0,
-          itemBuilder: (context, index) {
-            return Card(
-              child: ListTile(),
-            );
-          },
-        ));
-  }
-}
-
-class MRState extends State<ActivityTab>
-    with AutomaticKeepAliveClientMixin<ActivityTab> {
-  @override
-  bool get wantKeepAlive => true;
-  List mrs;
+  final String _endPoint;
   RefreshController _refreshController = RefreshController();
+  List _data;
+  dynamic _page;
+  dynamic _total;
+  dynamic _next;
 
-  @override
-  void initState() {
-    super.initState();
-    _loadMr();
-  }
+  ActivityState(this._endPoint);
 
-  _loadMr({page: 1}) async {
-    _refreshController.sendBack(true, RefreshStatus.refreshing);
+  _loadData({page: 1}) async {
     final client = GitlabClient.newInstance();
     final data = await client
-        .get('merge_requests?state=opened&scope=all&page=$page&per_page=10')
+        .get('$_endPoint&page=$page&per_page=10')
+        .then((resp) {
+          _page = resp.headers['x-page'];
+          _total = resp.headers['x-total-pages'];
+          _next = resp.headers['x-next-page'];
+          print(resp.body);
+          return resp;
+        })
         .then((resp) => utf8.decode(resp.bodyBytes))
         .then((s) => jsonDecode(s))
         .catchError(print)
         .whenComplete(client.close);
-    print(data);
+    return data;
+  }
+
+  _loadMore() async {
+    if (_page == _total) {
+      _refreshController.sendBack(false, RefreshStatus.noMore);
+    } else {
+      final data = await _loadData(page: _next);
+      if (mounted) {
+        setState(() {
+          _data.addAll(data);
+        });
+        if (_page == _total) {
+          _refreshController.sendBack(false, RefreshStatus.noMore);
+        } else {
+          _refreshController.sendBack(false, RefreshStatus.canRefresh);
+        }
+      }
+    }
+  }
+
+  _loadNew() async {
+    final data = await _loadData();
     if (mounted) {
       setState(() {
-        mrs = data;
+        _data = data;
       });
       _refreshController.sendBack(true, RefreshStatus.completed);
+      if (_page == _total) {
+        _refreshController.sendBack(false, RefreshStatus.noMore);
+      } else {
+        _refreshController.sendBack(false, RefreshStatus.canRefresh);
+      }
     }
   }
 
   @override
+  void initState() {
+    super.initState();
+    _loadNew();
+  }
+
+  Widget childBuild(BuildContext context, int index);
+
+  @override
   Widget build(BuildContext context) {
-    return SmartRefresher(
-        controller: _refreshController,
-        enablePullDown: true,
-        enablePullUp: true,
-        onRefresh: (up) {
-          if (up) {
-            _loadMr();
-          }
-        },
-        child: ListView.builder(
-            itemCount: mrs == null ? 0 : mrs.length,
-            itemBuilder: (context, index) {
-              final mr = mrs[index];
-              return Card(
-                  child: Column(
-                children: <Widget>[
-                  ListTile(
-                      onTap: () => print(index),
-                      title:
-                          Text("🤠 ${mr['author']['username']} ⌨️ ${mr['title']}"),
-                      subtitle: Column(
-                          textDirection: TextDirection.ltr,
-                          children: <Widget>[
-                            mr['description'] != null
-                                ? Text("${mr['description']}")
-                                : Text(''),
-                            Text(
-                                "${mr['source_branch']} ➡️ ${mr['target_branch']}"),
-                            Row(
-                              children: mr['labels'] == null
-                                  ? <Widget>[]
-                                  : mr['labels'].map<Widget>((label) {
-                                      return Text(
-                                        label,
-                                        style: TextStyle(
-                                            color:
-                                                Theme.of(context).primaryColor),
-                                      );
-                                    }).toList(),
-                            ),
-                          ])),
-                ],
-              ));
-            }));
+    return _data == null
+        ? Center(child: CircularProgressIndicator())
+        : SmartRefresher(
+            controller: _refreshController,
+            enablePullDown: true,
+            enablePullUp: true,
+            onRefresh: (up) {
+              if (up) {
+                _loadNew();
+              } else {
+                _loadMore();
+              }
+            },
+            child: ListView.builder(
+                itemCount: _data == null ? 0 : _data.length,
+                itemBuilder: (context, index) {
+                  return childBuild(context, index);
+                }));
+  }
+}
+
+class MRState extends ActivityState {
+  MRState() : super("merge_requests?state=opened&scope=all");
+
+  Widget childBuild(BuildContext context, int index) {
+    final mr = _data[index];
+    return Card(
+        child: Column(
+      children: <Widget>[
+        ListTile(
+            onTap: () => print(index),
+            leading: CircleAvatar(
+              backgroundImage: NetworkImage(
+                  "https://git.llsapp.com/uploads/-/system/user/avatar/${mr['author']['id']}/avatar.png"),
+            ),
+            title: Text.rich(TextSpan(
+                style: TextStyle(fontWeight: FontWeight.bold),
+                text: "${mr['author']['username']} ",
+                children: [
+                  TextSpan(
+                      text: "「${mr['title']}」 ",
+                      style: TextStyle(fontWeight: FontWeight.normal)),
+                  TextSpan(
+                      text: "${mr['source_branch']} 🚀 ${mr['target_branch']}",
+                      style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.normal)),
+                ])),
+            subtitle: Row(
+              children: mr['labels'] == null
+                  ? <Widget>[]
+                  : mr['labels'].map<Widget>((label) {
+                      return Text(
+                        label,
+                        style: TextStyle(color: Theme.of(context).primaryColor),
+                      );
+                    }).toList(),
+            )),
+        ButtonTheme.bar(
+          child: ButtonBar(
+            children: <Widget>[
+              FlatButton(onPressed: () {}, child: const Text('Review')),
+              FlatButton(onPressed: () {}, child: const Text('Comment')),
+              FlatButton(onPressed: () {}, child: const Text('Approve')),
+              FlatButton(onPressed: () {}, child: const Text('Merge')),
+            ],
+          ),
+        )
+      ],
+    ));
+  }
+}
+
+class IssueState extends ActivityState {
+  IssueState() : super("issues?state=opened&scope=all");
+
+  Widget childBuild(BuildContext context, int index) {
+    final issue = _data[index];
+    return Card(
+      child: ListTile(
+        title: Text("${issue['title']}"),
+      ),
+    );
   }
 }
