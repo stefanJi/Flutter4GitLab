@@ -28,6 +28,10 @@ class GitlabClient extends http.BaseClient {
     return super.get(_generateUrl(endPoint), headers: headers);
   }
 
+  Future<http.Response> getRss(endPoint, {Map<String, String> headers}) {
+    return super.get("$_globalHOST/$endPoint");
+  }
+
   @override
   Future<http.Response> post(endPoint,
       {Map<String, String> headers, body, Encoding encoding}) {

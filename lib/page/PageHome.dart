@@ -1,10 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_gitlab/const.dart';
+import 'package:flutter_gitlab/gitlab_client.dart';
 import 'package:flutter_gitlab/page/tabs/activity.dart';
 import 'package:flutter_gitlab/page/tabs/project.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
-import 'package:flutter_gitlab/const.dart';
-import 'package:flutter_gitlab/gitlab_client.dart';
 
 const tabProjects = 0;
 const tabActivity = 1;
@@ -36,6 +37,7 @@ class HomeState extends State<HomePage> {
   @override
   initState() {
     super.initState();
+    _getStoreNav();
     _barTitle = tabs[_currentTab];
     _loadToken();
   }
@@ -179,5 +181,21 @@ class HomeState extends State<HomePage> {
       _currentTab = tabIndex;
       _barTitle = tabs[tabIndex];
     });
+    _storeNav(tabIndex);
+  }
+
+  _storeNav(int tabIndex) async {
+    final sp = await SharedPreferences.getInstance();
+    sp.setInt(KEY_TAB_INDEX, tabIndex);
+  }
+
+  _getStoreNav() async {
+    final index = await SharedPreferences.getInstance()
+        .then((sp) => sp.getInt(KEY_TAB_INDEX) ?? tabProjects);
+    if (mounted) {
+      setState(() {
+        _currentTab = index;
+      });
+    }
   }
 }
