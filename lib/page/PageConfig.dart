@@ -61,7 +61,7 @@ class ConfigState extends State<ConfigPage> {
                             Text("Test connectiong")
                           ],
                         )
-                      : Text("")
+                      : const IgnorePointer(ignoring: true)
                 ],
               ));
         },

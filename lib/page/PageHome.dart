@@ -195,6 +195,7 @@ class HomeState extends State<HomePage> {
     if (mounted) {
       setState(() {
         _currentTab = index;
+        _barTitle = tabs[index];
       });
     }
   }

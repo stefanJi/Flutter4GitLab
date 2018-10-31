@@ -38,9 +38,7 @@ class ProjectTab extends CommListWidget {
 }
 
 class ProjectState extends CommListState {
-  ProjectState(String endPoint) : super(endPoint) {
-    print(endPoint);
-  }
+  ProjectState(String endPoint) : super(endPoint);
 
   @override
   Widget childBuild(BuildContext context, int index) {
@@ -57,9 +55,12 @@ class ProjectState extends CommListState {
                 child: Text(item['name'].substring(0, 1).toUpperCase()),
               ),
         title: Text(item['name_with_namespace']),
-        subtitle: Text(item['description'] ?? ''),
+        subtitle: Text(item['description'] ?? item['last_activity_at']),
+        trailing: Chip(
+          label: Text(item['default_branch'], style: TextStyle(color: Theme.of(context).primaryColor)),
+          backgroundColor: Theme.of(context).backgroundColor,
+        ),
         onTap: () {
-          print(item);
           _navToProjectDetail(item['name'], item['id']);
         },
       ),

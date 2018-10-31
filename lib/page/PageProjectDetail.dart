@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_gitlab/gitlab_client.dart';
 import 'package:flutter_gitlab/widget/comm_ListView.dart';
 
 class PageProjectDetail extends StatefulWidget {
@@ -47,37 +50,102 @@ class _MrState extends CommListState {
   @override
   Widget childBuild(BuildContext context, int index) {
     final mr = data[index];
+    return _buidlItem(mr);
+  }
 
+  Widget _buidlItem(mr) {
     return Card(
-      child: Column(
-        children: <Widget>[
-          ListTile(
-            title: Text.rich(TextSpan(
-                text: "${mr['author']['username']} ",
-                style: TextStyle(fontWeight: FontWeight.bold),
-                children: [
-                  TextSpan(
-                      text: mr['title'],
-                      style: TextStyle(fontWeight: FontWeight.normal))
-                ])),
-            subtitle: Text("${mr['description'] ?? ''}"),
+      child: Column(children: <Widget>[
+        ListTile(
+          onTap: () {},
+          title:
+              Text.rich(TextSpan(text: "${mr['title']} opened by ", children: [
+            TextSpan(
+                text: "${mr['author']['username']}",
+                style: TextStyle(fontWeight: FontWeight.bold))
+          ])),
+          isThreeLine: true,
+          trailing: Text(mr['target_branch']),
+          subtitle: Align(
+            alignment: Alignment.topLeft,
+            child: Column(children: [_MrApprove(projectId, mr['iid'])]),
           ),
-          ListTile(
-              title: Text("${mr['source_branch']} -> ${mr['target_branch']}"),
-              subtitle: Text(mr['merge_status']),
-              trailing: Column(
-                children: <Widget>[
-                  Column(
-                    children: mr['labels']
-                        .map<Widget>((item) => Text.rich(TextSpan(
-                            text: item,
-                            style: TextStyle(color: Theme.of(context).primaryColor))))
-                        .toList(),
-                  )
-                ],
-              )),
-        ],
-      ),
+        ),
+        ButtonTheme.bar(
+          child: ButtonBar(
+            children: <Widget>[
+              FlatButton(
+                onPressed: () {},
+                child: const Text("Approve"),
+              ),
+              FlatButton(
+                onPressed: () {},
+                child: const Text("Merge"),
+              )
+            ],
+          ),
+        )
+      ]),
     );
+  }
+}
+
+class _MrApprove extends StatefulWidget {
+  final int projectId;
+  final int mrIID;
+
+  _MrApprove(this.projectId, this.mrIID);
+
+  @override
+  State<StatefulWidget> createState() => _MrApproveState();
+}
+
+class _MrApproveState extends State<_MrApprove> {
+  dynamic approve;
+
+  _loadApprove() async {
+    final client = GitlabClient.newInstance();
+    final data = await client
+        .get(
+            'projects/${widget.projectId}/merge_requests/${widget.mrIID}/approvals')
+        .then((resp) => jsonDecode(utf8.decode(resp.bodyBytes)))
+        .whenComplete(client.close);
+    if (mounted) {
+      setState(() {
+        approve = data;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadApprove();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return approve == null
+        ? IgnorePointer(ignoring: true)
+        : Row(children: [
+            approve['approved_by'].isNotEmpty
+                ? Row(
+                    children: <Widget>[
+                          const Text('Approved by '),
+                        ] +
+                        approve['approved_by'].map<Widget>((item) {
+                          return Padding(
+                              padding: EdgeInsets.all(3),
+                              child: CircleAvatar(
+                                radius: 10,
+                                backgroundImage:
+                                    NetworkImage(item['user']['avatar_url']),
+                              ));
+                        }).toList())
+                : IgnorePointer(ignoring: true),
+            approve['approvals_left'] > 0
+                ? Text("Requires ${approve['approvals_left']} more approvals")
+                : const IgnorePointer(ignoring: true)
+          ]);
   }
 }
