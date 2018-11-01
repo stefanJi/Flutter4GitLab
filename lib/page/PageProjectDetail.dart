@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_gitlab/gitlab_client.dart';
 import 'package:flutter_gitlab/widget/comm_ListView.dart';
+import 'package:flutter_gitlab/page/PageMrDetail.dart';
 
 class PageProjectDetail extends StatefulWidget {
   final String projectName;
@@ -21,6 +22,7 @@ class PageProjectState extends State<PageProjectDetail> {
         length: 2,
         child: Scaffold(
           appBar: AppBar(
+            centerTitle: false,
             title: Text(widget.projectName),
             bottom:
                 TabBar(tabs: [Tab(text: 'Merge Request'), Tab(text: 'CI/CD')]),
@@ -57,7 +59,9 @@ class _MrState extends CommListState {
     return Card(
       child: Column(children: <Widget>[
         ListTile(
-          onTap: () {},
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => PageMrDetail(mr['title'], projectId, mr['iid'])));
+          },
           title:
               Text.rich(TextSpan(text: "${mr['title']} opened by ", children: [
             TextSpan(
@@ -68,23 +72,9 @@ class _MrState extends CommListState {
           trailing: Text(mr['target_branch']),
           subtitle: Align(
             alignment: Alignment.topLeft,
-            child: Column(children: [_MrApprove(projectId, mr['iid'])]),
+            child: _MrApprove(projectId, mr['iid']),
           ),
         ),
-        ButtonTheme.bar(
-          child: ButtonBar(
-            children: <Widget>[
-              FlatButton(
-                onPressed: () {},
-                child: const Text("Approve"),
-              ),
-              FlatButton(
-                onPressed: () {},
-                child: const Text("Merge"),
-              )
-            ],
-          ),
-        )
       ]),
     );
   }
@@ -135,7 +125,7 @@ class _MrApproveState extends State<_MrApprove> {
                         ] +
                         approve['approved_by'].map<Widget>((item) {
                           return Padding(
-                              padding: EdgeInsets.all(3),
+                              padding: EdgeInsets.all(2),
                               child: CircleAvatar(
                                 radius: 10,
                                 backgroundImage:
@@ -144,7 +134,7 @@ class _MrApproveState extends State<_MrApprove> {
                         }).toList())
                 : IgnorePointer(ignoring: true),
             approve['approvals_left'] > 0
-                ? Text("Requires ${approve['approvals_left']} more approvals")
+                ? Text("Requires ${approve['approvals_left']} approvals")
                 : const IgnorePointer(ignoring: true)
           ]);
   }

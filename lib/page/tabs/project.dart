@@ -52,14 +52,22 @@ class ProjectState extends CommListState {
               )
             : CircleAvatar(
                 backgroundColor: Theme.of(context).primaryColor,
-                child: Text(item['name'].substring(0, 1).toUpperCase()),
+                child: Text(
+                  item['name'].substring(0, 1).toUpperCase(),
+                  style: TextStyle(color: Theme.of(context).accentColor),
+                ),
               ),
         title: Text(item['name_with_namespace']),
         subtitle: Text(item['description'] ?? item['last_activity_at']),
-        trailing: Chip(
-          label: Text(item['default_branch'], style: TextStyle(color: Theme.of(context).primaryColor)),
-          backgroundColor: Theme.of(context).backgroundColor,
-        ),
+        trailing: item['default_branch'] != null
+            ? Chip(
+                label: Text(item['default_branch'],
+                    style: TextStyle(color: Theme.of(context).primaryColor)),
+                backgroundColor: Theme.of(context).backgroundColor,
+              )
+            : IgnorePointer(
+                ignoring: true,
+              ),
         onTap: () {
           _navToProjectDetail(item['name'], item['id']);
         },

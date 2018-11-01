@@ -61,7 +61,11 @@ class ConfigState extends State<ConfigPage> {
                             Text("Test connectiong")
                           ],
                         )
-                      : const IgnorePointer(ignoring: true)
+                      : const IgnorePointer(ignoring: true),
+                  FlatButton(
+                    child: Text("Clear"),
+                    onPressed: () {},
+                  )
                 ],
               ));
         },
@@ -122,7 +126,8 @@ class ConfigState extends State<ConfigPage> {
       final SharedPreferences sp = await SharedPreferences.getInstance();
       sp.setString(KEY_ACCESS_TOKEN, _token);
       sp.setString(KEY_HOST, _host);
-      Navigator.pop(context, true);
+      Future.delayed(
+          Duration(milliseconds: 300), () => Navigator.pop(context, true));
     }
 
     setState(() {

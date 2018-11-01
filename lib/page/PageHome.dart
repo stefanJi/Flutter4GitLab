@@ -90,9 +90,7 @@ class HomeState extends State<HomePage> {
                   title: Text(APP_NAME),
                 ),
                 body: Center(
-                  child: RaisedButton(
-                    color: Theme.of(context).primaryColor,
-                    textColor: Colors.white,
+                  child: FlatButton(
                     onPressed: () {
                       _navigateToConfig(context);
                     },
