@@ -8,8 +8,10 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 abstract class CommListWidget extends StatefulWidget {
   final bool canPullUp;
   final bool canPullDown;
+  final bool withPage;
 
-  CommListWidget({this.canPullDown = true, this.canPullUp = true});
+  CommListWidget(
+      {this.canPullDown = true, this.canPullUp = true, this.withPage = true});
 }
 
 abstract class CommListState extends State<CommListWidget>
@@ -29,8 +31,15 @@ abstract class CommListState extends State<CommListWidget>
 
   loadData({nextPage: 1}) async {
     final client = GitlabClient.newInstance();
+    var url;
+    if (widget.withPage) {
+      url = "$_endPoint&page=$nextPage&per_page=10";
+    } else {
+      url = _endPoint;
+    }
+    print("request url: ${client.getRequestUrl(url)}");
     final remoteData = await client
-        .get('$_endPoint&page=$nextPage&per_page=10')
+        .get(url)
         .then((resp) {
           page = int.tryParse(resp.headers['x-page'] ?? 0);
           total = int.tryParse(resp.headers['x-total-pages'] ?? 0);
@@ -39,7 +48,10 @@ abstract class CommListState extends State<CommListWidget>
         })
         .then((resp) => utf8.decode(resp.bodyBytes))
         .then((s) => jsonDecode(s))
-        .catchError(print)
+        .catchError((err) {
+          print("loadData err: $err");
+          return [];
+        })
         .whenComplete(client.close);
     return remoteData;
   }

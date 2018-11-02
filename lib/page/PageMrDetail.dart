@@ -1,6 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_gitlab/gitlab_client.dart';
-import 'dart:convert';
 
 class PageMrDetail extends StatefulWidget {
   final String title;
@@ -26,32 +27,37 @@ class PageMrState extends State<PageMrDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(centerTitle: false, title: Text(widget.title)),
-      body: Container(
-        padding: EdgeInsets.all(32.0),
-        child: Column(
-          children: <Widget>[
-            Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+      body: _info == null
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : Container(
+              padding: EdgeInsets.all(32.0),
+              child: Column(
                 children: <Widget>[
-                  Text("Opened by ${_info['author']['username']}"),
-                  Chip(
-                    label: Text("${_info['merge_status']}"),
-                    backgroundColor: _getStatusColor(_info['merge_status']),
+                  Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: <Widget>[
+                        Text("Opened by ${_info['author']['username']}"),
+                        Chip(
+                          label: Text("${_info['merge_status']}"),
+                          backgroundColor:
+                              _getStatusColor(_info['merge_status']),
+                        ),
+                      ],
+                    ),
                   ),
+                  Container(
+                    padding: EdgeInsets.only(bottom: 8.0),
+                    child: Text(
+                      widget.title,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  )
                 ],
               ),
             ),
-            Container(
-              padding: EdgeInsets.only(bottom: 8.0),
-              child: Text(
-                widget.title,
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-            )
-          ],
-        ),
-      ),
     );
   }
 
@@ -62,9 +68,14 @@ class PageMrState extends State<PageMrDetail> {
             "projects/${widget.projectId}/merge_requests/${widget.mergeRequestIId}")
         .then((resp) {
       return jsonDecode(utf8.decode(resp.bodyBytes));
-    });
+    }).catchError((err) {
+      print("[loadMrInfo ]err: ${err.toString()}");
+      return null;
+    }).whenComplete(client.close);
     if (mounted) {
-      _info = info;
+      setState(() {
+        _info = info;
+      });
     }
   }
 

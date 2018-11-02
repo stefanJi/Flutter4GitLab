@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 const API_VERSION = 'v4';
 
 class GitlabClient extends http.BaseClient {
-  static String _globalHOST;
+  static String globalHOST;
   static String _globalTOKEN;
 
   final http.Client _inner = http.Client();
@@ -14,7 +14,7 @@ class GitlabClient extends http.BaseClient {
 
   static setUpTokenAndHost(String token, String host) {
     _globalTOKEN = token;
-    _globalHOST = host;
+    globalHOST = host;
   }
 
   Future<http.StreamedResponse> send(http.BaseRequest request) {
@@ -25,20 +25,20 @@ class GitlabClient extends http.BaseClient {
 
   @override
   Future<http.Response> get(endPoint, {Map<String, String> headers}) {
-    return super.get(_generateUrl(endPoint), headers: headers);
+    return super.get(getRequestUrl(endPoint), headers: headers);
   }
 
   Future<http.Response> getRss(endPoint, {Map<String, String> headers}) {
-    return super.get("$_globalHOST/$endPoint");
+    return super.get("$globalHOST/$endPoint");
   }
 
   @override
   Future<http.Response> post(endPoint,
       {Map<String, String> headers, body, Encoding encoding}) {
-    return super.post(_generateUrl(endPoint),
+    return super.post(getRequestUrl(endPoint),
         headers: headers, body: body, encoding: encoding);
   }
 
-  String _generateUrl(String endPoint) =>
-      "$_globalHOST/api/$API_VERSION/$endPoint";
+  String getRequestUrl(String endPoint) =>
+      "$globalHOST/api/$API_VERSION/$endPoint";
 }

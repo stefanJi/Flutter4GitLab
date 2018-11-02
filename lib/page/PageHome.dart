@@ -5,7 +5,10 @@ import 'package:flutter_gitlab/const.dart';
 import 'package:flutter_gitlab/gitlab_client.dart';
 import 'package:flutter_gitlab/page/tabs/activity.dart';
 import 'package:flutter_gitlab/page/tabs/project.dart';
+import 'package:flutter_gitlab/page/tabs/todo.dart';
+import 'package:flutter_gitlab/page/tabs/groups.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 const tabProjects = 0;
 const tabActivity = 1;
@@ -131,16 +134,16 @@ class HomeState extends State<HomePage> {
                         onTap: () => _switchTab(tabActivity),
                       ),
                       ListTile(
-                        selected: _currentTab == tabGroups,
-                        leading: Icon(Icons.group),
-                        title: Text(tabs[tabGroups]),
-                        onTap: () => _switchTab(tabGroups),
-                      ),
-                      ListTile(
                         selected: _currentTab == tabTodo,
                         leading: Icon(Icons.view_list),
                         title: Text(tabs[tabTodo]),
                         onTap: () => _switchTab(tabTodo),
+                      ),
+                      ListTile(
+                        selected: _currentTab == tabGroups,
+                        leading: Icon(Icons.group),
+                        title: Text(tabs[tabGroups]),
+                        onTap: () => _switchTab(tabGroups),
                       ),
                       ListTile(
                           leading: Icon(Icons.settings),
@@ -151,24 +154,27 @@ class HomeState extends State<HomePage> {
                         applicationName: APP_NAME,
                         applicationVersion: APP_VERSION,
                         applicationLegalese: APP_LEGEND,
-                        applicationIcon: Icon(Icons.code),
+                        applicationIcon: Image.network(
+                          APP_ICON_URL,
+                          width: 60,
+                          height: 60,
+                        ),
+                        aboutBoxChildren: <Widget>[
+                          OutlineButton(
+                            child: Text("FeedBack"),
+                            onPressed: () => launch(APP_FEED_BACK_URL),
+                          ),
+                          OutlineButton(
+                            child: Text("See in GitHub"),
+                            onPressed: () => launch(APP_REPO_URL),
+                          )
+                        ],
                       )
                     ],
                   ),
                 ),
                 body: Builder(builder: (context) {
-                  switch (_currentTab) {
-                    case tabActivity:
-                      return Activity();
-                      break;
-                    case tabProjects:
-                      return Project();
-                      break;
-                    case tabGroups:
-                      break;
-                    case tabTodo:
-                      break;
-                  }
+                  return _getTab();
                 }),
               );
   }
@@ -180,6 +186,23 @@ class HomeState extends State<HomePage> {
       _barTitle = tabs[tabIndex];
     });
     _storeNav(tabIndex);
+  }
+
+  _getTab() {
+    switch (_currentTab) {
+      case tabActivity:
+        return Activity();
+        break;
+      case tabProjects:
+        return Project();
+        break;
+      case tabTodo:
+        return Todo();
+        break;
+      case tabGroups:
+        return Groups();
+        break;
+    }
   }
 
   _storeNav(int tabIndex) async {
