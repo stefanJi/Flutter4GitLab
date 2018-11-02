@@ -66,6 +66,6 @@ Please **contribute** to the  project either by **_creating a PR_** or **_submit
 |:-:|:-:|
 | ![First](./art/flutter_gitlab_activity.png) | ![Sec](./art/flutter_gitlab_nav.png) |
 
-| Repo | Profile |
+| Repo | Merge Request |
 |:-:|:-:|
 | ![Third](./art/flutter_gitlab_project.png) | ![Fourth](./art/flutter_gitlab_mr.png) |
