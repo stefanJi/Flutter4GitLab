@@ -1,6 +1,6 @@
+import 'package:F4Lab/page/PageProjectDetail.dart';
+import 'package:F4Lab/widget/comm_ListView.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gitlab/page/PageProjectDetail.dart';
-import 'package:flutter_gitlab/widget/comm_ListView.dart';
 
 const projectTypes = {
   "All": "membership=true",

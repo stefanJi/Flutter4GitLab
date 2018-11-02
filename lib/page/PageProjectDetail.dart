@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_gitlab/gitlab_client.dart';
-import 'package:flutter_gitlab/widget/comm_ListView.dart';
-import 'package:flutter_gitlab/page/PageMrDetail.dart';
+import 'package:F4Lab/gitlab_client.dart';
+import 'package:F4Lab/widget/comm_ListView.dart';
+import 'package:F4Lab/page/PageMrDetail.dart';
 
 class PageProjectDetail extends StatefulWidget {
   final String projectName;
@@ -60,7 +60,9 @@ class _MrState extends CommListState {
       child: Column(children: <Widget>[
         ListTile(
           onTap: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => PageMrDetail(mr['title'], projectId, mr['iid'])));
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) =>
+                    PageMrDetail(mr['title'], projectId, mr['iid'])));
           },
           title:
               Text.rich(TextSpan(text: "${mr['title']} opened by ", children: [

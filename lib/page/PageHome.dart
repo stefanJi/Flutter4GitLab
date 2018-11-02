@@ -1,12 +1,12 @@
 import 'dart:convert';
 
+import 'package:F4Lab/const.dart';
+import 'package:F4Lab/gitlab_client.dart';
+import 'package:F4Lab/page/tabs/activity.dart';
+import 'package:F4Lab/page/tabs/groups.dart';
+import 'package:F4Lab/page/tabs/project.dart';
+import 'package:F4Lab/page/tabs/todo.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gitlab/const.dart';
-import 'package:flutter_gitlab/gitlab_client.dart';
-import 'package:flutter_gitlab/page/tabs/activity.dart';
-import 'package:flutter_gitlab/page/tabs/project.dart';
-import 'package:flutter_gitlab/page/tabs/todo.dart';
-import 'package:flutter_gitlab/page/tabs/groups.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 

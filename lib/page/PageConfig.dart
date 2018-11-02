@@ -1,6 +1,6 @@
+import 'package:F4Lab/const.dart';
+import 'package:F4Lab/gitlab_client.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gitlab/const.dart';
-import 'package:flutter_gitlab/gitlab_client.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 

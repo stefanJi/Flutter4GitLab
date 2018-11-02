@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gitlab/widget/comm_ListView.dart';
+import 'package:F4Lab/widget/comm_ListView.dart';
 
 class Groups extends CommListWidget {
   Groups() : super(canPullUp: false, withPage: false);

@@ -1,8 +1,8 @@
 import 'dart:convert';
 
+import 'package:F4Lab/gitlab_client.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_gitlab/gitlab_client.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 abstract class CommListWidget extends StatefulWidget {

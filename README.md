@@ -37,6 +37,11 @@ Yet another **open-source** GitLab client app but unlike any other app, F4Lab is
     - [x] Feeds
     - [x] Repos
 
+## GitLab Api
+
+- [**GitLab Api Doc**](https://gitlab.com/help/api/README.md)
+- Or Your personal GitLab.(https://gitlab.exsample.com/help/api/README.md)
+
 ## Specs / Open-source libraries:
 
 - Android Minimum **SDK 16**, IOS Minimun **9.0**

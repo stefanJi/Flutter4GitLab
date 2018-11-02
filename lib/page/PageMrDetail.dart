@@ -1,7 +1,7 @@
 import 'dart:convert';
 
+import 'package:F4Lab/gitlab_client.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gitlab/gitlab_client.dart';
 
 class PageMrDetail extends StatefulWidget {
   final String title;
