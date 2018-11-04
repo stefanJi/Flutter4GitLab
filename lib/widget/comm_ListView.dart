@@ -15,30 +15,37 @@ abstract class CommListWidget extends StatefulWidget {
 }
 
 abstract class CommListState extends State<CommListWidget>
-    with AutomaticKeepAliveClientMixin<CommListWidget> {
+    with
+        AutomaticKeepAliveClientMixin<CommListWidget>,
+        SingleTickerProviderStateMixin {
   @override
   bool get wantKeepAlive => true;
+
   final String _endPoint;
-  RefreshController _refreshController = RefreshController();
+
   List data;
   int page;
   int total;
   int next;
-  bool _hasLoadOnce = false;
 
-  /// _endPoint like: merge_request?status=open
+  bool _hasLoadOnce = false;
+  RefreshController _refreshController = RefreshController();
+
+  GitlabClient _client;
+
+  ///[_endPoint] like: merge_request?status=open
   CommListState(this._endPoint);
 
   loadData({nextPage: 1}) async {
-    final client = GitlabClient.newInstance();
+    _client = GitlabClient.newInstance();
     var url;
     if (widget.withPage) {
       url = "$_endPoint&page=$nextPage&per_page=10";
     } else {
       url = _endPoint;
     }
-    print("request url: ${client.getRequestUrl(url)}");
-    final remoteData = await client
+    print("request url: ${_client.getRequestUrl(url)}");
+    final remoteData = await _client
         .get(url)
         .then((resp) {
           page = int.tryParse(resp.headers['x-page'] ?? 0);
@@ -52,7 +59,7 @@ abstract class CommListState extends State<CommListWidget>
           print("loadData err: $err");
           return [];
         })
-        .whenComplete(client.close);
+        .whenComplete(_client.close);
     return remoteData;
   }
 
@@ -75,7 +82,7 @@ abstract class CommListState extends State<CommListWidget>
   }
 
   _loadNew() async {
-    final remoteDate = await loadData();
+    final remoteDate = await loadData() as List;
     if (mounted) {
       setState(() {
         data = remoteDate;
@@ -97,13 +104,20 @@ abstract class CommListState extends State<CommListWidget>
     _loadNew();
   }
 
+  @override
+  void dispose() {
+    if (_client != null) {
+      _client.close();
+    }
+    super.dispose();
+  }
+
   Widget childBuild(BuildContext context, int index);
 
   Widget buildEmptyView() {
     return Center(
-      child: Text.rich(
-          TextSpan(text: "🎉 No More 🎉", style: TextStyle(fontSize: 24))),
-    );
+        child: Text.rich(
+            TextSpan(text: "🎉 No More 🎉", style: TextStyle(fontSize: 24))));
   }
 
   Widget buildDataListView() {
