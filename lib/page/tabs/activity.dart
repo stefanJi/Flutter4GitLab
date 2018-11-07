@@ -18,7 +18,7 @@ class FeedState extends CommListState {
 
   @override
   loadData({nextPage: 1}) async {
-    final url = "dashboard/projects.atom?rss_token=XcV4SEjeywunDFXQRnLu";
+    final url = "dashboard/projects.atom";
     final client = GitlabClient.newInstance();
     final data = await client.getRss(url).then((resp) {
       final data = utf8.decode(resp.bodyBytes);
