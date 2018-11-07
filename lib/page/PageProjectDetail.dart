@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:F4Lab/gitlab_client.dart';
 import 'package:F4Lab/widget/comm_ListView.dart';
-import 'package:F4Lab/page/PageMrDetail.dart';
 
 class PageProjectDetail extends StatefulWidget {
   final String projectName;
@@ -57,28 +56,49 @@ class _MrState extends CommListState {
 
   Widget _buidlItem(mr) {
     return Card(
-      child: Column(children: <Widget>[
-        ListTile(
-          onTap: () {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) =>
-                    PageMrDetail(mr['title'], projectId, mr['iid'])));
-          },
-          title:
-              Text.rich(TextSpan(text: "${mr['title']} opened by ", children: [
-            TextSpan(
-                text: "${mr['author']['username']}",
-                style: TextStyle(fontWeight: FontWeight.bold))
-          ])),
-          isThreeLine: true,
-          trailing: Text(mr['target_branch']),
-          subtitle: Align(
-            alignment: Alignment.topLeft,
-            child: _MrApprove(projectId, mr['iid']),
-          ),
+        child: GestureDetector(
+      child: Container(
+        padding: EdgeInsets.all(10),
+        child: Column(
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Text(mr['title'],
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            )),
+                      ),
+                      Text(mr['target_branch'])
+                    ],
+                  ),
+                ),
+                mr['merge_status'] == 'can_be_merged'
+                    ? Icon(Icons.done_outline, color: Colors.green)
+                    : Icon(
+                        Icons.error,
+                        color: Colors.red,
+                      ),
+                mr['assignee'] != null
+                    ? Padding(
+                        padding: EdgeInsets.only(left: 8.0),
+                        child: CircleAvatar(
+                          radius: 15,
+                          backgroundImage: NetworkImage(
+                              "${GitlabClient.globalHOST}/uploads/-/system/user/avatar/${mr['assignee']['id']}/avatar.png"),
+                        ))
+                    : IgnorePointer(),
+              ],
+            ),
+          ],
         ),
-      ]),
-    );
+      ),
+    ));
   }
 }
 
