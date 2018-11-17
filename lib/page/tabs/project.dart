@@ -15,7 +15,7 @@ class Project extends StatelessWidget {
         length: 3,
         child: Scaffold(
           appBar: TabBar(
-              labelColor: Theme.of(context).primaryColor,
+              labelColor: Theme.of(context).accentColor,
               indicatorColor: Theme.of(context).primaryColor,
               tabs:
                   projectTypes.keys.map((title) => Tab(text: title)).toList()),

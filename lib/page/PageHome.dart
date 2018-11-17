@@ -27,6 +27,11 @@ const tabs = {
 };
 
 class HomePage extends StatefulWidget {
+  final bool isDark;
+  final ValueChanged<bool> themeChanger;
+
+  HomePage(this.isDark, this.themeChanger);
+
   @override
   State<StatefulWidget> createState() => HomeState();
 }
@@ -36,6 +41,7 @@ class HomeState extends State<HomePage> {
   bool isLoading = false;
   int _currentTab = 0;
   String _barTitle;
+  bool isDark;
 
   @override
   initState() {
@@ -43,6 +49,7 @@ class HomeState extends State<HomePage> {
     _getStoreNav();
     _barTitle = tabs[_currentTab];
     _loadToken();
+    isDark = widget.isDark;
   }
 
   _loadToken() async {
@@ -169,7 +176,19 @@ class HomeState extends State<HomePage> {
                             onPressed: () => launch(APP_REPO_URL),
                           )
                         ],
-                      )
+                      ),
+                      Padding(
+                          padding: EdgeInsets.only(left: 20),
+                          child: Row(
+                            children: <Widget>[
+                              Text("Dark Theme"),
+                              Switch(
+                                  onChanged: (newValue) {
+                                    _changeTheme(newValue);
+                                  },
+                                  value: isDark)
+                            ],
+                          ))
                     ],
                   ),
                 ),
@@ -219,5 +238,12 @@ class HomeState extends State<HomePage> {
         _barTitle = tabs[index];
       });
     }
+  }
+
+  _changeTheme(bool newValue) {
+    widget.themeChanger(newValue);
+    setState(() {
+      isDark = newValue;
+    });
   }
 }

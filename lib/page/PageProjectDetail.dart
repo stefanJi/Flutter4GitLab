@@ -121,7 +121,7 @@ class _MrApprove extends StatefulWidget {
   State<StatefulWidget> createState() => _MrApproveState();
 }
 
-class _MrApproveState extends State<_MrApprove> {
+class _MrApproveState extends State<_MrApprove> with AutomaticKeepAliveClientMixin {
   dynamic approve;
 
   _loadApprove() async {
@@ -185,4 +185,7 @@ class _MrApproveState extends State<_MrApprove> {
     );
     return item;
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
