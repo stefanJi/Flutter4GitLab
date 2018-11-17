@@ -4,6 +4,8 @@
 
 > Flutter for GitLab. Support **Android** & **IOS**.
 
+[Download APK.](./art/app-release.apk)
+
 Yet another **open-source** GitLab client app but unlike any other app, F4Lab is building by Flutter.  
 
 ### Welcome to contribute to the following features.
@@ -12,7 +14,7 @@ Yet another **open-source** GitLab client app but unlike any other app, F4Lab is
 - **App**
   - [x] Login by Personal Access Token
   - [x] Projects
-  - [ ] Themes mode
+  - [x] Themes mode
   - [ ] Markdown and code highlighting support
   - [ ] Search Users/Orgs, Repos, Issues/MRs & Code.
 - **Repositories**
@@ -33,6 +35,7 @@ Yet another **open-source** GitLab client app but unlike any other app, F4Lab is
   - [ ] Merge MRs
   - [ ] MRs request review changes/approve & comment.
   - [x] MRs statuses
+  - [ ] Approve MR
 - **Organisations**
     - [x] Feeds
     - [x] Repos
@@ -62,9 +65,9 @@ Please **contribute** to the  project either by **_creating a PR_** or **_submit
 
 ## Screenshots
 
-| Feeds | Drawer |
+| Light | Dark |
 |:-:|:-:|
-| ![First](./art/flutter_gitlab_activity.png) | ![Sec](./art/flutter_gitlab_nav.png) |
+| ![First](./art/flutter_gitlab_nav_light.png) | ![Sec](./art/flutter_gitlab_nav.png) |
 
 | Repo | Merge Request |
 |:-:|:-:|
