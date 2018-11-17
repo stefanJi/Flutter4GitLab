@@ -1,8 +1,9 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:F4Lab/gitlab_client.dart';
+import 'package:F4Lab/page/PageMrDetail.dart';
 import 'package:F4Lab/widget/comm_ListView.dart';
+import 'package:flutter/material.dart';
 
 class PageProjectDetail extends StatefulWidget {
   final String projectName;
@@ -51,54 +52,62 @@ class _MrState extends CommListState {
   @override
   Widget childBuild(BuildContext context, int index) {
     final mr = data[index];
-    return _buidlItem(mr);
+    return _buildItem(mr);
   }
 
-  Widget _buidlItem(mr) {
-    return Card(
-        child: GestureDetector(
-      child: Container(
-        padding: EdgeInsets.all(10),
-        child: Column(
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Container(
-                        padding: const EdgeInsets.only(bottom: 8.0),
-                        child: Text(mr['title'],
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            )),
-                      ),
-                      Text(mr['target_branch'])
-                    ],
+  Widget _buildItem(mr) {
+    bool assigneed = mr['assignee'] != null;
+    bool hadDescription =
+        mr['description'] != null && (!mr['description'].isEmpty);
+    String branch = "${mr['source_branch']} → ${mr['target_branch']}";
+    var card = Card(
+      child: Column(
+        children: <Widget>[
+          ListTile(
+            onTap: () => _toMrDetatil(mr),
+            title: Text(mr['title']),
+            subtitle: assigneed
+                ? Text.rich(TextSpan(children: <TextSpan>[
+                    TextSpan(
+                        text: mr['assignee']['username'],
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 16)),
+                    TextSpan(text: " $branch")
+                  ]))
+                : Text(branch),
+            leading: mr['merge_status'] == 'can_be_merged'
+                ? Icon(Icons.done_outline, color: Colors.green)
+                : Icon(
+                    Icons.error,
+                    color: Colors.red,
                   ),
-                ),
-                mr['merge_status'] == 'can_be_merged'
-                    ? Icon(Icons.done_outline, color: Colors.green)
-                    : Icon(
-                        Icons.error,
-                        color: Colors.red,
-                      ),
-                mr['assignee'] != null
-                    ? Padding(
-                        padding: EdgeInsets.only(left: 8.0),
-                        child: CircleAvatar(
-                          radius: 15,
-                          backgroundImage: NetworkImage(
-                              "${GitlabClient.globalHOST}/uploads/-/system/user/avatar/${mr['assignee']['id']}/avatar.png"),
-                        ))
-                    : IgnorePointer(),
-              ],
-            ),
-          ],
-        ),
+            trailing: assigneed
+                ? Padding(
+                    padding: EdgeInsets.only(left: 8.0),
+                    child: CircleAvatar(
+                      radius: 15,
+                      backgroundImage: NetworkImage(
+                          "${GitlabClient.globalHOST}/uploads/-/system/user/avatar/${mr['assignee']['id']}/avatar.png"),
+                    ))
+                : IgnorePointer(),
+          ),
+          hadDescription
+              ? ListTile(
+                  onTap: () => _toMrDetatil(mr),
+                  title: Text(mr['description']),
+                )
+              : IgnorePointer(),
+          _MrApprove(mr['project_id'], mr['iid'])
+        ],
       ),
-    ));
+    );
+    return card;
+  }
+
+  _toMrDetatil(mr) {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) =>
+            PageMrDetail(mr['title'], mr['project_id'], mr['iid'])));
   }
 }
 
@@ -137,27 +146,43 @@ class _MrApproveState extends State<_MrApprove> {
 
   @override
   Widget build(BuildContext context) {
-    return approve == null
-        ? IgnorePointer(ignoring: true)
-        : Row(children: [
-            approve['approved_by'].isNotEmpty
-                ? Row(
-                    children: <Widget>[
-                          const Text('Approved by '),
-                        ] +
-                        approve['approved_by'].map<Widget>((item) {
-                          return Padding(
-                              padding: EdgeInsets.all(2),
-                              child: CircleAvatar(
-                                radius: 10,
-                                backgroundImage:
-                                    NetworkImage(item['user']['avatar_url']),
-                              ));
-                        }).toList())
-                : IgnorePointer(ignoring: true),
-            approve['approvals_left'] > 0
-                ? Text("Requires ${approve['approvals_left']} approvals")
-                : const IgnorePointer(ignoring: true)
-          ]);
+    if (approve == null) {
+      return LinearProgressIndicator();
+    }
+    return _buildItem(approve);
+  }
+
+  Widget _buildItem(approve) {
+    bool approvedBy = approve['approved_by'] != null && approve['approved_by'].isNotEmpty;
+    var item = Padding(
+      padding: EdgeInsets.all(10),
+      child: Column(
+        children: <Widget>[
+          approvedBy
+              ? Row(
+                  children: <Widget>[
+                        const Text('Approved by '),
+                      ] +
+                      approve['approved_by'].map<Widget>((item) {
+                        return Padding(
+                            padding: EdgeInsets.all(2),
+                            child: CircleAvatar(
+                              radius: 10,
+                              backgroundImage:
+                                  NetworkImage(item['user']['avatar_url']),
+                            ));
+                      }).toList() +
+                      [const Text(".")])
+              : IgnorePointer(),
+          Row(
+            children: [
+              Text(
+                  "Approvals required ${approve['approvals_required']}, also need ${approve['approvals_left']} approval.")
+            ],
+          )
+        ],
+      ),
+    );
+    return item;
   }
 }

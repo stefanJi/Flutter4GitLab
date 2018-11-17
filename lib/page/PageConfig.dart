@@ -92,11 +92,8 @@ class ConfigState extends State<ConfigPage> {
     final http.Response resp = await client.get('user').catchError((err) {
       setState(() {
         isTesting = false;
-        _token = null;
-        _host = null;
       });
-      Scaffold.of(rootContext).showSnackBar(
-          SnackBar(content: Text("Error: $err"), backgroundColor: Colors.red));
+      Scaffold.of(rootContext).showSnackBar(SnackBar(content: Text("Error: $err"), backgroundColor: Colors.red));
     }).whenComplete(client.close);
     if (resp == null) {
       return;
