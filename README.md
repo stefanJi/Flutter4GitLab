@@ -39,6 +39,9 @@ Yet another **open-source** GitLab client app but unlike any other app, F4Lab is
 - **Organisations**
     - [x] Feeds
     - [x] Repos
+- **PipeLines**
+    - [x] List project's pipepine
+    - [x] Play, Retry, Cancel Pipeline Job
 
 ## GitLab Api
 
