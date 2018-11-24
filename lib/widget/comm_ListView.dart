@@ -5,16 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-
 ///[canPullUp] This bool will affect whether or not to have the function of drop-up load
 ///[canPullDown] This bool will affect whether or not to have the function of drop-down refresh
 ///[withPage] Tihs bool will affect whether or not to add page arg to request url
 abstract class CommListWidget extends StatefulWidget {
-  
   final bool canPullUp;
-  
+
   final bool canPullDown;
-  
+
   final bool withPage;
 
   CommListWidget(
@@ -40,14 +38,18 @@ abstract class CommListState extends State<CommListWidget>
   RefreshController _refreshController = RefreshController();
 
   GitlabClient _client;
-  
+
   CommListState(this._endPoint);
 
   loadData({nextPage: 1}) async {
     _client = GitlabClient.newInstance();
     var url;
     if (widget.withPage) {
-      url = "$_endPoint&page=$nextPage&per_page=10";
+      if (!_endPoint.contains("?")) {
+        url = "$_endPoint?page=$nextPage&per_page=10";
+      } else {
+        url = "$_endPoint&page=$nextPage&per_page=10";
+      }
     } else {
       url = _endPoint;
     }
