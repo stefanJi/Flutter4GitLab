@@ -61,6 +61,94 @@ Yet another **open-source** GitLab client app but unlike any other app, F4Lab is
 
 Please **contribute** to the  project either by **_creating a PR_** or **_submitting an issue_** on GitHub.  
 
+
+## Comm Widget
+
+### GitLab Client
+
+Wrapped api request.
+
+- setup token and host
+- request headers
+- generate full url
+
+#### Usage
+
+```dart
+GitlabClient _client = GitlabClient.newInstance();
+final url = "";
+final remoteData = await _client
+        .get(url)
+        .then((resp) {
+          page = int.tryParse(resp.headers['x-page'] ?? 0);
+          total = int.tryParse(resp.headers['x-total-pages'] ?? 0);
+          next = int.tryParse(resp.headers['x-next-page'] ?? 0);
+          return resp;
+        })
+        .then((resp) => utf8.decode(resp.bodyBytes))
+        .then((s) => jsonDecode(s))
+        .catchError((err) {
+          print("loadData err: $err");
+          return [];
+        })
+        .whenComplete(_client.close);
+    return remoteData;
+/// remoteData: Object or List
+```
+
+### CommListView
+
+It is a common component that contains some logics. as follows:
+
+- Automatically load data
+- Pull down to refresh
+- Pull up page load
+
+```dart
+///[canPullUp] This bool will affect whether or not to have the function of drop-up load
+///[canPullDown] This bool will affect whether or not to have the function of drop-down refresh
+///[withPage] Tihs bool will affect whether or not to add page arg to request url
+abstract class CommListWidget extends StatefulWidget {
+  final bool canPullUp;
+
+  final bool canPullDown;
+
+  final bool withPage;
+
+  CommListWidget(
+      {this.canPullDown = true, this.canPullUp = true, this.withPage = true});
+}
+```
+
+#### Usage
+
+```dart
+/// Create a list statefull widget
+
+class ProjectTab extends CommListWidget {
+  final String type;
+
+  ProjectTab(this.type);
+
+  @override
+  State<StatefulWidget> createState() => ProjectState(
+      "projects?order_by=updated_at&per_page=10&simple=true&$type");
+}
+
+/// Create a state for list
+
+class ProjectState extends CommListState {
+  ProjectState(String endPoint) : super(endPoint);
+
+  @override
+  Widget childBuild(BuildContext context, int index) {
+    final item = data[index];
+    return Card(...);
+  }
+}
+
+```
+
 ## License
 
 > Copyright (C) 2018 StefanJi.  
