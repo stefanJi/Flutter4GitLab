@@ -23,6 +23,7 @@ dependencies:
   pull_to_refresh: ^1.1.6
   xml: ^3.2.3
   url_launcher: ^4.0.1
+  http: ^0.12.0
 
 dev_dependencies:
   flutter_test:
