@@ -4,7 +4,12 @@
 
 > Flutter for GitLab. Support **Android** & **IOS**.
 
-[Download APK.](./art/app-release.apk)
+
+### Run Project
+
+Please referer to [Set up an editor](https://flutter.io/docs/get-started/editor).
+
+---
 
 Yet another **open-source** GitLab client app but unlike any other app, F4Lab is building by Flutter.  
 
@@ -36,6 +41,8 @@ Yet another **open-source** GitLab client app but unlike any other app, F4Lab is
   - [ ] MRs request review changes/approve & comment.
   - [x] MRs statuses
   - [ ] Approve MR
+  - [x] CI Status
+  - [x] Play|Cancel|Retry CI Job
 - **Organisations**
     - [x] Feeds
     - [x] Repos
@@ -60,7 +67,6 @@ Yet another **open-source** GitLab client app but unlike any other app, F4Lab is
 ## Contribution
 
 Please **contribute** to the  project either by **_creating a PR_** or **_submitting an issue_** on GitHub.  
-
 
 ## Comm Widget
 
@@ -163,3 +169,7 @@ class ProjectState extends CommListState {
 | Repo | Merge Request |
 |:-:|:-:|
 | ![Third](./art/flutter_gitlab_project.png) | ![Fourth](./art/flutter_gitlab_mr.png) |
+
+|Groups|Jobs|
+|:-:|:-:|
+|![Five](./art/flutter_gitlab_groups.png)|![Six](./art/flutter_gitlab_jobs.png)|
