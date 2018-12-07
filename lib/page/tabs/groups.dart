@@ -12,30 +12,54 @@ class _State extends CommListState {
   _State() : super("groups");
 
   @override
+  Widget build(BuildContext context) {
+    return data != null
+        ? GridView.builder(
+            itemCount: data.length,
+            gridDelegate:
+                SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+            itemBuilder: (context, index) {
+              return childBuild(context, index);
+            }).build(context)
+        : super.build(context);
+  }
+
+  @override
   Widget childBuild(BuildContext context, int index) {
     final item = data[index];
-    print("item: $item");
     return _buildItem(item);
   }
 
   Widget _buildItem(item) {
-    return Column(
-      children: <Widget>[
-        ListTile(
-          leading: item['avatar_url'] != null
-              ? CircleAvatar(backgroundImage: NetworkImage(item['avatar_url']))
-              : CircleAvatar(
-                  child: Text(
-                      (item['name'] as String).substring(0, 2).toUpperCase()),
-                ),
-          title: Text(item['name']),
-          subtitle: item['description'] != null
-              ? Text(item['description'])
-              : IgnorePointer(),
-          onTap: () {},
-        ),
-        Divider(height: 2)
-      ],
-    );
+    return Card(
+        child: InkWell(
+            onTap: () {
+              Scaffold.of(context).hideCurrentSnackBar();
+              Scaffold.of(context).showSnackBar(SnackBar(
+                  content: Text("${item['name']}: ${item['description']}"),
+                  backgroundColor: Theme.of(context).primaryColor));
+            },
+            child: Center(
+                child: Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Column(
+                      children: <Widget>[
+                        item['avatar'] == null
+                            ? CircleAvatar(
+                                radius: 40,
+                                child: Text(item['name'],
+                                    textAlign: TextAlign.center,
+                                    overflow: TextOverflow.fade))
+                            : CircleAvatar(
+                                backgroundImage:
+                                    NetworkImage(item['avatar_url'])),
+                        Text(
+                          item['description'],
+                          softWrap: true,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(fontSize: 12),
+                        )
+                      ],
+                    )))));
   }
 }
