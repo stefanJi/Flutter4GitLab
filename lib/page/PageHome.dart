@@ -117,15 +117,25 @@ class HomeState extends State<HomePage> {
                 drawer: Drawer(
                   child: ListView(
                     children: <Widget>[
-                      DrawerHeader(
-                        child: Column(
-                          children: <Widget>[
-                            CircleAvatar(
-                              radius: 50,
-                              backgroundImage: NetworkImage(user['avatar_url']),
-                            ),
-                            Text(user['name'])
-                          ],
+                      UserAccountsDrawerHeader(
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).scaffoldBackgroundColor,
+                        ),
+                        accountName: Text(
+                          user['name'],
+                          style: TextStyle(
+                            color: Theme.of(context).accentColor,
+                          ),
+                        ),
+                        accountEmail: Text(
+                          user['email'],
+                          style: TextStyle(
+                            color: Theme.of(context).highlightColor,
+                          ),
+                        ),
+                        currentAccountPicture: CircleAvatar(
+                          radius: 50,
+                          backgroundImage: NetworkImage(user['avatar_url']),
                         ),
                       ),
                       ListTile(
@@ -211,16 +221,12 @@ class HomeState extends State<HomePage> {
     switch (_currentTab) {
       case tabActivity:
         return Activity();
-        break;
       case tabProjects:
         return Project();
-        break;
       case tabTodo:
         return Todo();
-        break;
       case tabGroups:
         return Groups();
-        break;
     }
   }
 

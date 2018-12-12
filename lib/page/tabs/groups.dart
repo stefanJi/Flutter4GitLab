@@ -32,34 +32,30 @@ class _State extends CommListState {
 
   Widget _buildItem(item) {
     return Card(
-        child: InkWell(
-            onTap: () {
-              Scaffold.of(context).hideCurrentSnackBar();
-              Scaffold.of(context).showSnackBar(SnackBar(
-                  content: Text("${item['name']}: ${item['description']}"),
-                  backgroundColor: Theme.of(context).primaryColor));
-            },
-            child: Center(
-                child: Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Column(
-                      children: <Widget>[
-                        item['avatar'] == null
-                            ? CircleAvatar(
-                                radius: 40,
-                                child: Text(item['name'],
-                                    textAlign: TextAlign.center,
-                                    overflow: TextOverflow.fade))
-                            : CircleAvatar(
-                                backgroundImage:
-                                    NetworkImage(item['avatar_url'])),
-                        Text(
-                          item['description'],
-                          softWrap: true,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(fontSize: 12),
-                        )
-                      ],
-                    )))));
+      child: InkWell(
+        onTap: () {
+          Scaffold.of(context).hideCurrentSnackBar();
+          Scaffold.of(context).showSnackBar(
+            SnackBar(
+              content: Text("${item['name']}: ${item['description']}"),
+              backgroundColor: Theme.of(context).primaryColor,
+            ),
+          );
+        },
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.all(10),
+            child: CircleAvatar(
+              radius: 40,
+              child: Text(
+                item['name'],
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.fade,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
