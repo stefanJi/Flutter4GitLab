@@ -40,7 +40,7 @@ Yet another **open-source** GitLab client app but unlike any other app, F4Lab is
   - [ ] Merge MRs
   - [ ] MRs request review changes/approve & comment.
   - [x] MRs statuses
-  - [ ] Approve MR
+  - [x] Approve or UnApprove MR
   - [x] CI Status
   - [x] Play|Cancel|Retry CI Job
 - **Organisations**
