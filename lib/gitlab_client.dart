@@ -19,7 +19,7 @@ class GitlabClient extends http.BaseClient {
 
   Future<http.StreamedResponse> send(http.BaseRequest request) {
     request.headers['Private-Token'] = _globalTOKEN;
-    request.headers['user-agent'] = 'Gitlab Dart Client';
+    request.headers['User-Agent'] = 'F4Lab';
     return _inner.send(request);
   }
 

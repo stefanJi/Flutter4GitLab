@@ -34,8 +34,10 @@ class _MrState extends CommListState {
         mr['description'] != null && (!mr['description'].isEmpty);
     String branch = "${mr['source_branch']} → ${mr['target_branch']}";
     String uName;
+    String avatarUrl;
     if (assigned) {
       uName = mr['assignee']['username'];
+      avatarUrl = mr['assignee']['avatar_url'];
     }
     var card = Card(
       child: InkWell(
@@ -70,7 +72,7 @@ class _MrState extends CommListState {
                   ? Padding(
                       padding: EdgeInsets.only(left: 8.0),
                       child: loadAvatar(
-                        "${GitlabClient.globalHOST}/uploads/-/system/user/avatar/${mr['assignee']['id']}/avatar.png",
+                        avatarUrl,
                         uName,
                       ),
                     )
@@ -197,7 +199,7 @@ class _MrApproveState extends State<_MrApprove>
   Widget _buildItem(approve) {
     bool hadApproved =
         approve['approved_by'] != null && approve['approved_by'].isNotEmpty;
-    int hadApproves = approve['approvals_required'];
+    int requireApproves = approve['approvals_required'];
     int needApproves = approve['approvals_left'];
 
     Widget approves;
@@ -221,7 +223,7 @@ class _MrApproveState extends State<_MrApprove>
         text: "Approvals required ",
         children: [
           TextSpan(
-            text: "$hadApproves",
+            text: "$requireApproves",
             style: TextStyle(
               color: Theme.of(context).accentColor,
             ),
@@ -242,16 +244,18 @@ class _MrApproveState extends State<_MrApprove>
       ),
     );
     Widget approveBtn =
-        needApproves != null && needApproves is int && needApproves > 0
-            ? RaisedButton(
-                child: const Text("Approve"),
-                onPressed: () => _approveMr(approve),
-              )
-            : RaisedButton(
-                color: Colors.grey,
-                onPressed: () => _approveMr(approve, isUnApprove: true),
-                child: const Text("UnApprove"),
-              );
+        requireApproves != null && requireApproves is int && requireApproves > 0
+            ? (needApproves != null && needApproves is int && needApproves > 0
+                ? RaisedButton(
+                    child: const Text("Approve"),
+                    onPressed: () => _approveMr(approve),
+                  )
+                : RaisedButton(
+                    color: Colors.grey,
+                    onPressed: () => _approveMr(approve, isUnApprove: true),
+                    child: const Text("UnApprove"),
+                  ))
+            : IgnorePointer();
 
     Widget group = Chip(
       label: Text(
@@ -282,9 +286,11 @@ class _MrApproveState extends State<_MrApprove>
   }
 
   _approveMr(approveItem, {bool isUnApprove = false}) async {
+    print(approveItem);
     final endPoint = "projects/${approveItem['project_id']}/merge_requests/"
         "${approveItem['iid']}/"
         "${isUnApprove ? "unapprove" : "approve"}";
+    print(endPoint);
     final client = GitlabClient.newInstance();
     await client.post(endPoint).then((resp) {
       if (resp.statusCode == 200) {
