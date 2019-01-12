@@ -23,7 +23,6 @@ addons:
 before_script:
   - git clone https://github.com/flutter/flutter.git -b stable --depth 1
   - ./flutter/bin/flutter doctor
-  - echo 'org.gradle.daemon=false' >> $HOME/.gradle/gradle.properties
 script:
   - ./flutter/bin/flutter -v build apk
 
