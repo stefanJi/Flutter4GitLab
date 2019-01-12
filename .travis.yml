@@ -1,15 +1,19 @@
-language: android
-jdk: oraclejdk8
+os:
+  - linux
 sudo: false
-
-android:
-  components:
-    - platform-tools
-    - tools
-    - build-tools-28.0.3
-    - android-28
-
+addons:
+  apt:
+    # Flutter depends on /usr/lib/x86_64-linux-gnu/libstdc++.so.6 version GLIBCXX_3.4.18
+    sources:
+      - ubuntu-toolchain-r-test # if we don't specify this, the libstdc++6 we get is the wrong version
+    packages:
+      - libstdc++6
+      - fonts-droid
 before_script:
-  - echo '============= gsbstart build ============'
-
-script: android/gradlew app:build
+  - git clone https://github.com/flutter/flutter.git -b beta
+  - ./flutter/bin/flutter doctor
+script:
+  - ./flutter/bin/flutter build apk
+cache:
+  directories:
+    - $HOME/.pub-cache
