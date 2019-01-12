@@ -1,5 +1,19 @@
-os:
-  - linux
+os: linux
+language: android
+licenses:
+  - 'android-sdk-preview-license-.+'
+  - 'android-sdk-license-.+'
+  - 'google-gdk-license-.+'
+android:
+  components:
+    - tools
+    - platform-tools
+    - build-tools-258.0.3
+    - android-28
+    - extra-android-m2repository
+    - extra-google-m2repository
+    - extra-google-android-support
+jdk: oraclejdk8
 sudo: false
 addons:
   apt:
@@ -10,10 +24,11 @@ addons:
       - libstdc++6
       - fonts-droid
 before_script:
-  - git clone https://github.com/flutter/flutter.git -b beta
+  - git clone https://github.com/flutter/flutter.git -b stable --depth 1
   - ./flutter/bin/flutter doctor
 script:
-  - ./flutter/bin/flutter build apk
+  - ./flutter/bin/flutter -v build apk
+
 cache:
   directories:
     - $HOME/.pub-cache

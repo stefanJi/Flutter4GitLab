@@ -4,6 +4,7 @@
 
 > Flutter for GitLab. Support **Android** & **IOS**.
 
+[![Build Status](https://travis-ci.org/stefanJi/Flutter4GitLab.svg?branch=master)](https://travis-ci.org/stefanJi/Flutter4GitLab)
 
 ### Run Project
 
