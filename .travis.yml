@@ -30,3 +30,6 @@ script:
 cache:
   directories:
     - $HOME/.pub-cache
+
+after_success:
+  - ./upload-apk.sh
