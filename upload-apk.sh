@@ -7,6 +7,6 @@ chmod +x qrsctl
 
 ./qrsctl login $QINIU_User $QINIU_Passwd
 DATE=`date '+%Y%m%d_%H%M%S'`
-name="apk/Flutter4GitLab_${DATE}.apk"
+name="apk/f4lab_${DATE}.apk"
 echo "Start put file ${name}"
-./qrsctl put -c myapk name $apk_path
+./qrsctl put -c myapk $name $apk_path
