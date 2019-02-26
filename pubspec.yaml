@@ -7,10 +7,7 @@ description: A new Flutter applicatio fot GitLab.
 # Both the version and the builder number may be overridden in flutter
 # build by specifying --build-name and --build-number, respectively.
 # Read more about versioning at semver.org.
-version: 1.0.5+5
-
-environment:
-  sdk: ">=2.0.0-dev.68.0 <3.0.0"
+version: 1.0.6
 
 dependencies:
   flutter:
@@ -20,7 +17,6 @@ dependencies:
   pull_to_refresh: ^1.1.6
   xml: ^3.2.3
   url_launcher: ^4.0.1
-#  http: ^0.12.0
   flutter_html_textview: ^0.2.6
 
 dev_dependencies:
