@@ -6,7 +6,7 @@ curl "http://devtools.qiniu.com/linux/amd64/qrsctl?ref=developer.qiniu.com" -o q
 chmod +x qrsctl
 
 ./qrsctl login $QINIU_User $QINIU_Passwd
-
-echo "Start put file"
-DATE=`date '+%Y%m%d%H%M%S'`
-./qrsctl put -c myapk "apk/Flutter4GitLab_${DATE}.apk" $apk_path
+DATE=`date '+%Y%m%d_%H%M%S'`
+name="apk/Flutter4GitLab_${DATE}.apk"
+echo "Start put file ${name}"
+./qrsctl put -c myapk name $apk_path
