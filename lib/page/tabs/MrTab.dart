@@ -159,9 +159,9 @@ class _MrApprove extends StatefulWidget {
   ]
 }
 */
-class _MrApproveState extends State<_MrApprove>
-    with AutomaticKeepAliveClientMixin {
+class _MrApproveState extends State<_MrApprove> {
   dynamic approve;
+  bool isApproving = false;
 
   _loadApprove() async {
     if (mounted) {
@@ -248,11 +248,13 @@ class _MrApproveState extends State<_MrApprove>
             ? (needApproves != null && needApproves is int && needApproves > 0
                 ? RaisedButton(
                     child: const Text("Approve"),
-                    onPressed: () => _approveMr(approve),
+                    onPressed: isApproving ? null : () => _approveMr(approve),
                   )
                 : RaisedButton(
                     color: Colors.grey,
-                    onPressed: () => _approveMr(approve, isUnApprove: true),
+                    onPressed: isApproving
+                        ? null
+                        : () => _approveMr(approve, isUnApprove: true),
                     child: const Text("UnApprove"),
                   ))
             : IgnorePointer();
@@ -286,25 +288,28 @@ class _MrApproveState extends State<_MrApprove>
   }
 
   _approveMr(approveItem, {bool isUnApprove = false}) async {
-    print(approveItem);
     final endPoint = "projects/${approveItem['project_id']}/merge_requests/"
         "${approveItem['iid']}/"
         "${isUnApprove ? "unapprove" : "approve"}";
-    print(endPoint);
     final client = GitlabClient.newInstance();
+    setState(() {
+      isApproving = true;
+    });
     await client.post(endPoint).then((resp) {
-      if (resp.statusCode == 200) {
+      print("approve resp: ${resp.statusCode} ${resp.body}");
+      if (resp.statusCode >= 200) {
         _loadApprove();
       } else {
-        print("Approve mr error: ${resp.body}");
         Scaffold.of(context).showSnackBar(SnackBar(
-          content: Text("Action failed. ${resp.body}"),
+          content: Text("${resp.body}"),
           backgroundColor: Colors.red,
         ));
       }
-    }).whenComplete(client.close);
+    }).whenComplete(() {
+      client.close();
+      setState(() {
+        isApproving = false;
+      });
+    });
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }
