@@ -1,7 +1,7 @@
-import 'dart:convert';
-
+import 'package:F4Lab/api.dart';
 import 'package:F4Lab/const.dart';
 import 'package:F4Lab/gitlab_client.dart';
+import 'package:F4Lab/model/user.dart';
 import 'package:F4Lab/page/tabs/activity.dart';
 import 'package:F4Lab/page/tabs/groups.dart';
 import 'package:F4Lab/page/tabs/project.dart';
@@ -37,7 +37,7 @@ class HomePage extends StatefulWidget {
 }
 
 class HomeState extends State<HomePage> {
-  dynamic user;
+  User user;
   bool isLoading = false;
   int _currentTab = 0;
   String _barTitle;
@@ -66,14 +66,11 @@ class HomeState extends State<HomePage> {
       return;
     }
     GitlabClient.setUpTokenAndHost(token, host);
-    final client = GitlabClient();
-    final resp = await client.get('user').whenComplete(client.close);
-    if (resp.statusCode != 200) {
-      user = null;
-    }
+
+    final user = await ApiService.getAuthUser();
     setState(() {
       isLoading = false;
-      user = jsonDecode(resp.body);
+      this.user = user;
     });
   }
 
@@ -122,20 +119,20 @@ class HomeState extends State<HomePage> {
                           color: Theme.of(context).scaffoldBackgroundColor,
                         ),
                         accountName: Text(
-                          user['name'],
+                          user.name,
                           style: TextStyle(
                             color: Theme.of(context).accentColor,
                           ),
                         ),
                         accountEmail: Text(
-                          user['email'],
+                          user.email,
                           style: TextStyle(
                             color: Theme.of(context).highlightColor,
                           ),
                         ),
                         currentAccountPicture: CircleAvatar(
                           radius: 50,
-                          backgroundImage: NetworkImage(user['avatar_url']),
+                          backgroundImage: NetworkImage(user.avatarUrl),
                         ),
                       ),
                       ListTile(
