@@ -1,3 +1,4 @@
+import 'package:F4Lab/model/project.dart' as model;
 import 'package:F4Lab/page/PageProjectDetail.dart';
 import 'package:F4Lab/widget/comm_ListView.dart';
 import 'package:flutter/material.dart';
@@ -42,26 +43,26 @@ class ProjectState extends CommListState {
 
   @override
   Widget childBuild(BuildContext context, int index) {
-    final item = data[index];
+    final item = model.Project.fromJson(data[index]);
     return Card(
       child: ListTile(
-        leading: item['avatar_url'] != null
+        leading: item.avatarUrl != null
             ? CircleAvatar(
-                backgroundImage: NetworkImage(item['avatar_url']),
+                backgroundImage: NetworkImage(item.avatarUrl),
                 backgroundColor: Theme.of(context).primaryColor,
               )
             : CircleAvatar(
                 backgroundColor: Theme.of(context).primaryColor,
                 child: Text(
-                  item['name'].substring(0, 1).toUpperCase(),
+                  item.name.substring(0, 1).toUpperCase(),
                   style: TextStyle(color: Theme.of(context).accentColor),
                 ),
               ),
-        title: Text(item['name_with_namespace']),
-        subtitle: Text(item['description'] ?? item['last_activity_at']),
-        trailing: item['default_branch'] != null
+        title: Text(item.nameWithNamespace),
+        subtitle: Text(item.description ?? item.lastActivityAt),
+        trailing: item.defaultBranch != null
             ? Chip(
-                label: Text(item['default_branch'],
+                label: Text(item.defaultBranch,
                     style: TextStyle(color: Theme.of(context).primaryColor)),
                 backgroundColor: Theme.of(context).backgroundColor,
               )
@@ -69,7 +70,7 @@ class ProjectState extends CommListState {
                 ignoring: true,
               ),
         onTap: () {
-          _navToProjectDetail(item['name'], item['id']);
+          _navToProjectDetail(item.name, item.id);
         },
       ),
     );
