@@ -297,7 +297,7 @@ class _MrApproveState extends State<_MrApprove> {
     });
     await client.post(endPoint).then((resp) {
       print("approve resp: ${resp.statusCode} ${resp.body}");
-      if (resp.statusCode >= 200) {
+      if (resp.statusCode / 100 == 2) {
         _loadApprove();
       } else {
         Scaffold.of(context).showSnackBar(SnackBar(
