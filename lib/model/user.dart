@@ -97,6 +97,24 @@ class User {
     privateProfile = json['private_profile'];
   }
 
+  User.fromJsonInJobs(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    username = json['username'];
+    state = json['state'];
+    avatarUrl = json['avatar_url'];
+    webUrl = json['web_url'];
+    createdAt = json['created_at'];
+    bio = json['bio'];
+    location = json['location'];
+    publicEmail = json['public_email'];
+    skype = json['skype'];
+    linkedin = json['linkedin'];
+    twitter = json['twitter'];
+    websiteUrl = json['website_url'];
+    organization = json['organization'];
+  }
+
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
@@ -130,6 +148,26 @@ class User {
     data['two_factor_enabled'] = this.twoFactorEnabled;
     data['external'] = this.external;
     data['private_profile'] = this.privateProfile;
+    return data;
+  }
+
+  Map<String, dynamic> toJsonInJobs() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['name'] = this.name;
+    data['username'] = this.username;
+    data['state'] = this.state;
+    data['avatar_url'] = this.avatarUrl;
+    data['web_url'] = this.webUrl;
+    data['created_at'] = this.createdAt;
+    data['bio'] = this.bio;
+    data['location'] = this.location;
+    data['public_email'] = this.publicEmail;
+    data['skype'] = this.skype;
+    data['linkedin'] = this.linkedin;
+    data['twitter'] = this.twitter;
+    data['website_url'] = this.websiteUrl;
+    data['organization'] = this.organization;
     return data;
   }
 }
