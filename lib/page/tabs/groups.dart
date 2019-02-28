@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
+import 'package:F4Lab/model/group.dart';
 import 'package:F4Lab/widget/comm_ListView.dart';
+import 'package:flutter/material.dart';
 
 class Groups extends CommListWidget {
   Groups() : super(canPullUp: false, withPage: false);
@@ -31,13 +32,14 @@ class _State extends CommListState {
   }
 
   Widget _buildItem(item) {
+    final group = Group.fromJson(item);
     return Card(
       child: InkWell(
         onTap: () {
           Scaffold.of(context).hideCurrentSnackBar();
           Scaffold.of(context).showSnackBar(
             SnackBar(
-              content: Text("${item['name']}: ${item['description']}"),
+              content: Text("${group.name}: ${group.description}"),
               backgroundColor: Theme.of(context).primaryColor,
             ),
           );
@@ -48,7 +50,7 @@ class _State extends CommListState {
             child: CircleAvatar(
               radius: 40,
               child: Text(
-                item['name'],
+                group.name,
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.fade,
               ),
