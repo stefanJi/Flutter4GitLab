@@ -1,3 +1,4 @@
+import 'package:F4Lab/model/todo.dart' as TodoModel;
 import 'package:F4Lab/widget/comm_ListView.dart';
 import 'package:flutter/material.dart';
 
@@ -11,29 +12,29 @@ class TodoState extends CommListState {
 
   @override
   Widget childBuild(BuildContext context, int index) {
-    final todoItem = data[index];
+    final todoItem = TodoModel.Todo.fromJson(data[index]);
     return Card(
         child: ExpansionTile(
       leading: CircleAvatar(
-        backgroundImage: NetworkImage(todoItem['author']['avatar_url']),
+        backgroundImage: NetworkImage(todoItem.author.avatarUrl),
       ),
       title: Text.rich(TextSpan(
-          text: "${todoItem['author']['name']} ",
+          text: "${todoItem.author.name} ",
           style: TextStyle(fontWeight: FontWeight.w100),
           children: [
             TextSpan(
-                text: (todoItem['action_name'] as String).toUpperCase(),
+                text: todoItem.actionName.toUpperCase(),
                 style: TextStyle(fontWeight: FontWeight.bold)),
             TextSpan(
-                text: " ${todoItem['target_type']} ",
+                text: " ${todoItem.targetType} ",
                 style: TextStyle(fontWeight: FontWeight.w400)),
-            TextSpan(text: todoItem['target']['title'])
+            TextSpan(text: todoItem.target.title)
           ])),
       trailing: OutlineButton(
         child: Text("Done"),
         onPressed: () {},
       ),
-      children: <Widget>[Text(todoItem['created_at'])],
+      children: <Widget>[Text(todoItem.createdAt)],
     ));
   }
 }
