@@ -6,6 +6,7 @@ import 'package:F4Lab/page/tabs/activity.dart';
 import 'package:F4Lab/page/tabs/groups.dart';
 import 'package:F4Lab/page/tabs/project.dart';
 import 'package:F4Lab/page/tabs/todo.dart';
+import 'package:F4Lab/user_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -68,6 +69,8 @@ class HomeState extends State<HomePage> {
     GitlabClient.setUpTokenAndHost(token, host);
 
     final user = await ApiService.getAuthUser();
+    UserHelper.setUser(user);
+
     setState(() {
       isLoading = false;
       this.user = user;
