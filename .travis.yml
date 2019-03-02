@@ -1,35 +1,41 @@
 os: linux
 language: android
 licenses:
-  - 'android-sdk-preview-license-.+'
-  - 'android-sdk-license-.+'
-  - 'google-gdk-license-.+'
+- android-sdk-preview-license-.+
+- android-sdk-license-.+
+- google-gdk-license-.+
 android:
   components:
-    - tools
-    - platform-tools
-    - build-tools-27.0.3
-    - android-27
-    - android-28
+  - tools
+  - platform-tools
+  - build-tools-27.0.3
+  - android-27
+  - android-28
 jdk: oraclejdk8
 sudo: false
 addons:
   apt:
     # Flutter depends on /usr/lib/x86_64-linux-gnu/libstdc++.so.6 version GLIBCXX_3.4.18
     sources:
-      - ubuntu-toolchain-r-test # if we don't specify this, the libstdc++6 we get is the wrong version
+    - ubuntu-toolchain-r-test
     packages:
-      - libstdc++6
-      - fonts-droid
+    - libstdc++6
+    - fonts-droid
 before_script:
-  - git clone https://github.com/flutter/flutter.git -b stable --depth 1
-  - ./flutter/bin/flutter doctor
+- git clone https://github.com/flutter/flutter.git -b stable --depth 1
+- "./flutter/bin/flutter doctor"
 script:
-  - ./flutter/bin/flutter -v build apk
-
+- "./flutter/bin/flutter -v build apk"
 cache:
   directories:
-    - $HOME/.pub-cache
-
+  - "$HOME/.pub-cache"
 after_success:
-  - ./upload-apk.sh
+- "mv build/app/outputs/apk/release/app-release.apk F4Lab.apk"
+deploy:
+  provider: releases
+  api_key:
+    secure: zLCNECH6Zoqi+pnykyfG20ABhc7bvDF9G9up5PerXZU5vGh78PB+LIiv5AhTZ2Y6kSxBwrJJyKWjIWoZ8GRj5i+zocUcMbB3hOdYITLyYh/STGLM9WUuJUVDpI7fiQ5JX5U0zOKWrjNDJUFzbvSa8gVS58cXQBp6C1hu16aM71/y7mxPe8RlBakzuGB7rvy3oHfgBqqRIeB6bywxLAAvguA+d8BcRZyB5G7v+lpQ06TU0oXLkc5QTh2AIw9d9WmbE4DLDzhkhaaBXd0E6Br6hQD7HHmY5yFNxbQ9HAXe2AUSU8YaCZJKFQABgNqpnYwzdNouh/10rZ0uryy3IpSKRjNdcdTFYJ6+crUDFyxD4nMwrNngqhcE3Vvtv3uizkk1m6IWpw2q9zmujyU23R2mwZqy145TEwEEQEV1v0qkamWCteXnZZ7mZzS9MuWDlyqbQbF1VhFAlYLjCyOFeGRPIsYOcYWlJoe9ypS3hxD5hbrw+8l2P0LohW8V30ZwewrALB7+PCDINb5I5rCrReylsAfTia0iE6kIOFviOFXclUqMy9FoIPdpS+FizsgIywQTJaRTZua9OPFNvZOWcKkq19bB1zfzorpKkfs5tK85o/1WiqaxpfxYurqo082MOr9n629OEdLo5qQOjumy+YWx05aOsI84Z9KPV1XaiRuVyOI=
+  file: F4Lab.apk
+  on:
+    repo: stefanJi/Flutter4GitLab
+    branch: master
