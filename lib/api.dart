@@ -21,5 +21,4 @@ class ApiService {
         .catchError(print)
         .whenComplete(client.close);
   }
-
 }

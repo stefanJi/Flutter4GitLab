@@ -1,4 +1,5 @@
 import 'package:F4Lab/gitlab_client.dart';
+import 'package:F4Lab/model/jobs.dart';
 import 'package:F4Lab/widget/comm_ListView.dart';
 import 'package:flutter/material.dart';
 
@@ -29,7 +30,8 @@ class _PipelineTabState extends CommListState {
 
   @override
   Widget childBuild(BuildContext context, int index) {
-    var item = data[index];
+    final item = Jobs.fromJson(data[index]);
+    print(item);
     return Card(
       child: Padding(
           padding: EdgeInsets.all(5),
@@ -38,21 +40,20 @@ class _PipelineTabState extends CommListState {
                 leading: CircleAvatar(
                   radius: 15,
                   backgroundImage: NetworkImage(
-                      "${GitlabClient.globalHOST}/uploads/-/system/user/avatar/${item['user']['id']}/avatar.png"),
+                      "${GitlabClient.globalHOST}/uploads/-/system/user/avatar/${item.user.id}/avatar.png"),
                 ),
-                title: Text(item['commit']['message']),
-                subtitle:
-                    Text("${item['user']['name']} :${item['created_at']}")),
+                title: Text(item.commit.message),
+                subtitle: Text("${item.user.name} :${item.createdAt}")),
             Table(
               children: <TableRow>[
                 TableRow(children: <TableCell>[
                   TableCell(
                       child: Text(
-                    item['status'],
-                    style: TextStyle(color: colors[item['status']]),
+                    item.status,
+                    style: TextStyle(color: colors[item.status]),
                   )),
-                  TableCell(child: Text(item['stage'])),
-                  TableCell(child: Text(item['name']))
+                  TableCell(child: Text(item.stage)),
+                  TableCell(child: Text(item.name))
                 ]),
               ],
             ),
@@ -65,26 +66,26 @@ class _PipelineTabState extends CommListState {
     );
   }
 
-  Widget _buildAction(item) {
-    switch (item['status']) {
+  Widget _buildAction(Jobs item) {
+    switch (item.status) {
       case 'skipped':
       case 'pending':
         return IgnorePointer();
       case 'running':
         return OutlineButton(
             child: const Text("cancel"),
-            onPressed: () => _doAction(projectId, item['id'], 'cancel'));
+            onPressed: () => _doAction(projectId, item.id, 'cancel'));
       case 'failed':
       case 'success':
         return OutlineButton(
             child: const Text("retry"),
-            onPressed: () => _doAction(projectId, item['id'], 'retry'));
+            onPressed: () => _doAction(projectId, item.id, 'retry'));
       case 'created':
       case 'canceled':
       case 'manual':
         return OutlineButton(
             child: const Text("play"),
-            onPressed: () => _doAction(projectId, item['id'], 'play'));
+            onPressed: () => _doAction(projectId, item.id, 'play'));
     }
     return IgnorePointer();
   }

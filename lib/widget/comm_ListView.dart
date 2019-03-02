@@ -29,7 +29,7 @@ abstract class CommListState extends State<CommListWidget>
   ///[_endPoint] like: merge_request?status=open
   final String _endPoint;
 
-  List data;
+  List<dynamic> data;
   int page;
   int total;
   int next;
