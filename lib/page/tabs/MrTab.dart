@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:F4Lab/gitlab_client.dart';
+import 'package:F4Lab/model/approvals.dart';
+import 'package:F4Lab/model/merge_request.dart';
 import 'package:F4Lab/page/PageMrDetail.dart';
 import 'package:F4Lab/util/widget_util.dart';
 import 'package:F4Lab/widget/comm_ListView.dart';
@@ -24,69 +26,59 @@ class _MrState extends CommListState {
 
   @override
   Widget childBuild(BuildContext context, int index) {
-    final mr = data[index];
-    return _buildItem(mr);
+    return _buildItem(data[index]);
   }
 
-  Widget _buildItem(mr) {
-    bool assigned = mr['assignee'] != null;
-    bool hadDescription =
-        mr['description'] != null && (!mr['description'].isEmpty);
-    String branch = "${mr['source_branch']} → ${mr['target_branch']}";
+  Widget _buildItem(item) {
+    final mr = MergeRequest.fromJson(item);
+    bool assigned = mr.assignee != null;
+    bool hadDescription = mr.description != null && (!mr.description.isEmpty);
+    String branch = "${mr.sourceBranch} → ${mr.targetBranch}";
     String uName;
     String avatarUrl;
     if (assigned) {
-      uName = mr['assignee']['username'];
-      avatarUrl = mr['assignee']['avatar_url'];
+      uName = mr.assignee.username;
+      avatarUrl = mr.assignee.avatarUrl;
     }
     var card = Card(
+      elevation: 1.0,
+      margin: EdgeInsets.only(bottom: 5.0, left: 4.0, right: 4.0, top: 5.0),
       child: InkWell(
-        onTap: () => _toMrDetatil(mr),
+        onTap: () => _toMrDetail(mr),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             ListTile(
-              title: Text(mr['title']),
-              subtitle: assigned
-                  ? Text.rich(TextSpan(children: <TextSpan>[
-                      TextSpan(
-                        text: uName.toUpperCase(),
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                      TextSpan(text: " $branch")
-                    ]))
-                  : Text(branch),
-              leading: mr['merge_status'] == 'can_be_merged'
+              title: Text(mr.title),
+              subtitle: Text(branch),
+              leading: mr.mergeStatus == 'can_be_merged'
                   ? Icon(
-                      Icons.done_outline,
+                      Icons.done,
                       color: Colors.green,
                     )
                   : Icon(
-                      Icons.error,
+                      Icons.highlight_off,
                       color: Colors.red,
                     ),
               trailing: assigned
-                  ? Padding(
-                      padding: EdgeInsets.only(left: 8.0),
-                      child: loadAvatar(
+                  ? Column(children: <Widget>[
+                      loadAvatar(
                         avatarUrl,
                         uName,
                       ),
-                    )
+                      Text(uName ?? "")
+                    ])
                   : IgnorePointer(),
             ),
             hadDescription
                 ? Padding(
                     padding: EdgeInsets.all(10),
                     child: Text(
-                      mr['description'],
+                      mr.description,
                     ),
                   )
                 : IgnorePointer(),
-            _MrApprove(mr['project_id'], mr['iid'])
+            MrApprove(mr.projectId, mr.iid)
           ],
         ),
       ),
@@ -94,81 +86,27 @@ class _MrState extends CommListState {
     return card;
   }
 
-  _toMrDetatil(mr) {
+  _toMrDetail(MergeRequest mr) {
     Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) =>
-            PageMrDetail(mr['title'], mr['project_id'], mr['iid'])));
+        builder: (context) => PageMrDetail(mr.title, mr.projectId, mr.iid)));
   }
 }
 
-class _MrApprove extends StatefulWidget {
+class MrApprove extends StatefulWidget {
   final int projectId;
   final int mrIID;
 
-  _MrApprove(this.projectId, this.mrIID);
+  MrApprove(this.projectId, this.mrIID);
 
   @override
   State<StatefulWidget> createState() => _MrApproveState();
 }
 
-/* Approve Item Json Data
-{
-  "id": 5,
-  "iid": 5,
-  "project_id": 1,
-  "title": "Approvals API",
-  "description": "Test",
-  "state": "opened",
-  "created_at": "2016-06-08T00:19:52.638Z",
-  "updated_at": "2016-06-08T21:20:42.470Z",
-  "merge_status": "cannot_be_merged",
-  "approvals_required": 2,
-  "approvals_missing": 2,
-  "approved_by": [],
-  "approvers": [
-    {
-      "user": {
-        "name": "Administrator",
-        "username": "root",
-        "id": 1,
-        "state": "active",
-        "avatar_url": "http://www.gravatar.com/avatar/e64c7d89f26bd1972efa854d13d7dd61?s=80\u0026d=identicon",
-        "web_url": "http://localhost:3000/u/root" 
-      }
-    }
-  ],
-  "approver_groups": [
-    {
-      "group": {
-        "id": 5,
-        "name": "group1",
-        "path": "group1",
-        "description": "",
-        "visibility": "public",
-        "lfs_enabled": false,
-        "avatar_url": null,
-        "web_url": "http://localhost/groups/group1",
-        "request_access_enabled": false,
-        "full_name": "group1",
-        "full_path": "group1",
-        "parent_id": null,
-        "ldap_cn": null,
-        "ldap_access": null
-      }
-    }
-  ]
-}
-*/
-class _MrApproveState extends State<_MrApprove> {
-  dynamic approve;
-  bool isApproving = false;
+class _MrApproveState extends State<MrApprove>
+    with AutomaticKeepAliveClientMixin {
+  Approvals approval;
 
-  _loadApprove() async {
-    if (mounted) {
-      setState(() {
-        approve = null;
-      });
-    }
+  void _loadApprove() async {
     final client = GitlabClient.newInstance();
     final data = await client
         .get(
@@ -177,7 +115,7 @@ class _MrApproveState extends State<_MrApprove> {
         .whenComplete(client.close);
     if (mounted) {
       setState(() {
-        approve = data;
+        approval = Approvals.fromJson(data);
       });
     }
   }
@@ -190,126 +128,36 @@ class _MrApproveState extends State<_MrApprove> {
 
   @override
   Widget build(BuildContext context) {
-    if (approve == null) {
+    if (approval == null) {
       return LinearProgressIndicator();
     }
-    return _buildItem(approve);
+    return _buildItem(approval);
   }
 
-  Widget _buildItem(approve) {
-    bool hadApproved =
-        approve['approved_by'] != null && approve['approved_by'].isNotEmpty;
-    int requireApproves = approve['approvals_required'];
-    int needApproves = approve['approvals_left'];
-
-    Widget approves;
-    if (hadApproved) {
-      approves = Row(
-        children: approve['approved_by'].map<Widget>((item) {
-              return Padding(
-                padding: EdgeInsets.all(2),
-                child: CircleAvatar(
-                  radius: 10,
-                  backgroundImage: NetworkImage(item['user']['avatar_url']),
-                ),
-              );
-            }).toList() +
-            [const Text("approved.")],
-      );
-    }
-
-    Widget approveTip = Text.rich(
-      TextSpan(
-        text: "Approvals required ",
-        children: [
-          TextSpan(
-            text: "$requireApproves",
-            style: TextStyle(
-              color: Theme.of(context).accentColor,
-            ),
-          ),
-          TextSpan(
-            text: ", also need ",
-          ),
-          TextSpan(
-            text: "$needApproves",
-            style: TextStyle(
-              color: Theme.of(context).accentColor,
-            ),
-          ),
-          TextSpan(
-            text: " approves.",
-          ),
-        ],
-      ),
-    );
-    Widget approveBtn =
-        requireApproves != null && requireApproves is int && requireApproves > 0
-            ? (needApproves != null && needApproves is int && needApproves > 0
-                ? RaisedButton(
-                    child: const Text("Approve"),
-                    onPressed: isApproving ? null : () => _approveMr(approve),
-                  )
-                : RaisedButton(
-                    color: Colors.grey,
-                    onPressed: isApproving
-                        ? null
-                        : () => _approveMr(approve, isUnApprove: true),
-                    child: const Text("UnApprove"),
-                  ))
-            : IgnorePointer();
-
-    Widget group = Chip(
-      label: Text(
-        "${(approve['approver_groups']).map((item) {
-          return item['group']['name'];
-        }).join(",")}",
-      ),
-    );
+  Widget _buildItem(Approvals approval) {
+    int requireApproves = approval.approvalsRequired ?? 0;
+    int hadApproval =
+        approval.approvedBy != null ? approval.approvedBy.length : 0;
 
     return Padding(
-      padding: EdgeInsets.all(10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: hadApproved
-            ? <Widget>[
-                group,
-                approves,
-                approveTip,
-                approveBtn,
-              ]
-            : <Widget>[
-                group,
-                approveTip,
-                approveBtn,
-              ],
-      ),
-    );
+        padding: EdgeInsets.all(10),
+        child: Row(
+          children: <Widget>[
+            Icon(Icons.sentiment_neutral),
+            Padding(
+              padding: EdgeInsets.all(5),
+              child: Text(
+                "$hadApproval of $requireApproves",
+                style: TextStyle(
+                    color: requireApproves == hadApproval
+                        ? Colors.green
+                        : Colors.grey),
+              ),
+            )
+          ],
+        ));
   }
 
-  _approveMr(approveItem, {bool isUnApprove = false}) async {
-    final endPoint = "projects/${approveItem['project_id']}/merge_requests/"
-        "${approveItem['iid']}/"
-        "${isUnApprove ? "unapprove" : "approve"}";
-    final client = GitlabClient.newInstance();
-    setState(() {
-      isApproving = true;
-    });
-    await client.post(endPoint).then((resp) {
-      print("approve resp: ${resp.statusCode} ${resp.body}");
-      if (resp.statusCode / 100 == 2) {
-        _loadApprove();
-      } else {
-        Scaffold.of(context).showSnackBar(SnackBar(
-          content: Text("${resp.body}"),
-          backgroundColor: Colors.red,
-        ));
-      }
-    }).whenComplete(() {
-      client.close();
-      setState(() {
-        isApproving = false;
-      });
-    });
-  }
+  @override
+  bool get wantKeepAlive => true;
 }
