@@ -2,6 +2,7 @@ import 'package:F4Lab/const.dart';
 import 'package:F4Lab/page/PageConfig.dart';
 import 'package:F4Lab/page/PageHome.dart';
 import 'package:flutter/material.dart';
+import 'package:sentry/sentry.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 ThemeData THEME_DARK = ThemeData(
@@ -16,14 +17,22 @@ ThemeData THEME_LIGHT = ThemeData(
 void main() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool isDark = prefs.getBool(KEY_THEME_IS_DARK) ?? false;
-  print(isDark);
   runApp(MyApp(isDark));
 }
 
 class MyApp extends StatefulWidget {
   final bool isDark;
 
-  MyApp(this.isDark);
+  MyApp(this.isDark) {
+    FlutterError.onError = MyApp.errorHandler;
+  }
+
+  static void errorHandler(FlutterErrorDetails details,
+      {bool forceReport = false}) {
+    final SentryClient sentry = new SentryClient(
+        dsn: "https://a49f4f9002e04a81959c51f769a4e013@sentry.io/1406491");
+    sentry.captureException(exception: details.exception);
+  }
 
   @override
   State<StatefulWidget> createState() => MyAppState();

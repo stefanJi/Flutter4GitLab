@@ -18,6 +18,7 @@ dependencies:
   xml: ^3.2.3
   url_launcher: ^4.0.1
   flutter_html_textview: ^0.2.6
+  sentry: any
 
 dev_dependencies:
   flutter_test:
