@@ -35,7 +35,7 @@ class ApiService {
         "projects/$projectId/merge_requests/$mrIId/${isApprove ? "unapprove" : "approve"}";
     final client = GitlabClient.newInstance();
     return client
-        .get(endPoint)
+        .post(endPoint)
         .then((resp) {
           return ApiResp<String>(resp.statusCode / 100 == 2, data: resp.body);
         })
