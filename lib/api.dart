@@ -37,7 +37,10 @@ class ApiService {
     return client
         .post(endPoint)
         .then((resp) {
-          return ApiResp<String>(resp.statusCode / 100 == 2, data: resp.body);
+          return ApiResp<String>(
+            (resp.statusCode ~/ 100) == 2,
+            data: resp.body,
+          );
         })
         .catchError(print)
         .whenComplete(client.close);
