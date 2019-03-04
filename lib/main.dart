@@ -31,7 +31,10 @@ class MyApp extends StatefulWidget {
       {bool forceReport = false}) {
     final SentryClient sentry = new SentryClient(
         dsn: "https://a49f4f9002e04a81959c51f769a4e013@sentry.io/1406491");
-    sentry.captureException(exception: details.exception);
+    sentry.captureException(
+      exception: details.exception,
+      stackTrace: details.stack,
+    );
   }
 
   @override
