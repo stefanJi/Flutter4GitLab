@@ -11,6 +11,11 @@ class ApiResp<T> {
   ApiResp(this.success, {this.data});
 }
 
+class ApiEndPoint {
+  static String mergeRequestCommit(int projectId, int mrIID) =>
+      "projects/$projectId/merge_requests/$mrIID/commits";
+}
+
 class ApiService {
   static Map<String, dynamic> respConvertToMap(Response resp) {
     if (resp.statusCode / 100 != 2) {
