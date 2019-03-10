@@ -31,7 +31,6 @@ class _PipelineTabState extends CommListState {
   @override
   Widget childBuild(BuildContext context, int index) {
     final item = Jobs.fromJson(data[index]);
-    print(item);
     return Card(
       child: Padding(
           padding: EdgeInsets.all(5),

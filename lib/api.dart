@@ -14,6 +14,9 @@ class ApiResp<T> {
 class ApiEndPoint {
   static String mergeRequestCommit(int projectId, int mrIID) =>
       "projects/$projectId/merge_requests/$mrIID/commits";
+
+  static String approveMergeRequest(int projectId, int mrIId, bool approve) =>
+      "projects/$projectId/merge_requests/$mrIId/${approve ? "approve" : "unapprove"}";
 }
 
 class ApiService {
@@ -37,7 +40,7 @@ class ApiService {
   static Future<ApiResp> approve(
       int projectId, int mrIId, bool isApprove) async {
     final endPoint =
-        "projects/$projectId/merge_requests/$mrIId/${isApprove ? "unapprove" : "approve"}";
+        ApiEndPoint.approveMergeRequest(projectId, mrIId, isApprove);
     final client = GitlabClient.newInstance();
     return client
         .post(endPoint)

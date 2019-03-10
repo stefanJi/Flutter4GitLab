@@ -173,7 +173,7 @@ class _MrApproveState extends State<MrApprove>
 
   Widget _buildActions(bool iHadApproval) {
     return RaisedButton(
-      onPressed: () => _approveOrUnApprove(iHadApproval),
+      onPressed: () => _approveOrUnApprove(!iHadApproval),
       child: Text(iHadApproval ? "UnApprove" : "Approve"),
     );
   }

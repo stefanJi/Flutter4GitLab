@@ -21,8 +21,11 @@ class _CommitState extends CommListState {
   @override
   Widget childBuild(BuildContext context, int index) {
     final Commit commit = Commit.fromJson(data[index]);
-    return ListTile(
-      title: Text(commit.title),
+    return Card(
+      child: ListTile(
+        title: Text(commit.title),
+        subtitle: Text(commit.createdAt),
+      ),
     );
   }
 }

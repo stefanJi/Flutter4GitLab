@@ -19,11 +19,11 @@ dependencies:
   url_launcher: ^4.0.1
   flutter_html_textview: ^0.2.6
   sentry: any
+  flutter_stetho: ^0.2.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_stetho: ^0.2.2
 
 
 # For information on the generic Dart part of this file, see the
