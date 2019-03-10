@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:sentry/sentry.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-ThemeData THEME_DARK = ThemeData(
+ThemeData themeDark = ThemeData(
     primaryColor: Colors.black,
     accentColor: Colors.deepOrange,
     brightness: Brightness.dark);
-ThemeData THEME_LIGHT = ThemeData(
+ThemeData themeLight = ThemeData(
     primaryColor: Colors.deepOrange,
     accentColor: Colors.black,
     brightness: Brightness.light);
@@ -47,7 +47,7 @@ class MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    themeData = widget.isDark ? THEME_DARK : THEME_LIGHT;
+    themeData = widget.isDark ? themeDark : themeLight;
   }
 
   @override
@@ -64,7 +64,7 @@ class MyAppState extends State<MyApp> {
   }
 
   themeChanger(bool isDark) {
-    ThemeData t = isDark ? THEME_DARK : THEME_LIGHT;
+    ThemeData t = isDark ? themeDark : themeLight;
     setState(() {
       themeData = t;
     });

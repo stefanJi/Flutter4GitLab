@@ -39,6 +39,13 @@ class GitlabClient extends http.BaseClient {
         headers: headers, body: body, encoding: encoding);
   }
 
+  @override
+  Future<http.Response> put(url,
+      {Map<String, String> headers, body, Encoding encoding}) {
+    return super.put(getRequestUrl(url),
+        headers: headers, body: body, encoding: encoding);
+  }
+
   String getRequestUrl(String endPoint) =>
       "$globalHOST/api/$API_VERSION/$endPoint";
 }

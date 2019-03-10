@@ -36,6 +36,8 @@ class MergeRequest {
   TimeStats timeStats;
   bool squash;
   int approvalsBeforeMerge;
+  int divergedCommitsCount;
+  bool rebaseInProgress;
 
   MergeRequest(
       {this.id,
@@ -74,7 +76,9 @@ class MergeRequest {
       this.webUrl,
       this.timeStats,
       this.squash,
-      this.approvalsBeforeMerge});
+      this.approvalsBeforeMerge,
+      this.divergedCommitsCount,
+      this.rebaseInProgress});
 
   MergeRequest.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -122,59 +126,9 @@ class MergeRequest {
         ? new TimeStats.fromJson(json['time_stats'])
         : null;
     squash = json['squash'];
-    approvalsBeforeMerge = json['approvals_before_merge'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['iid'] = this.iid;
-    data['project_id'] = this.projectId;
-    data['title'] = this.title;
-    data['description'] = this.description;
-    data['state'] = this.state;
-    if (this.mergedBy != null) {
-      data['merged_by'] = this.mergedBy.toJson();
-    }
-    data['merged_at'] = this.mergedAt;
-    data['closed_by'] = this.closedBy;
-    data['closed_at'] = this.closedAt;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    data['target_branch'] = this.targetBranch;
-    data['source_branch'] = this.sourceBranch;
-    data['upvotes'] = this.upvotes;
-    data['downvotes'] = this.downvotes;
-    if (this.author != null) {
-      data['author'] = this.author.toJson();
-    }
-    if (this.assignee != null) {
-      data['assignee'] = this.assignee.toJson();
-    }
-    data['source_project_id'] = this.sourceProjectId;
-    data['target_project_id'] = this.targetProjectId;
-    data['labels'] = this.labels;
-    data['work_in_progress'] = this.workInProgress;
-    if (this.milestone != null) {
-      data['milestone'] = this.milestone.toJson();
-    }
-    data['merge_when_pipeline_succeeds'] = this.mergeWhenPipelineSucceeds;
-    data['merge_status'] = this.mergeStatus;
-    data['sha'] = this.sha;
-    data['merge_commit_sha'] = this.mergeCommitSha;
-    data['user_notes_count'] = this.userNotesCount;
-    data['discussion_locked'] = this.discussionLocked;
-    data['should_remove_source_branch'] = this.shouldRemoveSourceBranch;
-    data['force_remove_source_branch'] = this.forceRemoveSourceBranch;
-    data['allow_collaboration'] = this.allowCollaboration;
-    data['allow_maintainer_to_push'] = this.allowMaintainerToPush;
-    data['web_url'] = this.webUrl;
-    if (this.timeStats != null) {
-      data['time_stats'] = this.timeStats.toJson();
-    }
-    data['squash'] = this.squash;
-    data['approvals_before_merge'] = this.approvalsBeforeMerge;
-    return data;
+    approvalsBeforeMerge = json['approvals_before_merge'] ?? 0;
+    divergedCommitsCount = json['diverged_commits_count'] ?? 0;
+    rebaseInProgress = json['rebase_in_progress'] ?? false;
   }
 }
 
