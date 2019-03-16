@@ -2,6 +2,7 @@ import 'package:F4Lab/api.dart';
 import 'package:F4Lab/model/merge_request.dart';
 import 'package:F4Lab/page/logic_widget/approve.dart';
 import 'package:F4Lab/page/logic_widget/merge_request_action.dart';
+import 'package:F4Lab/page/logic_widget/merge_request_jobs.dart';
 import 'package:F4Lab/page/tabs/commit_tab.dart';
 import 'package:flutter/material.dart';
 
@@ -41,14 +42,15 @@ class PageMrState extends State<PageMrDetail> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-        length: 2,
+        length: 3,
         child: Scaffold(
           appBar: AppBar(
             centerTitle: false,
             title: Text(widget._mrTitle),
             bottom: TabBar(tabs: [
-              Tab(text: "info"),
-              Tab(text: "commit"),
+              Tab(text: "Overview"),
+              Tab(text: "Commits"),
+              Tab(text: "Jobs",)
             ]),
           ),
           body: _mergeRequest == null
@@ -56,6 +58,7 @@ class PageMrState extends State<PageMrDetail> {
               : TabBarView(children: [
                   _buildInfo(),
                   CommitTab(_mergeRequest.projectId, _mergeRequest.iid),
+                  MergeRequestJobsTab(_mergeRequest.projectId, _mergeRequest.iid)
                 ]),
         ));
   }

@@ -1,3 +1,4 @@
+import 'package:F4Lab/model/pipeline.dart';
 import 'package:F4Lab/model/runner.dart';
 import 'package:F4Lab/model/user.dart';
 
@@ -132,31 +133,6 @@ class Commit {
     data['message'] = this.message;
     data['short_id'] = this.shortId;
     data['title'] = this.title;
-    return data;
-  }
-}
-
-class Pipeline {
-  int id;
-  String ref;
-  String sha;
-  String status;
-
-  Pipeline({this.id, this.ref, this.sha, this.status});
-
-  Pipeline.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    ref = json['ref'];
-    sha = json['sha'];
-    status = json['status'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['ref'] = this.ref;
-    data['sha'] = this.sha;
-    data['status'] = this.status;
     return data;
   }
 }

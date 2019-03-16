@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:F4Lab/gitlab_client.dart';
 import 'package:F4Lab/model/approvals.dart' hide User;
+import 'package:F4Lab/model/jobs.dart';
 import 'package:F4Lab/model/merge_request.dart';
 import 'package:F4Lab/model/user.dart';
 import 'package:http/http.dart';
@@ -32,6 +33,12 @@ class ApiEndPoint {
   static String rebaseMR(int projectId, int mrIId) =>
       "projects/$projectId/merge_requests/$mrIId/rebase";
 
+  static String mergeRequestPipelines(int projectId, int mrIId) =>
+      "projects/$projectId/merge_requests/$mrIId/pipelines";
+
+  static String pipelineJobs(int projectId, int pipelineId) =>
+      "projects/$projectId/pipelines/$pipelineId/jobs";
+
   static String mergeMR(
     int projectId,
     int mrIId, {
@@ -53,11 +60,21 @@ class ApiEndPoint {
 class ApiService {
   static bool respStatusIsOk(int statusCode) => (statusCode ~/ 100) == 2;
 
+  static dynamic respConvertToUtf8(Response resp) =>
+      utf8.decode(resp.bodyBytes);
+
   static Map<String, dynamic> respConvertToMap(Response resp) {
     if (!respStatusIsOk(resp.statusCode)) {
       throw Exception("Response error: ${resp.statusCode} ${resp.body}");
     }
-    return jsonDecode(utf8.decode(resp.bodyBytes));
+    return jsonDecode(respConvertToUtf8(resp));
+  }
+
+  static List<dynamic> respConvertToList(Response resp) {
+    if (!respStatusIsOk(resp.statusCode)) {
+      throw Exception("Response error: ${resp.statusCode} ${resp.body}");
+    }
+    return jsonDecode(respConvertToUtf8(resp));
   }
 
   static Future<User> getAuthUser() async {
@@ -136,6 +153,20 @@ class ApiService {
     final client = GitlabClient.newInstance();
     return client.put(endPoint).then((resp) {
       return ApiResp(respStatusIsOk(resp.statusCode));
+    }).catchError((err) {
+      return ApiResp(false);
+    }).whenComplete(client.close);
+  }
+
+  static Future<ApiResp<List<Jobs>>> pipelineJobs(
+      int projectId, int pipelineId) {
+    final endPoint = ApiEndPoint.pipelineJobs(projectId, pipelineId);
+    final client = GitlabClient.newInstance();
+    return client.get(endPoint).then((resp) {
+      return ApiResp(
+        respStatusIsOk(resp.statusCode),
+        respConvertToList(resp).map((item) => Jobs.fromJson(item)).toList(),
+      );
     }).catchError((err) {
       return ApiResp(false);
     }).whenComplete(client.close);
