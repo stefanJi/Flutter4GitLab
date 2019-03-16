@@ -1,7 +1,7 @@
+import 'package:F4Lab/api.dart';
 import 'package:F4Lab/model/merge_request.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:F4Lab/api.dart';
 
 class MergeRequestAction extends StatefulWidget {
   final MergeRequest mr;
@@ -60,6 +60,10 @@ class _MergeReqestState extends State<MergeRequestAction> {
     } else if (mr.workInProgress) {
       title = "Remove WIP";
       onPress = _removeWIP;
+    } else if (mr.state == "merged") {
+      _canMerge = false;
+      title = "Merged";
+      onPress = null;
     } else {
       _canMerge = true;
       title = "Merge";
