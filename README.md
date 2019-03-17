@@ -2,20 +2,15 @@
 
 # F4Lab
 
-> Flutter for GitLab. Support **Android** & **IOS**.
+> A glitlab client made by flutter. Support Android & IOS.
 
 [![Build Status](https://travis-ci.org/stefanJi/Flutter4GitLab.svg?branch=master)](https://travis-ci.org/stefanJi/Flutter4GitLab) 
 
 [Download Release Apk](https://github.com/stefanJi/Flutter4GitLab/releases)
 
-||||
-|:-:|:-:|:-:|
-| ![First](./art/flutter_gitlab_nav_light.png) | ![Sec](./art/flutter_gitlab_nav.png) | ![Third](./art/flutter_gitlab_project.png) |
-
-
-|||
-|:-:|:-:|
-|![nav](./art/flutter_gitlab_merge.png)|![mr list](./art/flutter_gitlab_pipeline.png)|
+|light nav|dark nav|project|merge requert|pipeline|
+|:-:|:-:|:-:|:-:|:-:|
+| ![First](./art/flutter_gitlab_nav_light.png) | ![Sec](./art/flutter_gitlab_nav.png) | ![Third](./art/flutter_gitlab_project.png) |![nav](./art/flutter_gitlab_merge.png)|![mr list](./art/flutter_gitlab_pipeline.png)|
 
 ### Run Project
 
