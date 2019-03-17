@@ -13,9 +13,9 @@
 | ![First](./art/flutter_gitlab_nav_light.png) | ![Sec](./art/flutter_gitlab_nav.png) | ![Third](./art/flutter_gitlab_project.png) |
 
 
-||||
-|:-:|:-:|:-:|
-|![nav](./art/screenshot_mr_list.png)|![mr list](./art/screenshot_jobs.png)|![merge mr](./art/screenshot_mr.png)|
+|||
+|:-:|:-:|
+|![nav](./art/flutter_gitlab_merge.png)|![mr list](./art/flutter_gitlab_pipeline.png)|
 
 ### Run Project
 
@@ -48,7 +48,7 @@ Yet another **open-source** GitLab client app but unlike any other app, F4Lab is
   - [ ] Open/close Issues/MRs
   - [ ] Comment on Issues/MRs
   - [ ] Manage Issue/PR comments
-  - [ ] Run pipeline stage
+  - [x] Run pipeline jobs
   - [x] Rebase when merge request
   - [x] Merge MRs
   - [x] MRs statuses
@@ -77,7 +77,7 @@ Yet another **open-source** GitLab client app but unlike any other app, F4Lab is
 - [**url_launcher**](https://pub.dartlang.org/packages/url_launcher)
 - [**sentry**](https://pub.dartlang.org/packages/sentry)
 - [**flutter_stetho**](https://pub.dartlang.org/packages/flutter_stetho)
-- [**flutter_html_textview*](https://pub.dartlang.org/packages/flutter_html_textview)
+- [**flutter_html_textview**](https://pub.dartlang.org/packages/flutter_html_textview)
 
 ## Contribution
 

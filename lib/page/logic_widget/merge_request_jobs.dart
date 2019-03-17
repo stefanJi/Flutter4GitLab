@@ -73,7 +73,6 @@ class _PipelineJobsState extends State<_PipelineJobs>
   }
 
   Widget _buildStatus(Jobs job) {
-    final status = Text(job.status);
     return Chip(
       label: Text(
         job.status,
