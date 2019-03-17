@@ -1,10 +1,12 @@
+import 'package:F4Lab/util/date_util.dart';
+
 class Commit {
   String id;
   String shortId;
   String title;
   String authorName;
   String authorEmail;
-  String createdAt;
+  DateTime createdAt;
   String message;
 
   Commit(
@@ -22,7 +24,7 @@ class Commit {
     title = json['title'];
     authorName = json['author_name'];
     authorEmail = json['author_email'];
-    createdAt = json['created_at'];
+    createdAt = string2Datetime(json['created_at']);
     message = json['message'];
   }
 

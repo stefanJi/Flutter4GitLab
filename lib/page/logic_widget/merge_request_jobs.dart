@@ -1,6 +1,7 @@
 import 'package:F4Lab/api.dart';
 import 'package:F4Lab/model/jobs.dart';
 import 'package:F4Lab/model/pipeline.dart';
+import 'package:F4Lab/util/date_util.dart';
 import 'package:F4Lab/widget/comm_ListView.dart';
 import 'package:flutter/material.dart';
 
@@ -39,8 +40,7 @@ class _PipelineJobs extends StatefulWidget {
   State<StatefulWidget> createState() => _PipelineJobsState();
 }
 
-class _PipelineJobsState extends State<_PipelineJobs>
-    with AutomaticKeepAliveClientMixin {
+class _PipelineJobsState extends State<_PipelineJobs> {
   bool _loading = true;
   List<Jobs> _jobs;
 
@@ -56,12 +56,17 @@ class _PipelineJobsState extends State<_PipelineJobs>
   };
 
   _loadJobs() async {
+    setState(() {
+      _loading = true;
+      _jobs = null;
+    });
     final apiResp =
         await ApiService.pipelineJobs(widget.projectId, widget.pipelineId);
     if (mounted) {
       setState(() {
         _loading = false;
-        _jobs = apiResp.data;
+        _jobs = apiResp.data
+          ..sort((j1, j2) => j2.createdAt.compareTo(j1.createdAt));
       });
     }
   }
@@ -154,7 +159,8 @@ class _PipelineJobsState extends State<_PipelineJobs>
                                               fontSize: 18),
                                         ),
                                         Padding(
-                                          child: Text(job.createdAt),
+                                          child: Text(
+                                              datetime2String(job.createdAt)),
                                           padding: const EdgeInsets.all(5),
                                         ),
                                         Padding(
@@ -172,8 +178,15 @@ class _PipelineJobsState extends State<_PipelineJobs>
                 )));
   }
 
-  _doAction(projectId, int id, String s) {}
-
-  @override
-  bool get wantKeepAlive => true;
+  _doAction(projectId, int jobId, String action) async {
+    _loading = true;
+    final resp = await ApiService.triggerPipelineJob(projectId, jobId, action);
+    if (mounted) {
+      setState(() => _loading = false);
+    }
+    if (!resp.success) {
+    } else {
+      _loadJobs();
+    }
+  }
 }

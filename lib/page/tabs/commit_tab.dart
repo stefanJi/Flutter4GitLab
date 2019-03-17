@@ -1,5 +1,6 @@
 import 'package:F4Lab/api.dart' show ApiEndPoint;
 import 'package:F4Lab/model/commit.dart';
+import 'package:F4Lab/util/date_util.dart';
 import 'package:F4Lab/widget/comm_ListView.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -24,7 +25,7 @@ class _CommitState extends CommListState {
     return Card(
       child: ListTile(
         title: Text(commit.title),
-        subtitle: Text(commit.createdAt),
+        subtitle: Text(datetime2String(commit.createdAt)),
       ),
     );
   }

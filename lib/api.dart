@@ -55,6 +55,9 @@ class ApiEndPoint {
 
   static String cancelMergeMrWhenPipelineSuccess(int projectId, int mrIId) =>
       "projects/$projectId/merge_requests/$mrIId/cancel_merge_when_pipeline_succeeds";
+
+  static String triggerPipelineJob(int projectId, int jobId, String action) =>
+      "projects/$projectId/jobs/$jobId/$action";
 }
 
 class ApiService {
@@ -162,13 +165,26 @@ class ApiService {
       int projectId, int pipelineId) {
     final endPoint = ApiEndPoint.pipelineJobs(projectId, pipelineId);
     final client = GitlabClient.newInstance();
-    return client.get(endPoint).then((resp) {
-      return ApiResp(
-        respStatusIsOk(resp.statusCode),
-        respConvertToList(resp).map((item) => Jobs.fromJson(item)).toList(),
-      );
-    }).catchError((err) {
-      return ApiResp(false);
-    }).whenComplete(client.close);
+    return client
+        .get(endPoint)
+        .then((resp) {
+          return ApiResp(
+            respStatusIsOk(resp.statusCode),
+            respConvertToList(resp).map((item) => Jobs.fromJson(item)).toList(),
+          );
+        })
+        .catchError((err) => ApiResp(false))
+        .whenComplete(client.close);
+  }
+
+  static Future<ApiResp> triggerPipelineJob(
+      int projectId, int jobId, String action) {
+    final endPoint = ApiEndPoint.triggerPipelineJob(projectId, jobId, action);
+    final client = GitlabClient.newInstance();
+    return client
+        .post(endPoint)
+        .then((resp) => ApiResp(respStatusIsOk(resp.statusCode)))
+        .catchError((err) => ApiResp(false))
+        .whenComplete(client.close);
   }
 }

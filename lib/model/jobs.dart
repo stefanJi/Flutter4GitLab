@@ -1,11 +1,12 @@
 import 'package:F4Lab/model/pipeline.dart';
 import 'package:F4Lab/model/runner.dart';
 import 'package:F4Lab/model/user.dart';
+import 'package:F4Lab/util/date_util.dart';
 
 class Jobs {
   Commit commit;
   String coverage;
-  String createdAt;
+  DateTime createdAt;
   String startedAt;
   String finishedAt;
   double duration;
@@ -46,7 +47,7 @@ class Jobs {
     commit =
         json['commit'] != null ? new Commit.fromJson(json['commit']) : null;
     coverage = json['coverage'];
-    createdAt = json['created_at'];
+    createdAt = string2Datetime(json['created_at']);
     startedAt = json['started_at'];
     finishedAt = json['finished_at'];
     duration = json['duration'];
