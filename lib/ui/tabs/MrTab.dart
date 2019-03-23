@@ -1,6 +1,6 @@
 import 'package:F4Lab/model/merge_request.dart';
-import 'package:F4Lab/page/PageMrDetail.dart';
-import 'package:F4Lab/page/logic_widget/approve.dart';
+import 'package:F4Lab/ui/page/PageMrDetail.dart';
+import 'package:F4Lab/ui/logic_widget/approve.dart';
 import 'package:F4Lab/util/widget_util.dart';
 import 'package:F4Lab/widget/comm_ListView.dart';
 import 'package:flutter/material.dart';

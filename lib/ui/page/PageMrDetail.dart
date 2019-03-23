@@ -1,9 +1,9 @@
 import 'package:F4Lab/api.dart';
 import 'package:F4Lab/model/merge_request.dart';
-import 'package:F4Lab/page/logic_widget/approve.dart';
-import 'package:F4Lab/page/logic_widget/merge_request_action.dart';
-import 'package:F4Lab/page/logic_widget/merge_request_jobs.dart';
-import 'package:F4Lab/page/tabs/commit_tab.dart';
+import 'package:F4Lab/ui/logic_widget/approve.dart';
+import 'package:F4Lab/ui/logic_widget/merge_request_action.dart';
+import 'package:F4Lab/ui/logic_widget/merge_request_jobs.dart';
+import 'package:F4Lab/ui/tabs/commit_tab.dart';
 import 'package:flutter/material.dart';
 
 class PageMrDetail extends StatefulWidget {
@@ -50,7 +50,9 @@ class PageMrState extends State<PageMrDetail> {
             bottom: TabBar(tabs: [
               Tab(text: "Overview"),
               Tab(text: "Commits"),
-              Tab(text: "Jobs",)
+              Tab(
+                text: "Jobs",
+              )
             ]),
           ),
           body: _mergeRequest == null
@@ -58,7 +60,8 @@ class PageMrState extends State<PageMrDetail> {
               : TabBarView(children: [
                   _buildInfo(),
                   CommitTab(_mergeRequest.projectId, _mergeRequest.iid),
-                  MergeRequestJobsTab(_mergeRequest.projectId, _mergeRequest.iid)
+                  MergeRequestJobsTab(
+                      _mergeRequest.projectId, _mergeRequest.iid)
                 ]),
         ));
   }
