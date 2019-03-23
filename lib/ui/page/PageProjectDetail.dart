@@ -1,4 +1,4 @@
-import 'package:F4Lab/page/tabs/MrTab.dart';
+import 'package:F4Lab/ui/tabs/MrTab.dart';
 import 'package:flutter/material.dart';
 
 class PageProjectDetail extends StatefulWidget {

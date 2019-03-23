@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:F4Lab/gitlab_client.dart';
 import 'package:F4Lab/model/approvals.dart' hide User;
+import 'package:F4Lab/model/diff.dart';
 import 'package:F4Lab/model/jobs.dart';
 import 'package:F4Lab/model/merge_request.dart';
 import 'package:F4Lab/model/user.dart';
@@ -58,6 +59,9 @@ class ApiEndPoint {
 
   static String triggerPipelineJob(int projectId, int jobId, String action) =>
       "projects/$projectId/jobs/$jobId/$action";
+
+  static String commitDiff(int projectId, String sha) =>
+      "projects/$projectId/repository/commits/$sha/diff";
 }
 
 class ApiService {
@@ -184,6 +188,20 @@ class ApiService {
     return client
         .post(endPoint)
         .then((resp) => ApiResp(respStatusIsOk(resp.statusCode)))
+        .catchError((err) => ApiResp(false))
+        .whenComplete(client.close);
+  }
+
+  static Future<ApiResp<List<Diff>>> commitDiff(int projectId, String sha) {
+    final endPoint = ApiEndPoint.commitDiff(projectId, sha);
+    final client = GitlabClient.newInstance();
+    return client
+        .get(endPoint)
+        .then((resp) => ApiResp(
+            respStatusIsOk(resp.statusCode),
+            respConvertToList(resp)
+                .map((item) => Diff.fromJson(item))
+                .toList()))
         .catchError((err) => ApiResp(false))
         .whenComplete(client.close);
   }

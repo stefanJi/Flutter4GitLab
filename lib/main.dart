@@ -1,6 +1,6 @@
 import 'package:F4Lab/const.dart';
-import 'package:F4Lab/page/PageConfig.dart';
-import 'package:F4Lab/page/PageHome.dart';
+import 'package:F4Lab/ui/page/PageConfig.dart';
+import 'package:F4Lab/ui/page/PageHome.dart';
 import 'package:flutter/material.dart';
 import 'package:sentry/sentry.dart';
 import 'package:shared_preferences/shared_preferences.dart';

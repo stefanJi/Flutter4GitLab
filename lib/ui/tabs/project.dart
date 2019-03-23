@@ -1,5 +1,5 @@
 import 'package:F4Lab/model/project.dart' as model;
-import 'package:F4Lab/page/PageProjectDetail.dart';
+import 'package:F4Lab/ui/page/PageProjectDetail.dart';
 import 'package:F4Lab/widget/comm_ListView.dart';
 import 'package:flutter/material.dart';
 

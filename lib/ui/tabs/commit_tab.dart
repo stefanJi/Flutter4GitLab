@@ -1,5 +1,6 @@
 import 'package:F4Lab/api.dart' show ApiEndPoint;
 import 'package:F4Lab/model/commit.dart';
+import 'package:F4Lab/ui/page/PageCommitDiff.dart';
 import 'package:F4Lab/util/date_util.dart';
 import 'package:F4Lab/widget/comm_ListView.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,9 @@ class CommitTab extends CommListWidget {
 }
 
 class _CommitState extends CommListState {
-  _CommitState(int projectId, int mrIId)
+  final int projectId;
+
+  _CommitState(this.projectId, int mrIId)
       : super(ApiEndPoint.mergeRequestCommit(projectId, mrIId));
 
   @override
@@ -26,6 +29,10 @@ class _CommitState extends CommListState {
       child: ListTile(
         title: Text(commit.title),
         subtitle: Text(datetime2String(commit.createdAt)),
+        onTap: () {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => PageCommitDiff(projectId, commit)));
+        },
       ),
     );
   }
