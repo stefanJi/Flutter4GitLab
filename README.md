@@ -8,9 +8,13 @@
 
 [Download Release Apk](https://github.com/stefanJi/Flutter4GitLab/releases)
 
-|light nav|dark nav|project|merge requert|pipeline|
-|:-:|:-:|:-:|:-:|:-:|
-| ![First](./art/flutter_gitlab_nav_light.png) | ![Sec](./art/flutter_gitlab_nav.png) | ![Third](./art/flutter_gitlab_project.png) |![nav](./art/flutter_gitlab_merge.png)|![mr list](./art/flutter_gitlab_pipeline.png)|
+|nav|project|merge requests|
+|:-:|:-:|:-:|
+| ![](./art/1.png) | ![](./art/2.png) | ![](./art/3.png) |
+
+|merge request|commit|diff|
+|:-:|:-:|:-:|
+| ![](./art/4.png) | ![](./art/5.png) | ![](./art/6.png) |
 
 ### Run Project
 
@@ -31,18 +35,12 @@ Yet another **open-source** GitLab client app but unlike any other app, F4Lab is
   - [ ] Markdown and code highlighting support
   - [ ] Search Users/Orgs, Repos, Issues/MRs & Code.
 - **Repositories**
-  - [ ] Edit, Create & Delete files (commit)
-  - [ ] Edit, Create & Delete files (Project Columns Cards)
   - [ ] Search Repos
   - [ ] Browse and search Repos
   - [x] See your public, private and forked Repos
   - [ ] Filter Branches and Commits
-- **Issues and Pull Requests**
-  - [ ] Search Issues/MRs
-  - [ ] Filter Issues/MRs
-  - [ ] Open/close Issues/MRs
-  - [ ] Comment on Issues/MRs
-  - [ ] Manage Issue/PR comments
+- **Issues and Merge Requests**
+  - [x] Commit code diff
   - [x] Run pipeline jobs
   - [x] Rebase when merge request
   - [x] Merge MRs
