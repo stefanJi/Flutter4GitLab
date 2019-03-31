@@ -7,9 +7,7 @@ class Todo extends CommListWidget {
   State<StatefulWidget> createState() => TodoState();
 }
 
-class TodoState extends CommListState {
-  TodoState() : super("todos?state=pending");
-
+class TodoState extends CommListState<Todo> {
   @override
   Widget childBuild(BuildContext context, int index) {
     final todoItem = TodoModel.Todo.fromJson(data[index]);
@@ -37,4 +35,7 @@ class TodoState extends CommListState {
       children: <Widget>[Text(todoItem.createdAt)],
     ));
   }
+
+  @override
+  String endPoint() => "todos?state=pending";
 }

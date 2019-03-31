@@ -9,9 +9,7 @@ class Groups extends CommListWidget {
   State<StatefulWidget> createState() => _State();
 }
 
-class _State extends CommListState {
-  _State() : super("groups");
-
+class _State extends CommListState<Groups> {
   @override
   Widget build(BuildContext context) {
     return data != null
@@ -60,4 +58,7 @@ class _State extends CommListState {
       ),
     );
   }
+
+  @override
+  String endPoint() => "groups";
 }

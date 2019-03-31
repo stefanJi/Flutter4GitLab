@@ -1,6 +1,6 @@
 import 'package:F4Lab/model/merge_request.dart';
-import 'package:F4Lab/ui/page/PageMrDetail.dart';
 import 'package:F4Lab/ui/logic_widget/approve.dart';
+import 'package:F4Lab/ui/page/PageMrDetail.dart';
 import 'package:F4Lab/util/widget_util.dart';
 import 'package:F4Lab/widget/comm_ListView.dart';
 import 'package:flutter/material.dart';
@@ -8,19 +8,15 @@ import 'package:flutter/rendering.dart';
 
 class MrTab extends CommListWidget {
   final int projectId;
+  final String state;
 
-  MrTab(this.projectId);
+  MrTab(this.projectId, {this.state});
 
   @override
-  State<StatefulWidget> createState() => _MrState(projectId);
+  State<StatefulWidget> createState() => _MrState();
 }
 
-class _MrState extends CommListState {
-  final int projectId;
-
-  _MrState(this.projectId)
-      : super("projects/$projectId/merge_requests?state=opened");
-
+class _MrState extends CommListState<MrTab> {
   @override
   Widget childBuild(BuildContext context, int index) {
     return _buildItem(data[index]);
@@ -87,4 +83,8 @@ class _MrState extends CommListState {
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => PageMrDetail(mr.title, mr.projectId, mr.iid)));
   }
+
+  @override
+  String endPoint() =>
+      "projects/${widget.projectId}/merge_requests?state=${widget.state ?? "opened"}";
 }
