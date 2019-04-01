@@ -13,15 +13,10 @@ class CommitTab extends CommListWidget {
   CommitTab(this.projectId, this.mrIId);
 
   @override
-  State<StatefulWidget> createState() => _CommitState(projectId, mrIId);
+  State<StatefulWidget> createState() => _CommitState();
 }
 
-class _CommitState extends CommListState {
-  final int projectId;
-
-  _CommitState(this.projectId, int mrIId)
-      : super(ApiEndPoint.mergeRequestCommit(projectId, mrIId));
-
+class _CommitState extends CommListState<CommitTab> {
   @override
   Widget childBuild(BuildContext context, int index) {
     final Commit commit = Commit.fromJson(data[index]);
@@ -31,9 +26,13 @@ class _CommitState extends CommListState {
         subtitle: Text(datetime2String(commit.createdAt)),
         onTap: () {
           Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => PageCommitDiff(projectId, commit)));
+              builder: (context) => PageCommitDiff(widget.projectId, commit)));
         },
       ),
     );
   }
+
+  @override
+  String endPoint() =>
+      ApiEndPoint.mergeRequestCommit(widget.projectId, widget.mrIId);
 }

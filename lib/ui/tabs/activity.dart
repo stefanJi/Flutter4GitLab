@@ -1,10 +1,10 @@
 import 'dart:convert';
 
+import 'package:F4Lab/gitlab_client.dart';
+import 'package:F4Lab/widget/comm_ListView.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:F4Lab/gitlab_client.dart';
 import 'package:xml/xml.dart';
-import 'package:F4Lab/widget/comm_ListView.dart';
 
 class Activity extends CommListWidget {
   Activity() : super(canPullUp: false);
@@ -13,9 +13,7 @@ class Activity extends CommListWidget {
   State<StatefulWidget> createState() => FeedState();
 }
 
-class FeedState extends CommListState {
-  FeedState() : super("");
-
+class FeedState extends CommListState<Activity> {
   @override
   loadData({nextPage: 1}) async {
     final url = "dashboard/projects.atom";
@@ -51,4 +49,7 @@ class FeedState extends CommListState {
       ),
     );
   }
+
+  @override
+  String endPoint() => null;
 }

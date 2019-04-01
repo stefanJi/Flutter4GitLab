@@ -12,21 +12,19 @@ class MergeRequestJobsTab extends CommListWidget {
   MergeRequestJobsTab(this.projectId, this.mrIId);
 
   @override
-  State<StatefulWidget> createState() => _JobsState(projectId, mrIId);
+  State<StatefulWidget> createState() => _JobsState();
 }
 
-class _JobsState extends CommListState {
-  final int mrIId;
-  final int projectId;
-
-  _JobsState(this.projectId, this.mrIId)
-      : super(ApiEndPoint.mergeRequestPipelines(projectId, mrIId));
-
+class _JobsState extends CommListState<MergeRequestJobsTab> {
   @override
   Widget childBuild(BuildContext context, int index) {
     final pipeline = Pipeline.fromJson(data[index]);
-    return _PipelineJobs(projectId, pipeline.id, index);
+    return _PipelineJobs(widget.projectId, pipeline.id, index);
   }
+
+  @override
+  String endPoint() =>
+      ApiEndPoint.mergeRequestPipelines(widget.projectId, widget.mrIId);
 }
 
 class _PipelineJobs extends StatefulWidget {

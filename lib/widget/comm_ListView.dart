@@ -19,16 +19,8 @@ abstract class CommListWidget extends StatefulWidget {
       {this.canPullDown = true, this.canPullUp = true, this.withPage = true});
 }
 
-abstract class CommListState extends State<CommListWidget>
-    with
-        AutomaticKeepAliveClientMixin<CommListWidget>,
-        SingleTickerProviderStateMixin {
-  @override
-  bool get wantKeepAlive => true;
-
-  ///[_endPoint] like: merge_request?status=open
-  final String _endPoint;
-
+abstract class CommListState<T extends CommListWidget> extends State<T>
+    with SingleTickerProviderStateMixin {
   List<dynamic> data;
   int page;
   int total;
@@ -39,11 +31,15 @@ abstract class CommListState extends State<CommListWidget>
 
   GitlabClient _client;
 
-  CommListState(this._endPoint);
+  CommListState();
+
+  /// eg: merge_request?status=open
+  String endPoint();
 
   loadData({nextPage: 1}) async {
     _client = GitlabClient.newInstance();
     var url;
+    final _endPoint = endPoint() ?? "";
     if (widget.withPage) {
       if (!_endPoint.contains("?")) {
         url = "$_endPoint?page=$nextPage&per_page=10";
@@ -53,7 +49,6 @@ abstract class CommListState extends State<CommListWidget>
     } else {
       url = _endPoint;
     }
-    print("request url: ${_client.getRequestUrl(url)}");
     final remoteData = await _client
         .get(url)
         .then((resp) {
@@ -124,9 +119,14 @@ abstract class CommListState extends State<CommListWidget>
   Widget childBuild(BuildContext context, int index);
 
   Widget buildEmptyView() {
-    return Center(
-        child: Text.rich(
-            TextSpan(text: "🎉 No More 🎉", style: TextStyle(fontSize: 24))));
+    return GestureDetector(
+      child: Center(
+          child: Text.rich(
+              TextSpan(text: "🎉 No More 🎉", style: TextStyle(fontSize: 24)))),
+      onTap: () {
+        _loadNew();
+      },
+    );
   }
 
   Widget buildDataListView() {

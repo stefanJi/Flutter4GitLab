@@ -34,13 +34,10 @@ class ProjectTab extends CommListWidget {
   ProjectTab(this.type);
 
   @override
-  State<StatefulWidget> createState() => ProjectState(
-      "projects?order_by=updated_at&per_page=10&simple=true&$type");
+  State<StatefulWidget> createState() => ProjectState();
 }
 
-class ProjectState extends CommListState {
-  ProjectState(String endPoint) : super(endPoint);
-
+class ProjectState extends CommListState<ProjectTab> {
   @override
   Widget childBuild(BuildContext context, int index) {
     final item = model.Project.fromJson(data[index]);
@@ -80,4 +77,8 @@ class ProjectState extends CommListState {
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => PageProjectDetail(name, projectId)));
   }
+
+  @override
+  String endPoint() =>
+      "projects?order_by=updated_at&per_page=10&simple=true&${widget.type}";
 }
