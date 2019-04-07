@@ -7,7 +7,7 @@ class MergeRequest {
   String state;
   MergedBy mergedBy;
   String mergedAt;
-  String closedBy;
+  Author closedBy;
   String closedAt;
   String createdAt;
   String updatedAt;
@@ -91,7 +91,8 @@ class MergeRequest {
         ? new MergedBy.fromJson(json['merged_by'])
         : null;
     mergedAt = json['merged_at'];
-    closedBy = json['closed_by'];
+    closedBy =
+        json['closed_by'] != null ? Author.fromJson(json['closed_by']) : null;
     closedAt = json['closed_at'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
