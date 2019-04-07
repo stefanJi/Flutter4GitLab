@@ -1,5 +1,5 @@
 const APP_NAME = 'F4Lab';
-const APP_VERSION = '1.0.9';
+const APP_VERSION = '1.1.0';
 const APP_LEGEND = 'A GitLab Client by Flutter.';
 const KEY_ACCESS_TOKEN = 'key.access.token';
 const KEY_HOST = 'key.host';
