@@ -46,7 +46,10 @@ class _MrState extends CommListState<MrTab> {
           children: <Widget>[
             ListTile(
               title: Text(mr.title),
-              subtitle: Text(branch),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[Chip(label: Text(branch)), Text(mr.webUrl)],
+              ),
               leading: mr.mergeStatus == 'can_be_merged'
                   ? Icon(
                       Icons.done,
