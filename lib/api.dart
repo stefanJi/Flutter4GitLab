@@ -16,8 +16,15 @@ class ApiResp<T> {
 }
 
 class ApiEndPoint {
-  static String openedMergeRequest(int projectId) =>
-      "projects/$projectId/merge_requests?state=opened";
+  static const merge_request_states = ["opened", "closed", "locked", "merged"];
+  static const merge_request_scopes = ["all", "assigned_to_me"];
+
+  /// Get a project's all merge requests with state and scope filter
+  /// [state] one of [merge_request_states]
+  /// [scope] one of [merge_request_scopes]
+  ///
+  static String mergeRequests(int projectId, {String state, String scope}) =>
+      "projects/$projectId/merge_requests?state=${state ?? "opened"}&scope=${scope ?? "all"}";
 
   static String singleMergeRequest(int projectId, int mrIId) =>
       "projects/$projectId/merge_requests/$mrIId?include_rebase_in_progress=true&include_diverged_commits_count=true";

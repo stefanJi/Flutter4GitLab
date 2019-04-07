@@ -1,3 +1,4 @@
+import 'package:F4Lab/api.dart';
 import 'package:F4Lab/model/merge_request.dart';
 import 'package:F4Lab/ui/logic_widget/approve.dart';
 import 'package:F4Lab/ui/page/PageMrDetail.dart';
@@ -8,9 +9,11 @@ import 'package:flutter/rendering.dart';
 
 class MrTab extends CommListWidget {
   final int projectId;
-  final String state;
+  final String mrState;
+  final String scope;
+  final Key key;
 
-  MrTab(this.projectId, {this.state});
+  MrTab(this.projectId, {this.mrState, this.key, this.scope});
 
   @override
   State<StatefulWidget> createState() => _MrState();
@@ -85,6 +88,6 @@ class _MrState extends CommListState<MrTab> {
   }
 
   @override
-  String endPoint() =>
-      "projects/${widget.projectId}/merge_requests?state=${widget.state ?? "opened"}";
+  String endPoint() => ApiEndPoint.mergeRequests(widget.projectId,
+      state: widget.mrState, scope: widget.scope);
 }
