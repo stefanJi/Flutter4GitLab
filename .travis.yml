@@ -45,6 +45,7 @@ script:
 - flutter test --no-pub test/
 
 before_deploy:
+- echo "current tag is ${TRVIS_TAG}"
 - flutter build apk
 - mv build/app/outputs/apk/release/app-release.apk $APK_NAME
 
@@ -58,4 +59,5 @@ deploy:
   on:
     repo: stefanJi/Flutter4GitLab
     branch: master
+    tags: true
     condition: $TRAVIS_TAG =~ /^release-v\d+\.\d+\.\d+/
