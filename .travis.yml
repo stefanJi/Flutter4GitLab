@@ -45,7 +45,7 @@ script:
 - flutter test --no-pub test/
 
 before_deploy:
-- echo "current tag is $TRVIS_TAG"
+- echo "Apk name: $APK_NAME"
 - flutter build apk
 - mv build/app/outputs/apk/release/app-release.apk $APK_NAME
 
