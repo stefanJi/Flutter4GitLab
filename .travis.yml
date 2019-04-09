@@ -58,6 +58,5 @@ deploy:
   overwrite: true
   on:
     repo: stefanJi/Flutter4GitLab
-    all_branches: true
+    branch: master
     tags: true
-    condition: $TRAVIS_TAG =~ /^release-v\d+\.\d+\.\d+$/
