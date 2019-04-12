@@ -32,7 +32,7 @@ cache:
   - "$HOME/.pub-cache"
 
 env:
-- BUILD_TIME=$(date +'%Y%m%d%H%M%S') APK_NAME="${TRAVIS_TAG}_${BUILD_TIME}_F4Lab.apk"
+- BUILD_TIME=$(date +'%Y%m%d%H%M%S') APK_PATH="${TRAVIS_TAG}_${BUILD_TIME}_F4Lab.apk"
 
 install:
 - git clone https://github.com/flutter/flutter.git -b stable --depth 1
@@ -46,17 +46,16 @@ script:
 
 before_deploy:
 - "echo Build time: $BUILD_TIME"
-- "echo Apk name: $APK_NAME"
+- "echo Apk name: $APK_PATH"
 - flutter build apk
-- mv build/app/outputs/apk/release/app-release.apk $APK_NAME
+- mv build/app/outputs/apk/release/app-release.apk $APK_PATH
 
 deploy:
   provider: releases
   api_key:
     secure: $github_deploy_api_key
-  file: $APK_NAME
+  file: $APK_PATH
   skip_cleanup: true
-  overwrite: true
   on:
     repo: stefanJi/Flutter4GitLab
     branch: master
