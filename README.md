@@ -48,6 +48,8 @@ Yet another **open-source** GitLab client app but unlike any other app, F4Lab is
   - [x] Approve or UnApprove MR
   - [x] CI Status
   - [x] Play|Cancel|Retry CI Job
+  - [x] Filter Merge Requests State. (opened, closed, locked, merged)
+  - [x] Filter Merge Requests Assign. (all, assigned_to_me)
 - **Organisations**
     - [x] Feeds
     - [x] Repos
