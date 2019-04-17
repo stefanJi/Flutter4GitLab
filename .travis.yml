@@ -40,6 +40,7 @@ install:
 - flutter doctor
 
 script:
+- mkdir -p ~/.gradle && echo "org.gradle.daemon=false" >> ~/.gradle/gradle.properties
 - flutter packages get
 - flutter analyze --no-pub --no-current-package lib/ test/
 - flutter test --no-pub test/
@@ -47,7 +48,6 @@ script:
 before_deploy:
 - "echo Build time: $BUILD_TIME"
 - "echo Apk name: $APK_PATH"
-- mkdir -p ~/.gradle && echo "org.gradle.daemon=false" >> ~/.gradle/gradle.properties
 - flutter build apk
 - mv build/app/outputs/apk/release/app-release.apk $APK_PATH
 
