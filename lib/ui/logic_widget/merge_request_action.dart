@@ -48,8 +48,6 @@ class _MergeReqestState extends State<MergeRequestAction> {
     _hideLoading();
   }
 
-  void _removeWIP() async {}
-
   Widget _buildMergeButton() {
     final mr = widget.mr;
     String title;
@@ -58,8 +56,8 @@ class _MergeReqestState extends State<MergeRequestAction> {
       title = mr.rebaseInProgress ? "Rebaseing" : "Rebase";
       onPress = mr.rebaseInProgress ? null : _rebase;
     } else if (mr.workInProgress) {
-      title = "Remove WIP";
-      onPress = _removeWIP;
+      title = "Remove WIP(Not Suuport)";
+      onPress = null;
     } else if (mr.state == "merged") {
       _canMerge = false;
       title = "Merged";
