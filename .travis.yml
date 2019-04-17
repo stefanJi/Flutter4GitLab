@@ -13,6 +13,7 @@ android:
   - platform-tools
   - build-tools-28.0.3
   - android-28
+  - android-27
 
 jdk: oraclejdk8
 
