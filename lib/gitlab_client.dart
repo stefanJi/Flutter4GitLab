@@ -2,19 +2,21 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-const API_VERSION = 'v4';
+const DEFAULT_API_VERSION = 'v4';
 
 class GitlabClient extends http.BaseClient {
   static String globalHOST;
   static String _globalTOKEN;
+  static String apiVersion;
 
   final http.Client _inner = http.Client();
 
   static GitlabClient newInstance() => GitlabClient();
 
-  static setUpTokenAndHost(String token, String host) {
+  static setUpTokenAndHost(String token, String host, String version) {
     _globalTOKEN = token;
     globalHOST = host;
+    apiVersion = version;
   }
 
   Future<http.StreamedResponse> send(http.BaseRequest request) {
@@ -47,5 +49,5 @@ class GitlabClient extends http.BaseClient {
   }
 
   String getRequestUrl(String endPoint) =>
-      "$globalHOST/api/$API_VERSION/$endPoint";
+      "$globalHOST/api/$apiVersion/$endPoint";
 }

@@ -10,7 +10,7 @@ class ConfigPage extends StatefulWidget {
 }
 
 class ConfigState extends State<ConfigPage> {
-  String _token, _host;
+  String _token, _host, _version;
   bool isTesting = false;
   BuildContext rootContext;
   String _err;
@@ -53,6 +53,15 @@ class ConfigState extends State<ConfigPage> {
                     textInputAction: TextInputAction.done,
                     keyboardType: TextInputType.url,
                     onChanged: (host) => _host = host,
+                  ),
+                  TextField(
+                    decoration: InputDecoration(
+                        hintText: _version ?? "Your gitlab api version",
+                        helperText: "Api version, default v4"),
+                    textInputAction: TextInputAction.done,
+                    keyboardType: TextInputType.text,
+                    maxLines: 1,
+                    onChanged: (v) => _version = v,
                   ),
                   _err != null
                       ? Text(_err, style: TextStyle(color: Colors.red))
@@ -110,7 +119,7 @@ class ConfigState extends State<ConfigPage> {
       _err = null;
     });
 
-    GitlabClient.setUpTokenAndHost(_token, _host);
+    GitlabClient.setUpTokenAndHost(_token, _host, _version);
     final resp = await ApiService.getAuthUser();
     if (resp.success && resp.data != null) {
       Scaffold.of(rootContext).showSnackBar(
@@ -119,6 +128,7 @@ class ConfigState extends State<ConfigPage> {
       final SharedPreferences sp = await SharedPreferences.getInstance();
       sp.setString(KEY_ACCESS_TOKEN, _token);
       sp.setString(KEY_HOST, _host);
+      sp.setString(KEY_API_VERSION, _version ?? DEFAULT_API_VERSION);
       Future.delayed(
           Duration(milliseconds: 300), () => Navigator.pop(context, 0));
     } else {
@@ -137,6 +147,7 @@ class ConfigState extends State<ConfigPage> {
     setState(() {
       _token = sp.getString(KEY_ACCESS_TOKEN);
       _host = sp.getString(KEY_HOST);
+      _version = sp.getString(KEY_API_VERSION) ?? DEFAULT_API_VERSION;
     });
   }
 

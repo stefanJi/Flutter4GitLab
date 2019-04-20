@@ -96,7 +96,7 @@ class _MrApproveState extends State<MrApprove>
     } else {
       Scaffold.of(context).showSnackBar(
         SnackBar(
-          content: Text("${apiData.data}"),
+          content: Text("${apiData.err}"),
           backgroundColor: Colors.red,
         ),
       );

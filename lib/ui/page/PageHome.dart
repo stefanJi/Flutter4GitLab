@@ -34,14 +34,15 @@ class HomeState extends State<HomePage> {
     final SharedPreferences sp = await SharedPreferences.getInstance();
     final token = sp.getString(KEY_ACCESS_TOKEN) ?? null;
     final host = sp.getString(KEY_HOST) ?? null;
-    if (token == null || host == null) {
+    final v = sp.getString(KEY_API_VERSION) ?? null;
+    if (token == null || host == null || v == null) {
       setState(() {
         this.isLoading = false;
         this.user = null;
       });
       return;
     }
-    GitlabClient.setUpTokenAndHost(token, host);
+    GitlabClient.setUpTokenAndHost(token, host, v);
 
     final resp = await ApiService.getAuthUser();
     UserHelper.setUser(resp.data);
