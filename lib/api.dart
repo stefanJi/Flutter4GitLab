@@ -98,7 +98,7 @@ class ApiService {
       return ApiResp(respStatusIsOk(resp.statusCode),
           User.fromJson(respConvertToMap(resp)));
     }).catchError((err) {
-      return ApiResp(false, null, err.toString());
+      return ApiResp(false, null, err?.toString());
     }).whenComplete(client.close);
   }
 
@@ -109,8 +109,7 @@ class ApiService {
       return ApiResp(respStatusIsOk(resp.statusCode),
           MergeRequest.fromJson(respConvertToMap(resp)));
     }).catchError((err) {
-      print(err);
-      return ApiResp(false, null);
+      return ApiResp(false, null, err?.toString());
     }).whenComplete(client.close);
   }
 
@@ -125,8 +124,7 @@ class ApiService {
         resp.body,
       );
     }).catchError((err) {
-      print(err);
-      return ApiResp(false, err);
+      return ApiResp(false, null, err?.toString());
     }).whenComplete(client.close);
   }
 
@@ -149,7 +147,7 @@ class ApiService {
           return ApiResp(respStatusIsOk(resp.statusCode),
               Approvals.fromJson(respConvertToMap(resp)));
         })
-        .catchError((err) => ApiResp(false))
+        .catchError((err) => ApiResp(false, null, err?.toString()))
         .whenComplete(client.close);
   }
 
@@ -167,7 +165,7 @@ class ApiService {
     return client.put(endPoint).then((resp) {
       return ApiResp(respStatusIsOk(resp.statusCode));
     }).catchError((err) {
-      return ApiResp(false);
+      return ApiResp(false, null, err?.toString());
     }).whenComplete(client.close);
   }
 
@@ -183,7 +181,7 @@ class ApiService {
             respConvertToList(resp).map((item) => Jobs.fromJson(item)).toList(),
           );
         })
-        .catchError((err) => ApiResp(false))
+        .catchError((err) => ApiResp(false, null, err?.toString()))
         .whenComplete(client.close);
   }
 
@@ -194,7 +192,7 @@ class ApiService {
     return client
         .post(endPoint)
         .then((resp) => ApiResp(respStatusIsOk(resp.statusCode)))
-        .catchError((err) => ApiResp(false))
+        .catchError((err) => ApiResp(false, null, err?.toString()))
         .whenComplete(client.close);
   }
 
@@ -208,7 +206,7 @@ class ApiService {
             respConvertToList(resp)
                 .map((item) => Diff.fromJson(item))
                 .toList()))
-        .catchError((err) => ApiResp(false))
+        .catchError((err) => ApiResp(false, null, err?.toString()))
         .whenComplete(client.close);
   }
 }
