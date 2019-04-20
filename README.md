@@ -8,6 +8,10 @@
 
 [Download Release Apk](https://github.com/stefanJi/Flutter4GitLab/releases)
 
+<center>
+<img alt="f4lab_home" src="./art/f4lab_home.png" height=400 />
+</center>
+
 |nav|project|merge requests|
 |:-:|:-:|:-:|
 | ![](./art/1.png) | ![](./art/2.png) | ![](./art/3.png) |
