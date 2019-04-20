@@ -1,7 +1,7 @@
+import 'package:F4Lab/api.dart';
 import 'package:F4Lab/const.dart';
 import 'package:F4Lab/gitlab_client.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ConfigPage extends StatefulWidget {
@@ -13,6 +13,7 @@ class ConfigState extends State<ConfigPage> {
   String _token, _host;
   bool isTesting = false;
   BuildContext rootContext;
+  String _err;
 
   @override
   void initState() {
@@ -53,6 +54,9 @@ class ConfigState extends State<ConfigPage> {
                     keyboardType: TextInputType.url,
                     onChanged: (host) => _host = host,
                   ),
+                  _err != null
+                      ? Text(_err, style: TextStyle(color: Colors.red))
+                      : const IgnorePointer(ignoring: true),
                   isTesting
                       ? Column(
                           children: <Widget>[
@@ -65,65 +69,66 @@ class ConfigState extends State<ConfigPage> {
               ));
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Theme.of(context).primaryColor,
-        onPressed: () {
-          if (_token == null ||
-              _host == null ||
-              _token.isEmpty ||
-              _host.isEmpty) {
-            return;
-          }
-          _testConfig();
-        },
-        tooltip: "Test & Save",
-        child: Icon(Icons.save),
-      ),
+      bottomSheet: BottomSheet(
+          onClosing: () {},
+          builder: (context) {
+            return Padding(
+                padding: EdgeInsets.only(bottom: 50),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: OutlineButton(
+                        child: Text("Test & Save 👏"),
+                        onPressed: () {
+                          if (_token == null ||
+                              _host == null ||
+                              _token.isEmpty ||
+                              _host.isEmpty) {
+                            return;
+                          }
+                          _testConfig();
+                        },
+                      ),
+                      flex: 2,
+                    ),
+                    Expanded(
+                      child: OutlineButton(
+                        child: Text("Reset 🙊"),
+                        onPressed: () => _reset(),
+                      ),
+                      flex: 1,
+                    ),
+                  ],
+                ));
+          }),
     );
   }
 
   _testConfig() async {
     setState(() {
       isTesting = true;
+      _err = null;
     });
 
     GitlabClient.setUpTokenAndHost(_token, _host);
-    final GitlabClient client = GitlabClient();
-    final http.Response resp = await client.get('user').catchError((err) {
-      setState(() {
-        isTesting = false;
-      });
-      Scaffold.of(rootContext).showSnackBar(SnackBar(content: Text("Error: $err"), backgroundColor: Colors.red));
-    }).whenComplete(client.close);
-    if (resp == null) {
-      return;
-    }
-    if (resp.statusCode != 200) {
-      var msg = resp.body;
-      switch (resp.statusCode) {
-        case 401:
-          msg = 'Unauthorized';
-          break;
-        case 403:
-          msg = 'Forbidden';
-          break;
-      }
-      Scaffold.of(rootContext).showSnackBar(SnackBar(
-          content: Text("${resp.statusCode} $msg"),
-          backgroundColor: Colors.red));
-    } else {
-      Scaffold.of(rootContext)
-          .showSnackBar(SnackBar(content: Text("Connection Success")));
-
+    final resp = await ApiService.getAuthUser();
+    if (resp.success && resp.data != null) {
+      Scaffold.of(rootContext).showSnackBar(
+        SnackBar(content: Text("Connection Success")),
+      );
       final SharedPreferences sp = await SharedPreferences.getInstance();
       sp.setString(KEY_ACCESS_TOKEN, _token);
       sp.setString(KEY_HOST, _host);
       Future.delayed(
-          Duration(milliseconds: 300), () => Navigator.pop(context, true));
+          Duration(milliseconds: 300), () => Navigator.pop(context, 0));
+    } else {
+      Scaffold.of(rootContext).showSnackBar(SnackBar(
+          content: Text(resp.err ?? "Error"), backgroundColor: Colors.red));
     }
 
     setState(() {
       isTesting = false;
+      _err = resp.err;
     });
   }
 
@@ -133,5 +138,12 @@ class ConfigState extends State<ConfigPage> {
       _token = sp.getString(KEY_ACCESS_TOKEN);
       _host = sp.getString(KEY_HOST);
     });
+  }
+
+  _reset() async {
+    final sp = await SharedPreferences.getInstance();
+    sp.remove(KEY_HOST);
+    sp.remove(KEY_ACCESS_TOKEN);
+    Navigator.pop(context, -1);
   }
 }

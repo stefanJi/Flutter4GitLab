@@ -2,14 +2,14 @@ import 'package:F4Lab/model/group.dart';
 import 'package:F4Lab/widget/comm_ListView.dart';
 import 'package:flutter/material.dart';
 
-class Groups extends CommListWidget {
-  Groups() : super(canPullUp: false, withPage: false);
+class TabGroups extends CommListWidget {
+  TabGroups() : super(canPullUp: false, withPage: false);
 
   @override
   State<StatefulWidget> createState() => _State();
 }
 
-class _State extends CommListState<Groups> {
+class _State extends CommListState<TabGroups> {
   @override
   Widget build(BuildContext context) {
     return data != null

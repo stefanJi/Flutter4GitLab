@@ -6,14 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:xml/xml.dart';
 
-class Activity extends CommListWidget {
-  Activity() : super(canPullUp: false);
+class TabActivity extends CommListWidget {
+  TabActivity() : super(canPullUp: false);
 
   @override
   State<StatefulWidget> createState() => FeedState();
 }
 
-class FeedState extends CommListState<Activity> {
+class FeedState extends CommListState<TabActivity> {
   @override
   loadData({nextPage: 1}) async {
     final url = "dashboard/projects.atom";

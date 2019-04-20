@@ -9,7 +9,7 @@ const projectTypes = {
   "Starred": "starred=true"
 };
 
-class Project extends StatelessWidget {
+class TabProject extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(

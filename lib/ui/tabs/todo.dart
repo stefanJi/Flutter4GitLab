@@ -2,12 +2,12 @@ import 'package:F4Lab/model/todo.dart' as TodoModel;
 import 'package:F4Lab/widget/comm_ListView.dart';
 import 'package:flutter/material.dart';
 
-class Todo extends CommListWidget {
+class TabTodo extends CommListWidget {
   @override
   State<StatefulWidget> createState() => TodoState();
 }
 
-class TodoState extends CommListState<Todo> {
+class TodoState extends CommListState<TabTodo> {
   @override
   Widget childBuild(BuildContext context, int index) {
     final todoItem = TodoModel.Todo.fromJson(data[index]);

@@ -11,8 +11,9 @@ import 'package:http/http.dart';
 class ApiResp<T> {
   bool success;
   T data;
+  String err;
 
-  ApiResp(this.success, [this.data]);
+  ApiResp(this.success, [this.data, this.err]);
 }
 
 class ApiEndPoint {
@@ -91,15 +92,13 @@ class ApiService {
     return jsonDecode(respConvertToUtf8(resp));
   }
 
-  static Future<User> getAuthUser() async {
+  static Future<ApiResp<User>> getAuthUser() async {
     final client = GitlabClient.newInstance();
-    return client
-        .get('user')
-        .then(respConvertToMap)
-        .then((jsonResp) => User.fromJson(jsonResp))
-        .catchError((err) {
-      print(err);
-      return null;
+    return client.get('user').then((resp) {
+      return ApiResp(respStatusIsOk(resp.statusCode),
+          User.fromJson(respConvertToMap(resp)));
+    }).catchError((err) {
+      return ApiResp(false, null, err.toString());
     }).whenComplete(client.close);
   }
 
