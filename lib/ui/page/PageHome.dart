@@ -1,11 +1,8 @@
-import 'package:F4Lab/api.dart';
 import 'package:F4Lab/const.dart';
-import 'package:F4Lab/gitlab_client.dart';
 import 'package:F4Lab/model/user.dart';
 import 'package:F4Lab/ui/logic_widget/home_nav.dart';
 import 'package:F4Lab/user_helper.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   final bool isDark;
@@ -31,26 +28,19 @@ class HomeState extends State<HomePage> {
     setState(() {
       isLoading = true;
     });
-    final SharedPreferences sp = await SharedPreferences.getInstance();
-    final token = sp.getString(KEY_ACCESS_TOKEN) ?? null;
-    final host = sp.getString(KEY_HOST) ?? null;
-    final v = sp.getString(KEY_API_VERSION) ?? null;
-    if (token == null || host == null || v == null) {
-      setState(() {
-        this.isLoading = false;
-        this.user = null;
-      });
-      return;
-    }
-    GitlabClient.setUpTokenAndHost(token, host, v);
 
-    final resp = await ApiService.getAuthUser();
-    UserHelper.setUser(resp.data);
-
+    String err = await UserHelper.initUser();
     setState(() {
       isLoading = false;
-      this.user = resp.data;
+      this.user = UserHelper.getUser();
     });
+
+    if (err != null) {
+      Scaffold.of(context).showSnackBar(SnackBar(
+        content: Text(err),
+        duration: Duration(seconds: 5),
+      ));
+    }
   }
 
   _navigateToConfig(BuildContext c) async {
