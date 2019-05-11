@@ -28,7 +28,7 @@ const _tabTodo = 3;
 const _tabSetting = 4;
 const _tabAbout = 5;
 
-const _tabs = {
+const _tabTitles = {
   _tabProjects: "Projects",
   _tabActivity: "Activity",
   _tabGroups: "Groups",
@@ -41,13 +41,19 @@ class _State extends State<HomeNav> {
   int _currentTab = 0;
   String _barTitle;
   bool _isDark;
+  List<Widget> _tabs;
 
   @override
   void initState() {
     super.initState();
     _getStoreNav();
-    _barTitle = _tabs[_currentTab];
+    _barTitle = _tabTitles[_currentTab];
     _isDark = widget.isDark;
+    _tabs = List();
+    _tabs.add(TabProject());
+    _tabs.add(TabActivity());
+    _tabs.add(TabGroups());
+    _tabs.add(TabTodo());
   }
 
   @override
@@ -122,7 +128,7 @@ class _State extends State<HomeNav> {
         ),
       ),
       body: Builder(builder: (context) {
-        return _getTab();
+        return IndexedStack(index: _currentTab, children: _tabs);
       }),
     );
   }
@@ -131,7 +137,7 @@ class _State extends State<HomeNav> {
     return ListTile(
       selected: _currentTab == currentTab,
       leading: Icon(icon),
-      title: Text(_tabs[currentTab]),
+      title: Text(_tabTitles[currentTab]),
       onTap: () => _switchTab(currentTab),
     );
   }
@@ -143,19 +149,6 @@ class _State extends State<HomeNav> {
     });
   }
 
-  _getTab() {
-    switch (_currentTab) {
-      case _tabActivity:
-        return TabActivity();
-      case _tabProjects:
-        return TabProject();
-      case _tabTodo:
-        return TabTodo();
-      case _tabGroups:
-        return TabGroups();
-    }
-  }
-
   _switchTab(int tabIndex) {
     if (tabIndex == _tabSetting) {
       _navigateToConfig(context);
@@ -164,7 +157,7 @@ class _State extends State<HomeNav> {
     Navigator.of(context).pop();
     setState(() {
       _currentTab = tabIndex;
-      _barTitle = _tabs[tabIndex];
+      _barTitle = _tabTitles[tabIndex];
     });
     _storeNav(tabIndex);
   }
@@ -190,7 +183,7 @@ class _State extends State<HomeNav> {
     if (mounted) {
       setState(() {
         _currentTab = index;
-        _barTitle = _tabs[index];
+        _barTitle = _tabTitles[index];
       });
     }
   }
