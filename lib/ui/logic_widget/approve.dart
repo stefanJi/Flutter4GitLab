@@ -1,8 +1,8 @@
+import 'package:F4Lab/api.dart';
+import 'package:F4Lab/model/approvals.dart';
 import 'package:F4Lab/user_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:F4Lab/model/approvals.dart';
-import 'package:F4Lab/api.dart';
 
 class MrApprove extends StatefulWidget {
   final int projectId;
@@ -15,8 +15,7 @@ class MrApprove extends StatefulWidget {
   State<StatefulWidget> createState() => _MrApproveState();
 }
 
-class _MrApproveState extends State<MrApprove>
-    with AutomaticKeepAliveClientMixin {
+class _MrApproveState extends State<MrApprove> {
   Approvals approval;
   bool isApproving = false;
 
@@ -71,9 +70,6 @@ class _MrApproveState extends State<MrApprove>
       ),
     );
   }
-
-  @override
-  bool get wantKeepAlive => true;
 
   Widget _buildActions(bool iHadApproval) {
     return OutlineButton(

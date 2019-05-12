@@ -119,10 +119,8 @@ class ApiService {
         ApiEndPoint.approveMergeRequest(projectId, mrIId, isApprove);
     final client = GitlabClient.newInstance();
     return client.post(endPoint).then((resp) {
-      return ApiResp<String>(
-        respStatusIsOk(resp.statusCode),
-        resp.body,
-      );
+      return ApiResp<String>(respStatusIsOk(resp.statusCode), resp.body,
+          respStatusIsOk(resp.statusCode) ? "" : resp.body);
     }).catchError((err) {
       return ApiResp(false, null, err?.toString());
     }).whenComplete(client.close);
