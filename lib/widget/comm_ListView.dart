@@ -26,7 +26,6 @@ abstract class CommListState<T extends CommListWidget> extends State<T>
   int total;
   int next;
 
-  bool _hasLoadOnce = false;
   RefreshController _refreshController = RefreshController();
 
   GitlabClient _client;
@@ -69,7 +68,7 @@ abstract class CommListState<T extends CommListWidget> extends State<T>
 
   _loadMore() async {
     if (page == total) {
-      _refreshController.sendBack(false, RefreshStatus.noMore);
+      _refreshController.loadNoData();
     } else {
       final remoteData = await loadData(nextPage: next);
       if (mounted) {
@@ -77,9 +76,9 @@ abstract class CommListState<T extends CommListWidget> extends State<T>
           data.addAll(remoteData);
         });
         if (page == total) {
-          _refreshController.sendBack(false, RefreshStatus.noMore);
+          _refreshController.loadNoData();
         } else {
-          _refreshController.sendBack(false, RefreshStatus.canRefresh);
+          _refreshController.loadComplete();
         }
       }
     }
@@ -91,14 +90,7 @@ abstract class CommListState<T extends CommListWidget> extends State<T>
       setState(() {
         data = remoteDate;
       });
-      if (_hasLoadOnce) {
-        _refreshController.sendBack(true, RefreshStatus.completed);
-        if (page == total) {
-          _refreshController.sendBack(false, RefreshStatus.noMore);
-        } else {
-          _refreshController.sendBack(false, RefreshStatus.canRefresh);
-        }
-      }
+      _refreshController.refreshCompleted();
     }
   }
 
@@ -113,6 +105,7 @@ abstract class CommListState<T extends CommListWidget> extends State<T>
     if (_client != null) {
       _client.close();
     }
+    _refreshController.dispose();
     super.dispose();
   }
 
@@ -124,6 +117,7 @@ abstract class CommListState<T extends CommListWidget> extends State<T>
           child: Text.rich(
               TextSpan(text: "🎉 No More 🎉", style: TextStyle(fontSize: 24)))),
       onTap: () {
+        _refreshController.requestRefresh();
         _loadNew();
       },
     );
@@ -134,16 +128,8 @@ abstract class CommListState<T extends CommListWidget> extends State<T>
         controller: _refreshController,
         enablePullDown: widget.canPullDown,
         enablePullUp: widget.canPullUp,
-        onRefresh: (up) {
-          if (up) {
-            if (!_hasLoadOnce) {
-              _hasLoadOnce = true;
-            }
-            _loadNew();
-          } else {
-            _loadMore();
-          }
-        },
+        onRefresh: () => _loadNew(),
+        onLoading: () => _loadMore(),
         child: ListView.builder(
             itemCount: data.length,
             itemBuilder: (context, index) {
