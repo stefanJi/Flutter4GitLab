@@ -27,15 +27,10 @@ abstract class CommListState<T extends CommListWidget> extends State<T>
 
   RefreshController _refreshController = RefreshController();
 
-  GitlabClient _client;
-
-  CommListState();
-
   /// eg: merge_request?status=open
   String endPoint();
 
   loadData({nextPage: 1}) async {
-    _client = GitlabClient.newInstance();
     Dio dio = GitlabClient.buildDio();
 
     var url;
@@ -64,23 +59,6 @@ abstract class CommListState<T extends CommListWidget> extends State<T>
           return [];
         });
 
-    /*
-    final remoteData = await _client
-        .get(url)
-        .then((resp) {
-          page = int.tryParse(resp.headers['x-page'] ?? 0);
-          total = int.tryParse(resp.headers['x-total-pages'] ?? 0);
-          next = int.tryParse(resp.headers['x-next-page'] ?? 0);
-          return resp;
-        })
-        .then((resp) => utf8.decode(resp.bodyBytes))
-        .then((s) => jsonDecode(s))
-        .catchError((err) {
-          print("loadData err: $err");
-          return [];
-        })
-        .whenComplete(_client.close);
-*/
     return Future(() {
       final List<dynamic> _remote = List();
       remoteData.forEach((item) {
@@ -128,9 +106,6 @@ abstract class CommListState<T extends CommListWidget> extends State<T>
 
   @override
   void dispose() {
-    if (_client != null) {
-      _client.close();
-    }
     _refreshController.dispose();
     super.dispose();
   }
@@ -140,14 +115,17 @@ abstract class CommListState<T extends CommListWidget> extends State<T>
   bool itemShouldRemove(dynamic item) => false;
 
   Widget buildEmptyView() {
-    return GestureDetector(
-      child: Center(
-          child: Text.rich(
-              TextSpan(text: "🎉 No More 🎉", style: TextStyle(fontSize: 24)))),
-      onTap: () {
-        _refreshController.requestRefresh();
-        _loadNew();
-      },
+    return Center(
+      child: Container(
+        margin: EdgeInsets.only(top: 100),
+        child: Text.rich(
+          TextSpan(
+            text: "🎉 No More 🎉\n\nPull Down To Refresh",
+            style: TextStyle(fontSize: 16),
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ),
     );
   }
 
@@ -158,17 +136,23 @@ abstract class CommListState<T extends CommListWidget> extends State<T>
         enablePullUp: widget.canPullUp,
         onRefresh: () => _loadNew(),
         onLoading: () => _loadMore(),
-        child: ListView.builder(
-            itemCount: data.length,
-            itemBuilder: (context, index) {
-              return childBuild(context, index);
-            }));
+        child: data.length == 0
+            ? ListView.builder(
+                itemCount: 1,
+                itemBuilder: (ctx, index) {
+                  return buildEmptyView();
+                })
+            : ListView.builder(
+                itemCount: data.length,
+                itemBuilder: (context, index) {
+                  return childBuild(context, index);
+                }));
   }
 
   @override
   Widget build(BuildContext context) {
     return data == null
         ? Center(child: CircularProgressIndicator())
-        : data.length == 0 ? buildEmptyView() : buildDataListView();
+        : buildDataListView();
   }
 }
