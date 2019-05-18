@@ -70,6 +70,9 @@ class ApiEndPoint {
 
   static String commitDiff(int projectId, String sha) =>
       "projects/$projectId/repository/commits/$sha/diff";
+
+  static String mergeRequestDiscussion(int projectId, int mrIId) =>
+      "projects/$projectId/merge_requests/$mrIId/discussions";
 }
 
 class ApiService {
@@ -170,17 +173,11 @@ class ApiService {
   static Future<ApiResp<List<Jobs>>> pipelineJobs(
       int projectId, int pipelineId) {
     final endPoint = ApiEndPoint.pipelineJobs(projectId, pipelineId);
-    final client = GitlabClient.newInstance();
-    return client
-        .get(endPoint)
-        .then((resp) {
-          return ApiResp(
-            respStatusIsOk(resp.statusCode),
-            respConvertToList(resp).map((item) => Jobs.fromJson(item)).toList(),
-          );
-        })
-        .catchError((err) => ApiResp(false, null, err?.toString()))
-        .whenComplete(client.close);
+    return GitlabClient.buildDio()
+        .get<List>(endPoint)
+        .then((resp) =>
+            ApiResp(true, resp.data.map((it) => Jobs.fromJson(it)).toList()))
+        .catchError((err) => ApiResp(false, null, err));
   }
 
   static Future<ApiResp> triggerPipelineJob(
@@ -196,15 +193,10 @@ class ApiService {
 
   static Future<ApiResp<List<Diff>>> commitDiff(int projectId, String sha) {
     final endPoint = ApiEndPoint.commitDiff(projectId, sha);
-    final client = GitlabClient.newInstance();
-    return client
-        .get(endPoint)
+    return GitlabClient.buildDio()
+        .get<List>(endPoint)
         .then((resp) => ApiResp(
-            respStatusIsOk(resp.statusCode),
-            respConvertToList(resp)
-                .map((item) => Diff.fromJson(item))
-                .toList()))
-        .catchError((err) => ApiResp(false, null, err?.toString()))
-        .whenComplete(client.close);
+            true, resp.data.map((item) => Diff.fromJson(item)).toList()))
+        .catchError((err) => ApiResp(false, null, err));
   }
 }

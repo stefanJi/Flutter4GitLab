@@ -20,6 +20,7 @@ dependencies:
   flutter_html_textview: ^0.2.6
   sentry: any
   flutter_stetho: ^0.2.2
+  dio: 2.1.3
 
 dev_dependencies:
   flutter_test:

@@ -1,6 +1,5 @@
-import 'dart:convert';
-
 import 'package:F4Lab/gitlab_client.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -37,6 +36,8 @@ abstract class CommListState<T extends CommListWidget> extends State<T>
 
   loadData({nextPage: 1}) async {
     _client = GitlabClient.newInstance();
+    Dio dio = GitlabClient.buildDio();
+
     var url;
     final _endPoint = endPoint() ?? "";
     if (widget.withPage) {
@@ -48,6 +49,22 @@ abstract class CommListState<T extends CommListWidget> extends State<T>
     } else {
       url = _endPoint;
     }
+
+    final remoteData = await dio
+        .get<dynamic>(url)
+        .then((resp) {
+          page = int.tryParse(resp.headers['x-page'][0] ?? 0);
+          total = int.tryParse(resp.headers['x-total-pages'][0] ?? 0);
+          next = int.tryParse(resp.headers['x-next-page'][0] ?? 0);
+          return resp;
+        })
+        .then((resp) => resp.data)
+        .catchError((err) {
+          print("Error: $err");
+          return [];
+        });
+
+    /*
     final remoteData = await _client
         .get(url)
         .then((resp) {
@@ -63,7 +80,16 @@ abstract class CommListState<T extends CommListWidget> extends State<T>
           return [];
         })
         .whenComplete(_client.close);
-    return remoteData;
+*/
+    return Future(() {
+      final List<dynamic> _remote = List();
+      remoteData.forEach((item) {
+        if (!itemShouldRemove(item)) {
+          _remote.add(item);
+        }
+      });
+      return _remote;
+    });
   }
 
   _loadMore() async {
@@ -110,6 +136,8 @@ abstract class CommListState<T extends CommListWidget> extends State<T>
   }
 
   Widget childBuild(BuildContext context, int index);
+
+  bool itemShouldRemove(dynamic item) => false;
 
   Widget buildEmptyView() {
     return GestureDetector(

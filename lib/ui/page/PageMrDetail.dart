@@ -3,7 +3,7 @@ import 'package:F4Lab/model/merge_request.dart';
 import 'package:F4Lab/ui/logic_widget/approve.dart';
 import 'package:F4Lab/ui/logic_widget/merge_request_action.dart';
 import 'package:F4Lab/ui/logic_widget/merge_request_jobs.dart';
-import 'package:F4Lab/ui/tabs/commit_tab.dart';
+import 'package:F4Lab/ui/tabs/merge_request_detail_tabs.dart';
 import 'package:flutter/material.dart';
 
 class PageMrDetail extends StatefulWidget {
@@ -18,18 +18,18 @@ class PageMrDetail extends StatefulWidget {
 }
 
 class PageMrState extends State<PageMrDetail> {
-  MergeRequest _mergeRequest;
+  MergeRequest _mr;
 
   void _onMergeRequestChange(void v) {
     _loadMergeRequest();
   }
 
   void _loadMergeRequest() async {
-    setState(() => _mergeRequest = null);
+    setState(() => _mr = null);
     final resp = await ApiService.getSingleMR(
         widget._projectId, widget._mergeRequestIId);
     if (resp.success) {
-      setState(() => _mergeRequest = resp?.data);
+      setState(() => _mr = resp?.data);
     }
   }
 
@@ -42,27 +42,28 @@ class PageMrState extends State<PageMrDetail> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-        length: 3,
+        length: 4,
         child: Scaffold(
           appBar: AppBar(
             centerTitle: false,
             title: Text(widget._mrTitle),
-            bottom: TabBar(tabs: [
+            bottom: TabBar(isScrollable: true, tabs: [
               Tab(text: "Overview"),
               Tab(text: "Commits"),
-              Tab(
-                text: "Jobs",
-              )
+              Tab(text: "Discussions"),
+              Tab(text: "Jobs"),
             ]),
           ),
-          body: _mergeRequest == null
+          body: _mr == null
               ? Center(child: CircularProgressIndicator())
-              : TabBarView(children: [
-                  _buildInfo(),
-                  CommitTab(_mergeRequest.projectId, _mergeRequest.iid),
-                  MergeRequestJobsTab(
-                      _mergeRequest.projectId, _mergeRequest.iid)
-                ]),
+              : TabBarView(
+                  children: [
+                    _buildInfo(),
+                    CommitTab(_mr.projectId, _mr.iid),
+                    DiscussionTab(_mr.projectId, _mr.iid),
+                    MergeRequestJobsTab(_mr.projectId, _mr.iid)
+                  ],
+                ),
         ));
   }
 
@@ -79,26 +80,23 @@ class PageMrState extends State<PageMrDetail> {
 
   Widget _buildInfo() {
     final title = Text(
-      _mergeRequest.title,
+      _mr.title,
       style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26.0),
     );
 
-    final desc = _mergeRequest.description != null
-        ? Text(_mergeRequest.description)
-        : IgnorePointer();
+    final desc =
+        _mr.description != null ? Text(_mr.description) : IgnorePointer();
 
     final mrPlan = Card(
       child: ListTile(
-        title: Text(
-            "Merge: ${_mergeRequest.sourceBranch} -> ${_mergeRequest.targetBranch}"),
-        trailing: _getStatusColor(_mergeRequest.mergeStatus),
+        title: Text("Merge: ${_mr.sourceBranch} -> ${_mr.targetBranch}"),
+        trailing: _getStatusColor(_mr.mergeStatus),
       ),
     );
 
-    final approvalAction =
-        _buildApproval(_mergeRequest.projectId, _mergeRequest.iid);
+    final approvalAction = _buildApproval(_mr.projectId, _mr.iid);
 
-    final mrAction = MergeRequestAction(_mergeRequest, _onMergeRequestChange);
+    final mrAction = MergeRequestAction(_mr, _onMergeRequestChange);
 
     return SingleChildScrollView(
         padding: EdgeInsets.all(10.0),
