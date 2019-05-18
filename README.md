@@ -54,6 +54,7 @@ Yet another **open-source** GitLab client app but unlike any other app, F4Lab is
   - [x] Play|Cancel|Retry CI Job
   - [x] Filter Merge Requests State. (opened, closed, locked, merged)
   - [x] Filter Merge Requests Assign. (all, assigned_to_me)
+  - [ ] Discussion of merge request
 - **Organisations**
     - [x] Feeds
     - [x] Repos
@@ -77,6 +78,7 @@ Yet another **open-source** GitLab client app but unlike any other app, F4Lab is
 - [**sentry**](https://pub.dartlang.org/packages/sentry)
 - [**flutter_stetho**](https://pub.dartlang.org/packages/flutter_stetho)
 - [**flutter_html_textview**](https://pub.dartlang.org/packages/flutter_html_textview)
+- [**Dio**](https://github.com/flutterchina/dio)
 
 ## Contribution
 
