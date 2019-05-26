@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-Widget loadAvatar(url, name, {color = Colors.teal}) {
+Widget loadAvatar(String url, String name, {Color color = Colors.teal}) {
   assert(name != null);
   if (url != null) {
     NetworkImage image;
