@@ -39,6 +39,7 @@ install:
 - git clone https://github.com/flutter/flutter.git -b stable --depth 1
 - export PATH=./flutter/bin:$PATH
 - flutter doctor
+- flutter --version
 
 script:
 - mkdir -p ~/.gradle && echo "org.gradle.daemon=false" >> ~/.gradle/gradle.properties

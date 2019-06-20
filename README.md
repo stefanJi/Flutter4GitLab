@@ -77,7 +77,6 @@ Yet another **open-source** GitLab client app but unlike any other app, F4Lab is
 - [**url_launcher**](https://pub.dartlang.org/packages/url_launcher)
 - [**sentry**](https://pub.dartlang.org/packages/sentry)
 - [**flutter_stetho**](https://pub.dartlang.org/packages/flutter_stetho)
-- [**flutter_html_textview**](https://pub.dartlang.org/packages/flutter_html_textview)
 - [**Dio**](https://github.com/flutterchina/dio)
 
 ## Contribution
