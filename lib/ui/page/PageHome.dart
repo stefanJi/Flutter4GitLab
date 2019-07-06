@@ -5,11 +5,7 @@ import 'package:F4Lab/user_helper.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
-  final bool isDark;
-  final ValueChanged<bool> themeChanger;
-
-  HomePage(this.isDark, this.themeChanger);
-
+  const HomePage();
   @override
   State<StatefulWidget> createState() => HomeState();
 }
@@ -111,8 +107,6 @@ class HomeState extends State<HomePage> {
   Widget build(BuildContext context) {
     return isLoading
         ? Scaffold(body: Center(child: CircularProgressIndicator()))
-        : user == null
-            ? _buildConfigView()
-            : HomeNav(user, _tokenChanger, widget.themeChanger, widget.isDark);
+        : user == null ? _buildConfigView() : HomeNav(user, _tokenChanger);
   }
 }

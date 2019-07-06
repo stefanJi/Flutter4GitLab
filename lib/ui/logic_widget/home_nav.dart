@@ -1,21 +1,21 @@
 import 'package:F4Lab/const.dart';
 import 'package:F4Lab/model/user.dart';
+import 'package:F4Lab/providers/theme_provider.dart';
 import 'package:F4Lab/ui/tabs/activity.dart';
 import 'package:F4Lab/ui/tabs/groups.dart';
 import 'package:F4Lab/ui/tabs/project.dart';
 import 'package:F4Lab/ui/tabs/todo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomeNav extends StatefulWidget {
   final User user;
-  final ValueChanged<bool> themeChanger;
   final ValueChanged<bool> tokenChanger;
-  final bool isDark;
 
-  const HomeNav(this.user, this.tokenChanger, this.themeChanger, this.isDark);
+  const HomeNav(this.user, this.tokenChanger);
 
   @override
   State<StatefulWidget> createState() => _State();
@@ -40,7 +40,6 @@ const _tabTitles = {
 class _State extends State<HomeNav> {
   int _currentTab = 0;
   String _barTitle;
-  bool _isDark;
   List<Widget> _tabs;
 
   @override
@@ -48,7 +47,6 @@ class _State extends State<HomeNav> {
     super.initState();
     _getStoreNav();
     _barTitle = _tabTitles[_currentTab];
-    _isDark = widget.isDark;
     _tabs = List();
     _tabs.add(TabProject());
     _tabs.add(TabActivity());
@@ -58,6 +56,7 @@ class _State extends State<HomeNav> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text("$_barTitle"),
@@ -118,10 +117,10 @@ class _State extends State<HomeNav> {
                   children: <Widget>[
                     Text("Dark Theme"),
                     Switch(
-                        onChanged: (newValue) {
-                          _changeTheme(newValue);
+                        onChanged: (isDark) {
+                          _changeTheme(isDark);
                         },
-                        value: _isDark)
+                        value: themeProvider.isDark)
                   ],
                 ))
           ],
@@ -142,11 +141,13 @@ class _State extends State<HomeNav> {
     );
   }
 
-  _changeTheme(bool newValue) {
-    widget.themeChanger(newValue);
-    setState(() {
-      _isDark = newValue;
-    });
+  _changeTheme(bool isDark) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    if (isDark) {
+      themeProvider.switchToDark();
+    } else {
+      themeProvider.switchToLight();
+    }
   }
 
   _switchTab(int tabIndex) {
