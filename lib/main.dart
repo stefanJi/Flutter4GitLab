@@ -1,4 +1,5 @@
 import 'package:F4Lab/providers/theme_provider.dart';
+import 'package:F4Lab/providers/user_provider.dart';
 import 'package:F4Lab/ui/page/PageConfig.dart';
 import 'package:F4Lab/ui/page/PageHome.dart';
 import 'package:flutter/material.dart';
@@ -27,8 +28,14 @@ class MyApp extends StatelessWidget {
   List<SingleChildCloneableWidget> _buildProviders(BuildContext context) {
     return [
       ChangeNotifierProvider(builder: (_) => ThemeProvider()),
+      ChangeNotifierProvider(builder: (_) => UserProvider()),
     ];
   }
+
+  Map<String, WidgetBuilder> _buildRoutes() => {
+        '/': (_) => HomePage(),
+        '/config': (_) => ConfigPage(),
+      };
 
   @override
   Widget build(BuildContext context) {
@@ -39,8 +46,7 @@ class MyApp extends StatelessWidget {
               title: 'GitLab',
               initialRoute: '/',
               theme: theme.currentTheme,
-              home: const HomePage(),
-              routes: {'/config': (context) => ConfigPage()});
+              routes: _buildRoutes());
         }));
   }
 }

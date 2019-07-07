@@ -1,19 +1,18 @@
-import 'package:F4Lab/api.dart';
 import 'package:F4Lab/const.dart';
 import 'package:F4Lab/gitlab_client.dart';
+import 'package:F4Lab/providers/user_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ConfigPage extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => ConfigState();
+  State<StatefulWidget> createState() => _ConfigState();
 }
 
-class ConfigState extends State<ConfigPage> {
+class _ConfigState extends State<ConfigPage> {
   String _token, _host, _version;
-  bool isTesting = false;
-  BuildContext rootContext;
-  String _err;
+  UserProvider userProvider;
 
   @override
   void initState() {
@@ -23,6 +22,11 @@ class ConfigState extends State<ConfigPage> {
 
   @override
   Widget build(BuildContext context) {
+    userProvider = Provider.of<UserProvider>(context);
+    if (userProvider.testSuccess) {
+      Navigator.pop(context);
+      userProvider.resetTestState();
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text("Config"),
@@ -31,7 +35,6 @@ class ConfigState extends State<ConfigPage> {
       ),
       body: Builder(
         builder: (context) {
-          rootContext = context;
           return Padding(
               padding: EdgeInsets.all(10),
               child: Column(
@@ -63,10 +66,11 @@ class ConfigState extends State<ConfigPage> {
                     maxLines: 1,
                     onChanged: (v) => _version = v,
                   ),
-                  _err != null
-                      ? Text(_err, style: TextStyle(color: Colors.red))
+                  userProvider.testErr != null
+                      ? Text(userProvider.testErr,
+                          style: TextStyle(color: Colors.red))
                       : const IgnorePointer(ignoring: true),
-                  isTesting
+                  userProvider.testing
                       ? Column(
                           children: <Widget>[
                             CircularProgressIndicator(),
@@ -87,7 +91,7 @@ class ConfigState extends State<ConfigPage> {
                   children: <Widget>[
                     Expanded(
                       child: OutlineButton(
-                        child: Text("Test & Save 👏"),
+                        child: Text("Test&Save"),
                         onPressed: () {
                           if (_token == null ||
                               _host == null ||
@@ -95,14 +99,14 @@ class ConfigState extends State<ConfigPage> {
                               _host.isEmpty) {
                             return;
                           }
-                          _testConfig();
+                          _testConfig(context);
                         },
                       ),
                       flex: 2,
                     ),
                     Expanded(
                       child: OutlineButton(
-                        child: Text("Reset 🙊"),
+                        child: Text("Reset"),
                         onPressed: () => _reset(),
                       ),
                       flex: 1,
@@ -113,36 +117,11 @@ class ConfigState extends State<ConfigPage> {
     );
   }
 
-  _testConfig() async {
-    setState(() {
-      isTesting = true;
-      _err = null;
-    });
-
-    GitlabClient.setUpTokenAndHost(_token, _host, _version);
-    final resp = await ApiService.getAuthUser();
-    if (resp.success && resp.data != null) {
-      Scaffold.of(rootContext).showSnackBar(
-        SnackBar(content: Text("Connection Success")),
-      );
-      final SharedPreferences sp = await SharedPreferences.getInstance();
-      sp.setString(KEY_ACCESS_TOKEN, _token);
-      sp.setString(KEY_HOST, _host);
-      sp.setString(KEY_API_VERSION, _version ?? DEFAULT_API_VERSION);
-      Future.delayed(
-          Duration(milliseconds: 300), () => Navigator.pop(context, 0));
-    } else {
-      Scaffold.of(rootContext).showSnackBar(SnackBar(
-          content: Text(resp.err ?? "Error"), backgroundColor: Colors.red));
-    }
-
-    setState(() {
-      isTesting = false;
-      _err = resp.err;
-    });
+  void _testConfig(BuildContext context) {
+    userProvider.testConfig(_host, _token, _version);
   }
 
-  _loadConfig() async {
+  void _loadConfig() async {
     final SharedPreferences sp = await SharedPreferences.getInstance();
     setState(() {
       _token = sp.getString(KEY_ACCESS_TOKEN);
@@ -151,10 +130,8 @@ class ConfigState extends State<ConfigPage> {
     });
   }
 
-  _reset() async {
-    final sp = await SharedPreferences.getInstance();
-    sp.remove(KEY_HOST);
-    sp.remove(KEY_ACCESS_TOKEN);
-    Navigator.pop(context, -1);
+  void _reset() {
+    Navigator.pop(context);
+    userProvider.logOut();
   }
 }

@@ -1,10 +1,12 @@
 import 'package:F4Lab/const.dart';
 import 'package:F4Lab/model/user.dart';
 import 'package:F4Lab/providers/theme_provider.dart';
+import 'package:F4Lab/providers/user_provider.dart';
 import 'package:F4Lab/ui/tabs/activity.dart';
 import 'package:F4Lab/ui/tabs/groups.dart';
 import 'package:F4Lab/ui/tabs/project.dart';
 import 'package:F4Lab/ui/tabs/todo.dart';
+import 'package:F4Lab/util/widget_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
@@ -12,11 +14,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomeNav extends StatefulWidget {
-  final User user;
-  final ValueChanged<bool> tokenChanger;
-
-  const HomeNav(this.user, this.tokenChanger);
-
   @override
   State<StatefulWidget> createState() => _State();
 }
@@ -57,75 +54,13 @@ class _State extends State<HomeNav> {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
+    final userProvider = Provider.of<UserProvider>(context);
+    final user = userProvider.user;
     return Scaffold(
       appBar: AppBar(
         title: Text("$_barTitle"),
       ),
-      drawer: Drawer(
-        child: ListView(
-          children: <Widget>[
-            UserAccountsDrawerHeader(
-              decoration: BoxDecoration(
-                color: Theme.of(context).scaffoldBackgroundColor,
-              ),
-              accountName: Text(
-                widget.user.name,
-                style: TextStyle(
-                  color: Theme.of(context).accentColor,
-                ),
-              ),
-              accountEmail: Text(
-                widget.user.email,
-                style: TextStyle(
-                  color: Theme.of(context).highlightColor,
-                ),
-              ),
-              currentAccountPicture: CircleAvatar(
-                radius: 50,
-                backgroundImage: NetworkImage(widget.user.avatarUrl),
-              ),
-            ),
-            _buildNavItem(_tabProjects, Icons.category),
-            _buildNavItem(_tabActivity, Icons.local_activity),
-            _buildNavItem(_tabTodo, Icons.view_list),
-            _buildNavItem(_tabGroups, Icons.group),
-            _buildNavItem(_tabSetting, Icons.settings),
-            AboutListTile(
-              icon: Icon(Icons.apps),
-              applicationName: APP_NAME,
-              applicationVersion: APP_VERSION,
-              applicationLegalese: APP_LEGEND,
-              applicationIcon: Image.network(
-                APP_ICON_URL,
-                width: 60,
-                height: 60,
-              ),
-              aboutBoxChildren: <Widget>[
-                OutlineButton(
-                  child: Text("FeedBack"),
-                  onPressed: () => launch(APP_FEED_BACK_URL),
-                ),
-                OutlineButton(
-                  child: Text("See in GitHub"),
-                  onPressed: () => launch(APP_REPO_URL),
-                )
-              ],
-            ),
-            Padding(
-                padding: EdgeInsets.only(left: 20),
-                child: Row(
-                  children: <Widget>[
-                    Text("Dark Theme"),
-                    Switch(
-                        onChanged: (isDark) {
-                          _changeTheme(isDark);
-                        },
-                        value: themeProvider.isDark)
-                  ],
-                ))
-          ],
-        ),
-      ),
+      drawer: _buildNav(user, themeProvider.isDark),
       body: Builder(builder: (context) {
         return IndexedStack(index: _currentTab, children: _tabs);
       }),
@@ -141,7 +76,72 @@ class _State extends State<HomeNav> {
     );
   }
 
-  _changeTheme(bool isDark) {
+  Drawer _buildNav(User user, bool isDark) {
+    return Drawer(
+      child: ListView(
+        children: <Widget>[
+          UserAccountsDrawerHeader(
+            decoration: BoxDecoration(
+              color: Theme.of(context).scaffoldBackgroundColor,
+            ),
+            accountName: Text(
+              user.name,
+              style: TextStyle(
+                color: Theme.of(context).accentColor,
+              ),
+            ),
+            accountEmail: Text(
+              user.email,
+              style: TextStyle(
+                color: Theme.of(context).highlightColor,
+              ),
+            ),
+            currentAccountPicture: loadAvatar(user.avatarUrl, user.name),
+          ),
+          _buildNavItem(_tabProjects, Icons.category),
+          _buildNavItem(_tabActivity, Icons.local_activity),
+          _buildNavItem(_tabTodo, Icons.view_list),
+          _buildNavItem(_tabGroups, Icons.group),
+          _buildNavItem(_tabSetting, Icons.settings),
+          AboutListTile(
+            icon: Icon(Icons.apps),
+            applicationName: APP_NAME,
+            applicationVersion: APP_VERSION,
+            applicationLegalese: APP_LEGEND,
+            applicationIcon: Image.network(
+              APP_ICON_URL,
+              width: 60,
+              height: 60,
+            ),
+            aboutBoxChildren: <Widget>[
+              OutlineButton(
+                child: Text("FeedBack"),
+                onPressed: () => launch(APP_FEED_BACK_URL),
+              ),
+              OutlineButton(
+                child: Text("See in GitHub"),
+                onPressed: () => launch(APP_REPO_URL),
+              )
+            ],
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 20),
+            child: Row(
+              children: <Widget>[
+                Text("Dark Theme"),
+                Switch(
+                  onChanged: (isDark) => _changeTheme(isDark),
+                  value: isDark,
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  void _changeTheme(bool isDark) {
     final themeProvider = Provider.of<ThemeProvider>(context);
     if (isDark) {
       themeProvider.switchToDark();
@@ -150,12 +150,12 @@ class _State extends State<HomeNav> {
     }
   }
 
-  _switchTab(int tabIndex) {
+  void _switchTab(int tabIndex) {
+    Navigator.of(context).pop();
     if (tabIndex == _tabSetting) {
       _navigateToConfig(context);
       return;
     }
-    Navigator.of(context).pop();
     setState(() {
       _currentTab = tabIndex;
       _barTitle = _tabTitles[tabIndex];
@@ -163,22 +163,15 @@ class _State extends State<HomeNav> {
     _storeNav(tabIndex);
   }
 
-  _navigateToConfig(BuildContext c) async {
-    final success = await Navigator.pushNamed(context, '/config');
-    print(success);
-    if (success != null) {
-      widget.tokenChanger(true);
-    } else {
-      print("cancel config");
-    }
-  }
+  void _navigateToConfig(BuildContext context) =>
+      Navigator.pushNamed(context, '/config');
 
-  _storeNav(int tabIndex) async {
+  void _storeNav(int tabIndex) async {
     final sp = await SharedPreferences.getInstance();
     sp.setInt(KEY_TAB_INDEX, tabIndex);
   }
 
-  _getStoreNav() async {
+  void _getStoreNav() async {
     final index = await SharedPreferences.getInstance()
         .then((sp) => sp.getInt(KEY_TAB_INDEX) ?? _tabProjects);
     if (mounted) {

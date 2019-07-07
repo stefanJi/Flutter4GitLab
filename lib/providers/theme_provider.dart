@@ -24,14 +24,12 @@ class ThemeProvider with ChangeNotifier {
   }
 
   void switchToDark() {
-    debugPrint("switch to dark");
     _currentTheme = _dark;
     _updateLocal(true);
     notifyListeners();
   }
 
   void switchToLight() {
-    debugPrint("switch to light");
     _currentTheme = _light;
     _updateLocal(false);
     notifyListeners();
@@ -44,7 +42,7 @@ class ThemeProvider with ChangeNotifier {
 
   void _loadFromLocal() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    final isDark = prefs.getBool(KEY_THEME_IS_DARK) ?? false;
+    final isDark = prefs.getBool(KEY_THEME_IS_DARK) ?? true;
     _currentTheme = isDark ? _dark : _light;
     notifyListeners();
   }
