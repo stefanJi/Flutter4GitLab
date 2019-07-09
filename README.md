@@ -1,36 +1,41 @@
-![Logo](./art/logo.png)
+<!-- ![Logo](./art/logo.png) -->
 
 # F4Lab
 
-> A glitlab client made by flutter. Support Android & IOS.
+*A glitlab client made by flutter. Support Android & IOS.*
 
-[![Build Status](https://travis-ci.org/stefanJi/Flutter4GitLab.svg?branch=master)](https://travis-ci.org/stefanJi/Flutter4GitLab) 
+[![Build Status](https://travis-ci.org/stefanJi/Flutter4GitLab.svg?branch=master)](https://travis-ci.org/stefanJi/Flutter4GitLab)
 
-[Download Release Apk](https://github.com/stefanJi/Flutter4GitLab/releases)
+|home|config|nav|project|merge requests| merge request|commit|diff|
+|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+|![](./art/f4lab_home.png)| ![](./art/8.png)| ![](./art/1.png) | ![](./art/2.png) | ![](./art/3.png) | ![](./art/4.png) | ![](./art/5.png) | ![](./art/6.png) |
 
-<center>
-<img alt="f4lab_home" src="./art/f4lab_home.png" height=400 />
-</center>
+## Usage
 
-|nav|project|merge requests|
-|:-:|:-:|:-:|
-| ![](./art/1.png) | ![](./art/2.png) | ![](./art/3.png) |
+### Running in Android device
 
-|merge request|commit|diff|
-|:-:|:-:|:-:|
-| ![](./art/4.png) | ![](./art/5.png) | ![](./art/6.png) |
+1. [Download release apk](https://github.com/stefanJi/Flutter4GitLab/releases)
+2. Install apk and then run
+
+### Running in IOS device
+
+1. Follow [Dev](#Dev) Section
+
+## Dev
+
+> First, you shuold setup your Flutter development env. [Set up an editor](https://flutter.io/docs/get-started/editor).
 
 ### Run Project
 
-Please referer to [Set up an editor](https://flutter.io/docs/get-started/editor).
+1. `fork` or `clone` this project
+2. In project root dir, run:
+    - `flutter packages pub get`
+    - `flutter run`
 
 ---
 
-Yet another **open-source** GitLab client app but unlike any other app, F4Lab is building by Flutter.  
-
-### Welcome to contribute to the following features.
-
-## Features
+<details>
+<summary>Features: welcome to contribute for the following features</summary>
 
 - **App**
   - [x] Login by Personal Access Token
@@ -54,7 +59,7 @@ Yet another **open-source** GitLab client app but unlike any other app, F4Lab is
   - [x] Play|Cancel|Retry CI Job
   - [x] Filter Merge Requests State. (opened, closed, locked, merged)
   - [x] Filter Merge Requests Assign. (all, assigned_to_me)
-  - [ ] Discussion of merge request
+  - [x] Discussion of merge request
 - **Organisations**
     - [x] Feeds
     - [x] Repos
@@ -62,12 +67,18 @@ Yet another **open-source** GitLab client app but unlike any other app, F4Lab is
     - [x] List project's pipepine
     - [x] Play, Retry, Cancel Pipeline Job
 
-## GitLab Api
+</details>
+
+<details>
+<summary>Api: GitLab Server || Local Server</summary>
 
 - [**GitLab Api Doc**](https://gitlab.com/help/api/README.md)
-- Or Your personal GitLab.(https://gitlab.exsample.com/help/api/README.md)
+- Or Your personal GitLab.(Eg: https://gitlab.exsample.com/help/api/README.md)
 
-## Specs / Open-source libraries:
+</details>
+
+<details>
+<summary>Dependencies: Lib && Plugin </summary>
 
 - Android Minimum **SDK 16**, IOS Minimun **9.0**
 - [**Flutter**](https://github.com/flutter/flutter)
@@ -78,12 +89,15 @@ Yet another **open-source** GitLab client app but unlike any other app, F4Lab is
 - [**sentry**](https://pub.dartlang.org/packages/sentry)
 - [**flutter_stetho**](https://pub.dartlang.org/packages/flutter_stetho)
 - [**Dio**](https://github.com/flutterchina/dio)
+- [**Provider**](https://github.com/rrousselGit/provider)
+
+</details>
 
 ## Contribution
 
-Please **contribute** to the  project either by **_creating a PR_** or **_submitting an issue_** on GitHub.  
+Please **contribute** to the  project either by **_creating a PR_** or **_submitting an issue_** on GitHub.
 
 ## License
 
-> Copyright (C) 2018 StefanJi.  
+> Copyright (C) 2018 StefanJi.
 > (See the [LICENSE](./LICENSE) file for the whole license text.)
