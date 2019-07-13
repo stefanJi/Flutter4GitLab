@@ -5,7 +5,6 @@ import 'package:F4Lab/providers/user_provider.dart';
 import 'package:F4Lab/ui/tabs/activity.dart';
 import 'package:F4Lab/ui/tabs/groups.dart';
 import 'package:F4Lab/ui/tabs/project.dart';
-import 'package:F4Lab/ui/tabs/todo.dart';
 import 'package:F4Lab/util/widget_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -18,37 +17,29 @@ class HomeNav extends StatefulWidget {
   State<StatefulWidget> createState() => _State();
 }
 
-const _tabProjects = 0;
-const _tabActivity = 1;
-const _tabGroups = 2;
-const _tabTodo = 3;
-const _tabSetting = 4;
-const _tabAbout = 5;
+class TabItem {
+  final IconData icon;
+  final String name;
+  final WidgetBuilder builder;
 
-const _tabTitles = {
-  _tabProjects: "Projects",
-  _tabActivity: "Activity",
-  _tabGroups: "Groups",
-  _tabTodo: "Todo",
-  _tabSetting: "Config",
-  _tabAbout: "About"
-};
+  TabItem(this.icon, this.name, this.builder);
+}
 
 class _State extends State<HomeNav> {
   int _currentTab = 0;
   String _barTitle;
-  List<Widget> _tabs;
+  List<TabItem> _items;
 
   @override
   void initState() {
     super.initState();
-    _getStoreNav();
-    _barTitle = _tabTitles[_currentTab];
-    _tabs = List();
-    _tabs.add(TabProject());
-    _tabs.add(TabActivity());
-    _tabs.add(TabGroups());
-    _tabs.add(TabTodo());
+    _items = [
+      TabItem(Icons.category, "Project", (_) => TabProject()),
+      TabItem(Icons.today, "Activity", (_) => TabActivity()),
+      TabItem(Icons.group, "Groups", (_) => TabGroups())
+    ];
+    _loadNavIndexFromLocal();
+    _barTitle = _items[_currentTab].name;
   }
 
   @override
@@ -56,93 +47,98 @@ class _State extends State<HomeNav> {
     final themeProvider = Provider.of<ThemeProvider>(context);
     final userProvider = Provider.of<UserProvider>(context);
     final user = userProvider.user;
+    final tabs = _items.map<Widget>((item) => item.builder(context)).toList();
     return Scaffold(
-      appBar: AppBar(
-        title: Text("$_barTitle"),
-      ),
-      drawer: _buildNav(user, themeProvider.isDark),
+      appBar: AppBar(title: Text("$_barTitle")),
+      drawer: _buildNav(context, user, themeProvider, _items),
       body: Builder(builder: (context) {
-        return IndexedStack(index: _currentTab, children: _tabs);
+        return IndexedStack(index: _currentTab, children: tabs);
       }),
     );
   }
 
-  ListTile _buildNavItem(int currentTab, IconData icon) {
-    return ListTile(
-      selected: _currentTab == currentTab,
-      leading: Icon(icon),
-      title: Text(_tabTitles[currentTab]),
-      onTap: () => _switchTab(currentTab),
-    );
-  }
+  Drawer _buildNav(BuildContext context, User user, ThemeProvider themeProvider,
+      List<TabItem> items) {
+    var widgets = List<Widget>();
 
-  Drawer _buildNav(User user, bool isDark) {
-    return Drawer(
-      child: ListView(
+    final header = UserAccountsDrawerHeader(
+      decoration:
+          BoxDecoration(color: Theme.of(context).scaffoldBackgroundColor),
+      accountName: Text(
+        user.name,
+        style: TextStyle(
+          color: Theme.of(context).accentColor,
+        ),
+      ),
+      accountEmail: Text(
+        user.email,
+        style: TextStyle(
+          color: Theme.of(context).highlightColor,
+        ),
+      ),
+      currentAccountPicture: loadAvatar(user.avatarUrl, user.name),
+    );
+    final tabs = _buildTabNav(items, context);
+    final config = ListTile(
+      leading: Icon(Icons.settings),
+      title: Text("Config"),
+      onTap: () => _navigateToConfig(context),
+    );
+    final about = AboutListTile(
+      icon: Icon(Icons.apps),
+      applicationName: APP_NAME,
+      applicationVersion: APP_VERSION,
+      applicationLegalese: APP_LEGEND,
+      applicationIcon: Image.network(
+        APP_ICON_URL,
+        width: 60,
+        height: 60,
+      ),
+      aboutBoxChildren: <Widget>[
+        OutlineButton(
+          child: Text("FeedBack"),
+          onPressed: () => launch(APP_FEED_BACK_URL),
+        ),
+        OutlineButton(
+          child: Text("See in GitHub"),
+          onPressed: () => launch(APP_REPO_URL),
+        )
+      ],
+    );
+    final footer = Padding(
+      padding: EdgeInsets.only(left: 20),
+      child: Row(
         children: <Widget>[
-          UserAccountsDrawerHeader(
-            decoration: BoxDecoration(
-              color: Theme.of(context).scaffoldBackgroundColor,
-            ),
-            accountName: Text(
-              user.name,
-              style: TextStyle(
-                color: Theme.of(context).accentColor,
-              ),
-            ),
-            accountEmail: Text(
-              user.email,
-              style: TextStyle(
-                color: Theme.of(context).highlightColor,
-              ),
-            ),
-            currentAccountPicture: loadAvatar(user.avatarUrl, user.name),
-          ),
-          _buildNavItem(_tabProjects, Icons.category),
-          _buildNavItem(_tabActivity, Icons.local_activity),
-          _buildNavItem(_tabTodo, Icons.view_list),
-          _buildNavItem(_tabGroups, Icons.group),
-          _buildNavItem(_tabSetting, Icons.settings),
-          AboutListTile(
-            icon: Icon(Icons.apps),
-            applicationName: APP_NAME,
-            applicationVersion: APP_VERSION,
-            applicationLegalese: APP_LEGEND,
-            applicationIcon: Image.network(
-              APP_ICON_URL,
-              width: 60,
-              height: 60,
-            ),
-            aboutBoxChildren: <Widget>[
-              OutlineButton(
-                child: Text("FeedBack"),
-                onPressed: () => launch(APP_FEED_BACK_URL),
-              ),
-              OutlineButton(
-                child: Text("See in GitHub"),
-                onPressed: () => launch(APP_REPO_URL),
-              )
-            ],
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 20),
-            child: Row(
-              children: <Widget>[
-                Text("Dark Theme"),
-                Switch(
-                  onChanged: (isDark) => _changeTheme(isDark),
-                  value: isDark,
-                )
-              ],
-            ),
+          Text("Dark Theme"),
+          Switch(
+            onChanged: (isDark) => _changeTheme(isDark, themeProvider),
+            value: themeProvider.isDark,
           )
         ],
       ),
     );
+
+    widgets.add(header);
+    widgets.addAll(tabs);
+    widgets.add(config);
+    widgets.add(about);
+    widgets.add(footer);
+    return Drawer(child: ListView(children: widgets));
   }
 
-  void _changeTheme(bool isDark) {
-    final themeProvider = Provider.of<ThemeProvider>(context);
+  List<Widget> _buildTabNav(List<TabItem> items, BuildContext context) {
+    return items.map<Widget>((item) {
+      final index = items.indexOf(item);
+      return ListTile(
+        selected: _currentTab == index,
+        leading: Icon(item.icon),
+        title: Text(item.name),
+        onTap: () => _switchTab(item, index, context),
+      );
+    }).toList();
+  }
+
+  void _changeTheme(bool isDark, ThemeProvider themeProvider) {
     if (isDark) {
       themeProvider.switchToDark();
     } else {
@@ -150,35 +146,32 @@ class _State extends State<HomeNav> {
     }
   }
 
-  void _switchTab(int tabIndex) {
+  void _switchTab(TabItem item, int index, BuildContext context) {
     Navigator.of(context).pop();
-    if (tabIndex == _tabSetting) {
-      _navigateToConfig(context);
-      return;
-    }
     setState(() {
-      _currentTab = tabIndex;
-      _barTitle = _tabTitles[tabIndex];
+      _currentTab = index;
+      _barTitle = item.name;
     });
-    _storeNav(tabIndex);
+    _saveNavIndexToLocal(index);
   }
 
-  void _navigateToConfig(BuildContext context) =>
-      Navigator.pushNamed(context, '/config');
+  void _navigateToConfig(BuildContext context) {
+    Navigator.pop(context);
+    Navigator.pushNamed(context, '/config');
+  }
 
-  void _storeNav(int tabIndex) async {
+  void _saveNavIndexToLocal(int tabIndex) async {
     final sp = await SharedPreferences.getInstance();
     sp.setInt(KEY_TAB_INDEX, tabIndex);
   }
 
-  void _getStoreNav() async {
-    final index = await SharedPreferences.getInstance()
-        .then((sp) => sp.getInt(KEY_TAB_INDEX) ?? _tabProjects);
-    if (mounted) {
-      setState(() {
-        _currentTab = index;
-        _barTitle = _tabTitles[index];
-      });
-    }
+  void _loadNavIndexFromLocal() {
+    SharedPreferences.getInstance()
+        .then((sp) => sp.getInt(KEY_TAB_INDEX) ?? 0)
+        .then((index) {
+      if (mounted) {
+        setState(() => _currentTab = index);
+      }
+    });
   }
 }
