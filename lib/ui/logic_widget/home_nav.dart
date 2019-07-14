@@ -2,6 +2,7 @@ import 'package:F4Lab/const.dart';
 import 'package:F4Lab/model/user.dart';
 import 'package:F4Lab/providers/theme_provider.dart';
 import 'package:F4Lab/providers/user_provider.dart';
+import 'package:F4Lab/ui/logic_widget/notification.dart';
 import 'package:F4Lab/ui/tabs/activity.dart';
 import 'package:F4Lab/ui/tabs/groups.dart';
 import 'package:F4Lab/ui/tabs/project.dart';
@@ -27,7 +28,6 @@ class TabItem {
 
 class _State extends State<HomeNav> {
   int _currentTab = 0;
-  String _barTitle;
   List<TabItem> _items;
 
   @override
@@ -39,7 +39,6 @@ class _State extends State<HomeNav> {
       TabItem(Icons.group, "Groups", (_) => TabGroups())
     ];
     _loadNavIndexFromLocal();
-    _barTitle = _items[_currentTab].name;
   }
 
   @override
@@ -49,10 +48,15 @@ class _State extends State<HomeNav> {
     final user = userProvider.user;
     final tabs = _items.map<Widget>((item) => item.builder(context)).toList();
     return Scaffold(
-      appBar: AppBar(title: Text("$_barTitle")),
+      appBar: AppBar(title: Text(_items[_currentTab].name)),
       drawer: _buildNav(context, user, themeProvider, _items),
       body: Builder(builder: (context) {
-        return IndexedStack(index: _currentTab, children: tabs);
+        return Stack(
+          children: <Widget>[
+            IndexedStack(index: _currentTab, children: tabs),
+            NotificationBar()
+          ],
+        );
       }),
     );
   }
@@ -148,10 +152,7 @@ class _State extends State<HomeNav> {
 
   void _switchTab(TabItem item, int index, BuildContext context) {
     Navigator.of(context).pop();
-    setState(() {
-      _currentTab = index;
-      _barTitle = item.name;
-    });
+    setState(() => _currentTab = index);
     _saveNavIndexToLocal(index);
   }
 

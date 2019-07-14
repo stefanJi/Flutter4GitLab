@@ -1,3 +1,4 @@
+import 'package:F4Lab/providers/notification.dart';
 import 'package:F4Lab/providers/theme_provider.dart';
 import 'package:F4Lab/providers/user_provider.dart';
 import 'package:F4Lab/ui/page/PageConfig.dart';
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
     return [
       ChangeNotifierProvider(builder: (_) => ThemeProvider()),
       ChangeNotifierProvider(builder: (_) => UserProvider()),
+      ChangeNotifierProvider(builder: (_) => NotificationProvider())
     ];
   }
 
