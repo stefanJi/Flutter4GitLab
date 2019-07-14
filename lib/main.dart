@@ -1,6 +1,6 @@
 import 'package:F4Lab/providers/notification.dart';
-import 'package:F4Lab/providers/theme_provider.dart';
-import 'package:F4Lab/providers/user_provider.dart';
+import 'package:F4Lab/providers/theme.dart';
+import 'package:F4Lab/providers/user.dart';
 import 'package:F4Lab/ui/page/PageConfig.dart';
 import 'package:F4Lab/ui/page/PageHome.dart';
 import 'package:flutter/material.dart';

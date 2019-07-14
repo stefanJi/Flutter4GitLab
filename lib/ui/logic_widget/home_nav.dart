@@ -1,7 +1,7 @@
 import 'package:F4Lab/const.dart';
 import 'package:F4Lab/model/user.dart';
-import 'package:F4Lab/providers/theme_provider.dart';
-import 'package:F4Lab/providers/user_provider.dart';
+import 'package:F4Lab/providers/theme.dart';
+import 'package:F4Lab/providers/user.dart';
 import 'package:F4Lab/ui/logic_widget/notification.dart';
 import 'package:F4Lab/ui/tabs/activity.dart';
 import 'package:F4Lab/ui/tabs/groups.dart';
