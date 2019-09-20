@@ -1,6 +1,13 @@
 name: F4Lab CI
 on:
-  - push
+  push:
+    paths:
+      - "*" # Run workflow for all file paths
+      - "!README.md"
+      - ".gitignore"
+      - "!/.vscode/*"
+      - "!/script/*"
+      - "!/art/*"
 
 jobs:
   test:
@@ -17,4 +24,3 @@ jobs:
       - uses: subosito/flutter-action@v1
       - run: flutter pub get
       - run: flutter test --no-pub test/
-      # - run: flutter build apk
