@@ -19,7 +19,7 @@ dependencies:
   xml: ^3.2.3
   cupertino_icons: ^0.1.2
   pull_to_refresh: ^1.3.3
-  flutter_stetho: ^0.2.2
+  flutter_stetho: ^0.5.0
   dio: ^2.1.7
   http: ^0.12.0+2
   sentry: ^2.2.0
