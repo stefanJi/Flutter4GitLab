@@ -77,7 +77,6 @@ class UserProvider with ChangeNotifier {
     _testSuccess = false;
     _testing = false;
     _testErr = null;
-    notifyListeners();
   }
 
 //  endregion

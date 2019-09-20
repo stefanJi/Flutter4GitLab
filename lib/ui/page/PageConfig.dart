@@ -24,8 +24,9 @@ class _ConfigState extends State<ConfigPage> {
   Widget build(BuildContext context) {
     userProvider = Provider.of<UserProvider>(context);
     if (userProvider.testSuccess) {
-      Navigator.pop(context);
       userProvider.resetTestState();
+      //TODO: delay pop to wait build finish, maybe have a better way
+      Future.delayed(Duration(milliseconds: 300), () => Navigator.pop(context));
     }
     return Scaffold(
       appBar: AppBar(

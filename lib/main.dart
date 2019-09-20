@@ -1,4 +1,3 @@
-import 'package:F4Lab/providers/notification.dart';
 import 'package:F4Lab/providers/theme.dart';
 import 'package:F4Lab/providers/user.dart';
 import 'package:F4Lab/ui/page/PageConfig.dart';
