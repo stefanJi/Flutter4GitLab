@@ -170,6 +170,11 @@ class User {
     data['organization'] = this.organization;
     return data;
   }
+
+  @override
+  String toString() {
+    return 'User{id: $id, username: $username, name: $name}';
+  }
 }
 
 class Identities {

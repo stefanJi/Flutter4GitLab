@@ -96,13 +96,10 @@ class ApiService {
   }
 
   static Future<ApiResp<User>> getAuthUser() async {
-    final client = GitlabClient.newInstance();
-    return client.get('user').then((resp) {
-      return ApiResp(respStatusIsOk(resp.statusCode),
-          User.fromJson(respConvertToMap(resp)));
-    }).catchError((err) {
-      return ApiResp(false, null, err?.toString());
-    }).whenComplete(client.close);
+    return GitlabClient.buildDio().get('user').then((resp) {
+      final ok = respStatusIsOk(resp.statusCode);
+      return ApiResp(ok, User.fromJson(resp.data));
+    }).catchError((err) => ApiResp(false, null, err.toString()));
   }
 
   static Future<ApiResp<MergeRequest>> getSingleMR(int projectId, int mrIId) {

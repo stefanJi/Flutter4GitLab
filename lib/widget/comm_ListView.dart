@@ -18,8 +18,7 @@ abstract class CommListWidget extends StatefulWidget {
       {this.canPullDown = true, this.canPullUp = true, this.withPage = true});
 }
 
-abstract class CommListState<T extends CommListWidget> extends State<T>
-    with SingleTickerProviderStateMixin {
+abstract class CommListState<T extends CommListWidget> extends State<T> {
   List<dynamic> data;
   int page;
   int total;
