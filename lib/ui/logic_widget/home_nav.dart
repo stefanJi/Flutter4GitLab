@@ -53,8 +53,7 @@ class _State extends State<HomeNav> {
       body: Builder(builder: (context) {
         return Stack(
           children: <Widget>[
-            IndexedStack(index: _currentTab, children: tabs),
-            NotificationBar()
+            IndexedStack(index: _currentTab, children: tabs)
           ],
         );
       }),
