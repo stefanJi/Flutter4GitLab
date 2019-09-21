@@ -1,13 +1,6 @@
 name: F4LabCI
 on:
-  push:
-    paths:
-      - "*" # Run workflow for all file paths
-      - "!README.md"
-      - ".gitignore"
-      - "!/.vscode/*"
-      - "!/script/*"
-      - "!/art/*"
+  push
 
 jobs:
   test:
