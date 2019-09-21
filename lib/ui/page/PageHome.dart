@@ -1,4 +1,4 @@
-import 'package:F4Lab/const.dart';
+import 'package:F4Lab/providers/package_info.dart';
 import 'package:F4Lab/providers/user.dart';
 import 'package:F4Lab/ui/logic_widget/home_nav.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +21,7 @@ class HomePage extends StatelessWidget {
       Scaffold(body: Center(child: CircularProgressIndicator()));
 
   Widget _buildWelcome(BuildContext context) {
+    final provider = Provider.of<PackageInfoProvider>(context);
     return Scaffold(
         body: Container(
       color: Theme.of(context).primaryColor,
@@ -32,7 +33,7 @@ class HomePage extends StatelessWidget {
             Padding(
               padding: EdgeInsets.only(top: 100),
               child: Text(
-                APP_NAME,
+                provider.packageInfo.appName,
                 style: TextStyle(
                     color: Theme.of(context).accentColor,
                     fontStyle: FontStyle.italic,

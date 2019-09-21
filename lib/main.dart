@@ -1,3 +1,4 @@
+import 'package:F4Lab/providers/package_info.dart';
 import 'package:F4Lab/providers/theme.dart';
 import 'package:F4Lab/providers/user.dart';
 import 'package:F4Lab/ui/page/PageConfig.dart';
@@ -28,7 +29,8 @@ class MyApp extends StatelessWidget {
   List<SingleChildCloneableWidget> _buildProviders(BuildContext context) {
     return [
       ChangeNotifierProvider(builder: (_) => ThemeProvider()),
-      ChangeNotifierProvider(builder: (_) => UserProvider())
+      ChangeNotifierProvider(builder: (_) => UserProvider()),
+      ChangeNotifierProvider(builder: (_) => PackageInfoProvider()),
     ];
   }
 
