@@ -17,6 +17,5 @@ jobs:
         with:
           # same with pubspec.yaml
           flutter-version: "1.9.1+hotfix.2"
-      - run: |
-          flutter pub get
-          flutter test --no-pub test/
+      - run: flutter pub get
+      - run: flutter test --no-pub test/
