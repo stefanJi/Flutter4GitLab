@@ -1,0 +1,29 @@
+name: F4LabCI
+on:
+  push:
+    paths:
+      - "*" # Run workflow for all file paths
+      - "!README.md"
+      - ".gitignore"
+      - "!/.vscode/*"
+      - "!/script/*"
+      - "!/art/*"
+
+jobs:
+  test:
+    name: Test on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-java@v1
+        with:
+          java-version: "12.x"
+      - uses: subosito/flutter-action@v1
+        with:
+          # same with pubspec.yaml
+          flutter-version: "1.7.8"
+      - run: flutter pub get
+      - run: flutter test --no-pub test/
