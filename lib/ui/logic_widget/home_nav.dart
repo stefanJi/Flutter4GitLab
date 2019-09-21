@@ -1,5 +1,6 @@
 import 'package:F4Lab/const.dart';
 import 'package:F4Lab/model/user.dart';
+import 'package:F4Lab/providers/package_info.dart';
 import 'package:F4Lab/providers/theme.dart';
 import 'package:F4Lab/providers/user.dart';
 import 'package:F4Lab/ui/tabs/activity.dart';
@@ -50,11 +51,7 @@ class _State extends State<HomeNav> {
       appBar: AppBar(title: Text(_items[_currentTab].name)),
       drawer: _buildNav(context, user, themeProvider, _items),
       body: Builder(builder: (context) {
-        return Stack(
-          children: <Widget>[
-            IndexedStack(index: _currentTab, children: tabs)
-          ],
-        );
+        return IndexedStack(index: _currentTab, children: tabs);
       }),
     );
   }
@@ -86,10 +83,12 @@ class _State extends State<HomeNav> {
       title: Text("Config"),
       onTap: () => _navigateToConfig(context),
     );
+
+    final packageInfoProvider = Provider.of<PackageInfoProvider>(context);
     final about = AboutListTile(
       icon: Icon(Icons.apps),
-      applicationName: APP_NAME,
-      applicationVersion: APP_VERSION,
+      applicationName: packageInfoProvider.packageInfo.appName,
+      applicationVersion: packageInfoProvider.packageInfo.version,
       applicationLegalese: APP_LEGEND,
       applicationIcon: Image.network(
         APP_ICON_URL,
