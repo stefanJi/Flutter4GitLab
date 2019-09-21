@@ -19,5 +19,5 @@ jobs:
           flutter-version: "1.9.1+hotfix.2"
       - name: flutter check
       - run: |
-         flutter pub get
-         flutter test --no-pub test/
+          flutter pub get
+          flutter test --no-pub test/
