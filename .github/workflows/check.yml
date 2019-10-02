@@ -2,7 +2,7 @@ name: F4LabCI
 on: pull_request
 
 jobs:
-  check:
+  test:
     name: Test on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
@@ -18,4 +18,5 @@ jobs:
           # same with pubspec.yaml
           flutter-version: "1.9.1+hotfix.2"
       - run: flutter pub get
+      - run: flutter analyze --no-pub --no-current-package lib/ test/
       - run: flutter test --no-pub test/
