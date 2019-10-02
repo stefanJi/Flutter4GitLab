@@ -2,7 +2,8 @@ name: F4LabCI
 on: pull_request
 
 jobs:
-  Test on ${{ matrix.os }}:
+  test:
+    name: Test on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
