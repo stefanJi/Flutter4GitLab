@@ -4,8 +4,6 @@
 
 *A glitlab client made by flutter. Support Android & IOS.*
 
-[![Build Status](https://travis-ci.org/stefanJi/Flutter4GitLab.svg?branch=master)](https://travis-ci.org/stefanJi/Flutter4GitLab)
-
 [![](https://github.com/stefanJi/Flutter4GitLab/workflows/F4LabCI/badge.svg)](https://github.com/stefanJi/Flutter4GitLab/actions)
 
 |home|config|nav|project|merge requests| merge request|commit|diff|
