@@ -43,8 +43,8 @@ class _State extends State<HomeNav> {
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context);
-    final userProvider = Provider.of<UserProvider>(context);
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
     final user = userProvider.user;
     final tabs = _items.map<Widget>((item) => item.builder(context)).toList();
     return Scaffold(
