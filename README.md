@@ -4,7 +4,10 @@
 
 *A glitlab client made by flutter. Support Android & IOS.*
 
+
 [![](https://github.com/stefanJi/Flutter4GitLab/workflows/F4LabCI/badge.svg)](https://github.com/stefanJi/Flutter4GitLab/actions)
+
+![Arch](./art/F4Lab_arch.png)
 
 |home|config|nav|project|merge requests| merge request|commit|diff|
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
