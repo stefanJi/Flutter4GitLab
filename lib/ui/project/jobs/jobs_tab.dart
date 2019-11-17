@@ -30,18 +30,47 @@ class JobWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-        child: Padding(
-      padding: EdgeInsets.all(8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text("#${job.id} ${job.ref} ${job.user.name}"),
-          Text(job.status),
-          Text(job.stage),
-          Text(job.name),
-        ],
-      ),
-    ));
+    return Card(child: Padding(padding: EdgeInsets.all(8), child: _item(job)));
   }
+
+  Widget _item(Jobs job) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(job.commit.title, style: TextStyle(fontWeight: FontWeight.bold)),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text("#${job.id} ${job.ref}"),
+            Row(
+              children: <Widget>[
+                Padding(
+                  child: Text(job.status),
+                  padding: EdgeInsets.all(3),
+                ),
+                statusIcons.containsKey(job.status)
+                    ? statusIcons[job.status]
+                    : Icon(Icons.error, size: 18)
+              ],
+            )
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text(job.stage),
+            Text(job.name),
+          ],
+        ),
+      ],
+    );
+  }
+
+  static get statusIcons => {
+        "success": Icon(Icons.check_circle, color: Colors.green, size: 18),
+        "manual": Icon(Icons.build, size: 18),
+        "failed": Icon(Icons.error_outline, color: Colors.redAccent, size: 18),
+        "skipped": Icon(Icons.skip_next, size: 18),
+        "canceled": Icon(Icons.cancel, size: 18)
+      };
 }
