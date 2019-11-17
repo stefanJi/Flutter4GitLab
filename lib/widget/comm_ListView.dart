@@ -6,7 +6,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 ///[canPullUp] This bool will affect whether or not to have the function of drop-up load
 ///[canPullDown] This bool will affect whether or not to have the function of drop-down refresh
-///[withPage] Tihs bool will affect whether or not to add page arg to request url
+///[withPage] This bool will affect whether or not to add page arg to request url
 abstract class CommListWidget extends StatefulWidget {
   final bool canPullUp;
 

@@ -1,8 +1,8 @@
 import 'package:F4Lab/providers/package_info.dart';
 import 'package:F4Lab/providers/theme.dart';
 import 'package:F4Lab/providers/user.dart';
-import 'package:F4Lab/ui/page/PageConfig.dart';
-import 'package:F4Lab/ui/page/PageHome.dart';
+import 'package:F4Lab/ui/config/config_page.dart';
+import 'package:F4Lab/ui/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sentry/sentry.dart';

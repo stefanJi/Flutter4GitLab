@@ -1,6 +1,6 @@
 import 'package:F4Lab/providers/package_info.dart';
 import 'package:F4Lab/providers/user.dart';
-import 'package:F4Lab/ui/logic_widget/home_nav.dart';
+import 'package:F4Lab/ui/home_nav.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
