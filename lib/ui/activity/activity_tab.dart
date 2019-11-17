@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:F4Lab/gitlab_client.dart';
+import 'package:F4Lab/util/widget_util.dart';
 import 'package:F4Lab/widget/comm_ListView.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -41,9 +42,7 @@ class FeedState extends CommListState<TabActivity> {
     final item = data[index];
     return Card(
       child: ListTile(
-        leading: CircleAvatar(
-          backgroundImage: NetworkImage(item['avatar']),
-        ),
+        leading: loadAvatar(item['avatar'], item['title']),
         title: Text(item['title']),
         onTap: () {},
       ),
