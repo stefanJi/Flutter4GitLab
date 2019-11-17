@@ -46,7 +46,7 @@ class PageMrState extends State<PageMrDetail> {
         child: Scaffold(
           appBar: AppBar(
             centerTitle: false,
-            title: Text(widget._mrTitle),
+            title: Text("MR #${widget._mergeRequestIId}"),
             bottom: TabBar(isScrollable: true, tabs: [
               Tab(text: "Overview"),
               Tab(text: "Commits"),

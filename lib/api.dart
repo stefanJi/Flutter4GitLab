@@ -48,6 +48,9 @@ class ApiEndPoint {
   static String pipelineJobs(int projectId, int pipelineId) =>
       "projects/$projectId/pipelines/$pipelineId/jobs";
 
+  static String projectJobs(int projectId) =>
+      "projects/$projectId/jobs";
+
   static String mergeMR(
     int projectId,
     int mrIId, {
