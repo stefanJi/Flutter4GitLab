@@ -1,9 +1,9 @@
 import 'package:F4Lab/api.dart';
 import 'package:F4Lab/model/merge_request.dart';
-import 'package:F4Lab/ui/logic_widget/approve.dart';
-import 'package:F4Lab/ui/logic_widget/merge_request_action.dart';
-import 'package:F4Lab/ui/logic_widget/merge_request_jobs.dart';
-import 'package:F4Lab/ui/tabs/merge_request_detail_tabs.dart';
+import 'package:F4Lab/ui/project/mr/approve.dart';
+import 'package:F4Lab/ui/project/mr/merge_request_action.dart';
+import 'package:F4Lab/ui/project/mr/mr_tab_jobs.dart';
+import 'package:F4Lab/ui/project/mr/mr_detail_tabs.dart';
 import 'package:flutter/material.dart';
 
 class PageMrDetail extends StatefulWidget {

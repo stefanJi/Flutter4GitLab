@@ -1,32 +1,17 @@
-import 'package:F4Lab/api.dart';
 import 'package:F4Lab/model/merge_request.dart';
-import 'package:F4Lab/ui/logic_widget/approve.dart';
-import 'package:F4Lab/ui/page/PageMrDetail.dart';
+import 'package:F4Lab/ui/project/mr/approve.dart';
+import 'package:F4Lab/ui/project/mr/mr_home.dart';
 import 'package:F4Lab/util/widget_util.dart';
-import 'package:F4Lab/widget/comm_ListView.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
-class MrTab extends CommListWidget {
-  final int projectId;
-  final String mrState;
-  final String scope;
-  final Key key;
+class MrListItem extends StatelessWidget {
+  final MergeRequest mr;
 
-  MrTab(this.projectId, {this.mrState, this.key, this.scope});
+  const MrListItem({Key key, this.mr}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _MrState();
-}
-
-class _MrState extends CommListState<MrTab> {
-  @override
-  Widget childBuild(BuildContext context, int index) {
-    return _buildItem(data[index]);
-  }
-
-  Widget _buildItem(item) {
-    final mr = MergeRequest.fromJson(item);
+  Widget build(BuildContext context) {
     bool assigned = mr.assignee != null;
     bool hadDescription = mr.description != null && (mr.description.isNotEmpty);
     String branch = "${mr.sourceBranch} → ${mr.targetBranch}";
@@ -40,7 +25,7 @@ class _MrState extends CommListState<MrTab> {
       elevation: 1.0,
       margin: EdgeInsets.only(bottom: 5.0, left: 4.0, right: 4.0, top: 5.0),
       child: InkWell(
-        onTap: () => _toMrDetail(mr),
+        onTap: () => _toMrDetail(context, mr),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -85,12 +70,8 @@ class _MrState extends CommListState<MrTab> {
     return card;
   }
 
-  _toMrDetail(MergeRequest mr) {
+  _toMrDetail(BuildContext context, MergeRequest mr) {
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => PageMrDetail(mr.title, mr.projectId, mr.iid)));
   }
-
-  @override
-  String endPoint() => ApiEndPoint.mergeRequests(widget.projectId,
-      state: widget.mrState, scope: widget.scope);
 }

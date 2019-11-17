@@ -5,7 +5,7 @@ import 'package:F4Lab/providers/theme.dart';
 import 'package:F4Lab/providers/user.dart';
 import 'package:F4Lab/ui/tabs/activity.dart';
 import 'package:F4Lab/ui/tabs/groups.dart';
-import 'package:F4Lab/ui/tabs/project.dart';
+import 'package:F4Lab/ui/project/project_tabs.dart';
 import 'package:F4Lab/util/widget_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';

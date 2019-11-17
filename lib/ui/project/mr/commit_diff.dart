@@ -1,7 +1,7 @@
 import 'package:F4Lab/api.dart';
 import 'package:F4Lab/model/commit.dart';
 import 'package:F4Lab/model/diff.dart';
-import 'package:F4Lab/ui/logic_widget/diff.dart';
+import 'package:F4Lab/ui/project/mr/diff.dart';
 import 'package:flutter/material.dart';
 
 class PageCommitDiff extends StatefulWidget {

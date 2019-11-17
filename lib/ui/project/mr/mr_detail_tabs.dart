@@ -1,7 +1,7 @@
 import 'package:F4Lab/api.dart' show ApiEndPoint;
 import 'package:F4Lab/model/commit.dart';
 import 'package:F4Lab/model/discussion.dart';
-import 'package:F4Lab/ui/page/PageCommitDiff.dart';
+import 'package:F4Lab/ui/project/mr/commit_diff.dart';
 import 'package:F4Lab/util/date_util.dart';
 import 'package:F4Lab/util/widget_util.dart';
 import 'package:F4Lab/widget/comm_ListView.dart';
