@@ -18,7 +18,8 @@ abstract class CommListWidget extends StatefulWidget {
       {this.canPullDown = true, this.canPullUp = true, this.withPage = true});
 }
 
-abstract class CommListState<T extends CommListWidget> extends State<T> {
+abstract class CommListState<T extends CommListWidget> extends State<T>
+    with AutomaticKeepAliveClientMixin {
   List<dynamic> data;
   int page;
   int total;
@@ -150,8 +151,12 @@ abstract class CommListState<T extends CommListWidget> extends State<T> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return data == null
         ? Center(child: CircularProgressIndicator())
         : buildDataListView();
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
