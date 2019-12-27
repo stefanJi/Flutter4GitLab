@@ -3,9 +3,9 @@ import 'package:F4Lab/providers/theme.dart';
 import 'package:F4Lab/providers/user.dart';
 import 'package:F4Lab/ui/config/config_page.dart';
 import 'package:F4Lab/ui/home_page.dart';
+import 'package:F4Lab/util/exception_capture.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sentry/sentry.dart';
 
 void main() {
   runApp(MyApp());
@@ -18,8 +18,6 @@ class MyApp extends StatelessWidget {
 
   static void errorHandler(FlutterErrorDetails details,
       {bool forceReport = false}) {
-    final SentryClient sentry = new SentryClient(
-        dsn: "https://a49f4f9002e04a81959c51f769a4e013@sentry.io/1406491");
     sentry.captureException(
       exception: details.exception,
       stackTrace: details.stack,
