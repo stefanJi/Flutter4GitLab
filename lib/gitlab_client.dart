@@ -4,7 +4,9 @@ import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 
 const DEFAULT_API_VERSION = 'v4';
-const USER_AGENT = "F4Lab";
+const USER_AGENT = "F4Lab Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36";
+const KEY_TOKEN = "private-token";
+const KEY_USER_AGENT = "user-agent";
 
 class GitlabClient extends http.BaseClient {
   static String globalHOST;
@@ -19,11 +21,11 @@ class GitlabClient extends http.BaseClient {
     globalTOKEN = token;
     globalHOST = host;
     apiVersion = version;
+    authHeaders[KEY_TOKEN] = globalTOKEN;
   }
 
   Future<http.StreamedResponse> send(http.BaseRequest request) {
-    request.headers['Private-Token'] = globalTOKEN;
-    request.headers['User-Agent'] = USER_AGENT;
+    authHeaders.forEach((k, v) => request.headers[k] = v);
     return _inner.send(request);
   }
 
@@ -60,9 +62,13 @@ class GitlabClient extends http.BaseClient {
     dio.options.baseUrl = baseUrl();
     dio.options.connectTimeout = 5000; //5s
     dio.options.receiveTimeout = 5000;
-    dio.options.headers["Private-Token"] = globalTOKEN;
-    dio.options.headers["User-Agent"] = USER_AGENT;
+    authHeaders.forEach((k, v) => dio.options.headers[k] = v);
     dio.options.responseType = ResponseType.json;
     return dio;
   }
+
+  static Map<String, String> authHeaders = {
+    KEY_TOKEN: globalTOKEN,
+    KEY_USER_AGENT: USER_AGENT
+  };
 }

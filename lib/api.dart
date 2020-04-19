@@ -6,6 +6,7 @@ import 'package:F4Lab/model/diff.dart';
 import 'package:F4Lab/model/jobs.dart';
 import 'package:F4Lab/model/merge_request.dart';
 import 'package:F4Lab/model/user.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart';
 
 class ApiResp<T> {
@@ -48,8 +49,7 @@ class ApiEndPoint {
   static String pipelineJobs(int projectId, int pipelineId) =>
       "projects/$projectId/pipelines/$pipelineId/jobs";
 
-  static String projectJobs(int projectId) =>
-      "projects/$projectId/jobs";
+  static String projectJobs(int projectId) => "projects/$projectId/jobs";
 
   static String mergeMR(
     int projectId,
