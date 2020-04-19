@@ -81,6 +81,6 @@ class MrListItem extends StatelessWidget {
 
   _toMrDetail(BuildContext context, MergeRequest mr) {
     Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => PageMrDetail(mr.title, mr.projectId, mr.iid)));
+        builder: (context) => PageMrDetail(mr.projectId, mr.iid)));
   }
 }

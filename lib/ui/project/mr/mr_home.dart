@@ -7,11 +7,10 @@ import 'package:F4Lab/ui/project/mr/mr_detail_tabs.dart';
 import 'package:flutter/material.dart';
 
 class PageMrDetail extends StatefulWidget {
-  final String _mrTitle;
   final int _projectId;
   final int _mergeRequestIId;
 
-  PageMrDetail(this._mrTitle, this._projectId, this._mergeRequestIId);
+  PageMrDetail(this._projectId, this._mergeRequestIId);
 
   @override
   State<StatefulWidget> createState() => PageMrState();

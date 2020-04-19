@@ -6,7 +6,6 @@ import 'package:F4Lab/model/diff.dart';
 import 'package:F4Lab/model/jobs.dart';
 import 'package:F4Lab/model/merge_request.dart';
 import 'package:F4Lab/model/user.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart';
 
 class ApiResp<T> {
