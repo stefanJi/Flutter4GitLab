@@ -18,6 +18,7 @@ jobs:
           # same with pubspec.yaml
           flutter-version: "1.12.13+hotfix.9"
       - run: flutter pub get
+      - run: flutter pub deps
       - run: flutter analyze --no-pub --no-current-package lib/ test/
       - run: flutter test --no-pub test/
       - run: flutter build apk
