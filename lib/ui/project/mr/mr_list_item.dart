@@ -15,7 +15,7 @@ class MrListItem extends StatelessWidget {
     bool assigned = mr.assignee != null;
     bool hadDescription = mr.description != null && (mr.description.isNotEmpty);
     String branch = "${mr.sourceBranch} → ${mr.targetBranch}";
-    String uName;
+    String uName = "";
     String avatarUrl;
     if (assigned) {
       uName = mr.assignee.username;
@@ -30,7 +30,19 @@ class MrListItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             ListTile(
-              title: Text(mr.title),
+              title: RichText(
+                text: TextSpan(
+                    text: uName + " ",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                    children: [
+                      TextSpan(
+                          text: mr.title,
+                          style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.normal,
+                              fontStyle: FontStyle.italic))
+                    ]),
+              ),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[Chip(label: Text(branch)), Text(mr.webUrl)],
@@ -45,13 +57,10 @@ class MrListItem extends StatelessWidget {
                       color: Colors.red,
                     ),
               trailing: assigned
-                  ? Column(children: <Widget>[
-                      loadAvatar(
-                        avatarUrl,
-                        uName,
-                      ),
-                      Text(uName ?? "")
-                    ])
+                  ? loadAvatar(
+                      avatarUrl,
+                      uName,
+                    )
                   : IgnorePointer(),
             ),
             hadDescription
