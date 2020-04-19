@@ -26,9 +26,9 @@ class MyApp extends StatelessWidget {
 
   List<SingleChildCloneableWidget> _buildProviders(BuildContext context) {
     return [
-      ChangeNotifierProvider(builder: (_) => ThemeProvider()),
-      ChangeNotifierProvider(builder: (_) => UserProvider()),
-      ChangeNotifierProvider(builder: (_) => PackageInfoProvider()),
+      ChangeNotifierProvider(create: (_) => ThemeProvider()),
+      ChangeNotifierProvider(create: (_) => UserProvider()),
+      ChangeNotifierProvider(create: (_) => PackageInfoProvider()),
     ];
   }
 

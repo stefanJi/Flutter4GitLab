@@ -21,6 +21,18 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
+def versionSplit = flutterVersionName.split("\\.")
+flutterVersionCode = 0
+versionSplit.each({ s ->
+    flutterVersionCode += Integer.valueOf(s)
+})
+println "version name: $flutterVersionName"
+println "base version code: $flutterVersionCode"
+println "armeabi-v7a version code: ${1000 + flutterVersionCode}"
+println "arm64_v8a version code: ${2000 + flutterVersionCode}"
+println "x86_64 version code: ${4000 + flutterVersionCode}"
+
+
 apply plugin: 'com.android.application'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
