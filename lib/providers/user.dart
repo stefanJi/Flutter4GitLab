@@ -7,15 +7,15 @@ import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserProvider with ChangeNotifier {
-  User _user = UserHelper.getUser();
+  User? _user = UserHelper.getUser();
   bool _loading = false;
-  String _error;
+  String? _error;
 
-  User get user => _user;
+  User? get user => _user;
 
   bool get loading => _loading;
 
-  String get error => _error;
+  String? get error => _error;
 
   UserProvider() {
     _initUser();
@@ -31,7 +31,7 @@ class UserProvider with ChangeNotifier {
     _loading = true;
     notifyListeners();
 
-    String err = await UserHelper.initUser();
+    String? err = await UserHelper.initUser();
     _loading = false;
     _error = err;
     _user = UserHelper.getUser();
@@ -39,23 +39,23 @@ class UserProvider with ChangeNotifier {
   }
 
 //region config token
-  String _testErr;
+  String? _testErr;
   bool _testSuccess = false;
   bool _testing = false;
 
-  String get testErr => _testErr;
+  String? get testErr => _testErr;
 
   bool get testSuccess => _testSuccess;
 
   bool get testing => _testing;
 
-  void testConfig(String host, String token, String version) async {
+  void testConfig(String host, String token, String? version) async {
     _testing = true;
     _testSuccess = false;
     _testErr = null;
     notifyListeners();
 
-    GitlabClient.setUpTokenAndHost(token, host, version);
+    GitlabClient.setUpTokenAndHost(token, host, version ?? DEFAULT_API_VERSION);
     final resp = await ApiService.getAuthUser();
     if (resp.success && resp.data != null) {
       _testSuccess = true;
@@ -64,7 +64,7 @@ class UserProvider with ChangeNotifier {
       sp.setString(KEY_ACCESS_TOKEN, token);
       sp.setString(KEY_HOST, host);
       sp.setString(KEY_API_VERSION, version ?? DEFAULT_API_VERSION);
-      setUser(resp.data);
+      setUser(resp.data!);
     } else {
       _testSuccess = false;
       _testErr = resp.err ?? "Error";

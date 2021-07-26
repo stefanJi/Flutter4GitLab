@@ -16,7 +16,7 @@ class MrApprove extends StatefulWidget {
 }
 
 class _MrApproveState extends State<MrApprove> {
-  Approvals approval;
+  Approvals? approval;
   bool isApproving = false;
 
   void _loadApprove() async {
@@ -43,12 +43,12 @@ class _MrApproveState extends State<MrApprove> {
     return _buildItem(approval);
   }
 
-  Widget _buildItem(Approvals ap) {
-    int requireApproves = ap.approvalsRequired ?? 0;
-    int hadApproval = ap.approvedBy != null ? ap.approvedBy.length : 0;
+  Widget _buildItem(Approvals? ap) {
+    int requireApproves = ap?.approvalsRequired ?? 0;
+    int? hadApproval = ap?.approvedBy != null ? ap?.approvedBy.length : 0;
     bool allApproval = requireApproves == hadApproval;
-    bool iHadApproval = ap.approvedBy != null
-        ? ap.approvedBy.any((item) => item.user.id == UserHelper.getUser().id)
+    bool iHadApproval = ap?.approvedBy != null
+        ? ap!.approvedBy.any((item) => item.user?.id == UserHelper.getUser()?.id)
         : false;
 
     return Card(
@@ -82,7 +82,7 @@ class _MrApproveState extends State<MrApprove> {
     setState(() {
       isApproving = true;
     });
-    final ApiResp<String> apiData =
+    final ApiResp apiData =
         await ApiService.approve(widget.projectId, widget.mrIID, isApprove);
     setState(() {
       isApproving = false;
@@ -90,7 +90,7 @@ class _MrApproveState extends State<MrApprove> {
     if (apiData.success) {
       _loadApprove();
     } else {
-      Scaffold.of(context).showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text("${apiData.err}"),
           backgroundColor: Colors.red,

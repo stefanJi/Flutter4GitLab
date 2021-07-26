@@ -17,7 +17,7 @@ class PageMrDetail extends StatefulWidget {
 }
 
 class PageMrState extends State<PageMrDetail> {
-  MergeRequest _mr;
+  MergeRequest? _mr;
 
   void _onMergeRequestChange(void v) {
     _loadMergeRequest();
@@ -28,7 +28,7 @@ class PageMrState extends State<PageMrDetail> {
     final resp = await ApiService.getSingleMR(
         widget._projectId, widget._mergeRequestIId);
     if (resp.success) {
-      setState(() => _mr = resp?.data);
+      setState(() => _mr = resp.data);
     }
   }
 
@@ -58,9 +58,9 @@ class PageMrState extends State<PageMrDetail> {
               : TabBarView(
                   children: [
                     _buildInfo(),
-                    CommitTab(_mr.projectId, _mr.iid),
-                    DiscussionTab(_mr.projectId, _mr.iid),
-                    MergeRequestJobsTab(_mr.projectId, _mr.iid)
+                    CommitTab(_mr!.projectId, _mr!.iid),
+                    DiscussionTab(_mr!.projectId, _mr!.iid),
+                    MergeRequestJobsTab(_mr!.projectId, _mr!.iid)
                   ],
                 ),
         ));
@@ -79,23 +79,23 @@ class PageMrState extends State<PageMrDetail> {
 
   Widget _buildInfo() {
     final title = Text(
-      _mr.title,
+      _mr!.title,
       style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26.0),
     );
 
     final desc =
-        _mr.description != null ? Text(_mr.description) : IgnorePointer();
+        _mr?.description != null ? Text(_mr!.description) : IgnorePointer();
 
     final mrPlan = Card(
       child: ListTile(
-        title: Text("Merge: ${_mr.sourceBranch} -> ${_mr.targetBranch}"),
-        trailing: _getStatusColor(_mr.mergeStatus),
+        title: Text("Merge: ${_mr!.sourceBranch} -> ${_mr!.targetBranch}"),
+        trailing: _getStatusColor(_mr!.mergeStatus),
       ),
     );
 
-    final approvalAction = _buildApproval(_mr.projectId, _mr.iid);
+    // final approvalAction = _buildApproval(_mr!.projectId, _mr!.iid);
 
-    final mrAction = MergeRequestAction(_mr, _onMergeRequestChange);
+    final mrAction = MergeRequestAction(_mr!, _onMergeRequestChange);
 
     return SingleChildScrollView(
         padding: EdgeInsets.all(10.0),
@@ -105,7 +105,7 @@ class PageMrState extends State<PageMrDetail> {
             title,
             desc,
             mrPlan,
-            approvalAction,
+            // approvalAction,
             mrAction,
           ],
         ));

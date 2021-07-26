@@ -1,15 +1,16 @@
 class Discussion {
-  String id;
-  bool individualNote;
-  List<Notes> notes;
+  late String id;
+  late bool individualNote;
+  late List<Notes> notes = [];
 
-  Discussion({this.id, this.individualNote, this.notes});
+  Discussion(
+      {required this.id, required this.individualNote, required this.notes});
 
   Discussion.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     individualNote = json['individual_note'];
     if (json['notes'] != null) {
-      notes = new List<Notes>();
+      notes = [];
       json['notes'].forEach((v) {
         notes.add(new Notes.fromJson(v));
       });
@@ -20,43 +21,41 @@ class Discussion {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['individual_note'] = this.individualNote;
-    if (this.notes != null) {
-      data['notes'] = this.notes.map((v) => v.toJson()).toList();
-    }
+    data['notes'] = this.notes.map((v) => v.toJson()).toList();
     return data;
   }
 }
 
 class Notes {
-  int id;
-  String type;
-  String body;
-  String attachment;
-  Author author;
-  String createdAt;
-  String updatedAt;
-  bool system;
-  int noteableId;
-  String noteableType;
-  int noteableIid;
-  bool resolved;
-  bool resolvable;
-  Author resolvedBy;
+  late int id;
+  late String type;
+  late String body;
+  late String attachment;
+  Author? author;
+  late String createdAt;
+  late String updatedAt;
+  late bool system;
+  late int noteableId;
+  late String noteableType;
+  late int noteableIid;
+  late bool resolved;
+  late bool resolvable;
+  Author? resolvedBy;
 
   Notes(
-      {this.id,
-      this.type,
-      this.body,
-      this.attachment,
+      {required this.id,
+      required this.type,
+      required this.body,
+      required this.attachment,
       this.author,
-      this.createdAt,
-      this.updatedAt,
-      this.system,
-      this.noteableId,
-      this.noteableType,
-      this.noteableIid,
-      this.resolved,
-      this.resolvable,
+      required this.createdAt,
+      required this.updatedAt,
+      required this.system,
+      required this.noteableId,
+      required this.noteableType,
+      required this.noteableIid,
+      required this.resolved,
+      required this.resolvable,
       this.resolvedBy});
 
   Notes.fromJson(Map<String, dynamic> json) {
@@ -86,7 +85,7 @@ class Notes {
     data['body'] = this.body;
     data['attachment'] = this.attachment;
     if (this.author != null) {
-      data['author'] = this.author.toJson();
+      data['author'] = this.author?.toJson();
     }
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
@@ -102,20 +101,20 @@ class Notes {
 }
 
 class Author {
-  int id;
-  String name;
-  String username;
-  String state;
-  String avatarUrl;
-  String webUrl;
+  late int id;
+  late String name;
+  late String username;
+  late String state;
+  late String avatarUrl;
+  late String webUrl;
 
   Author(
-      {this.id,
-      this.name,
-      this.username,
-      this.state,
-      this.avatarUrl,
-      this.webUrl});
+      {required this.id,
+      required this.name,
+      required this.username,
+      required this.state,
+      required this.avatarUrl,
+      required this.webUrl});
 
   Author.fromJson(Map<String, dynamic> json) {
     id = json['id'];

@@ -51,23 +51,23 @@ class _MergeReqestState extends State<MergeRequestAction> {
   Widget _buildMergeButton() {
     final mr = widget.mr;
     String title;
-    Function onPress;
+    VoidCallback onPress;
     if (mr.divergedCommitsCount > 0) {
       title = mr.rebaseInProgress ? "Rebaseing" : "Rebase";
-      onPress = mr.rebaseInProgress ? null : _rebase;
+      onPress = mr.rebaseInProgress ? ()=>{} : _rebase;
     } else if (mr.workInProgress) {
       title = "Remove WIP(Not Suuport)";
-      onPress = null;
+      onPress = ()=>{};
     } else if (mr.state == "merged") {
       _canMerge = false;
       title = "Merged";
-      onPress = null;
+      onPress = ()=>{};
     } else {
       _canMerge = true;
       title = "Merge";
       onPress = _merge;
     }
-    return RaisedButton(child: Text(title), onPressed: onPress);
+    return ElevatedButton(child: Text(title), onPressed: onPress);
   }
 
   Widget _buildRefreshButton() {
@@ -85,22 +85,22 @@ class _MergeReqestState extends State<MergeRequestAction> {
       children: <Widget>[
         CheckboxListTile(
           value: _removeBranch,
-          onChanged: (bool newValue) {
-            setState(() => _removeBranch = newValue);
+          onChanged: (bool? newValue) {
+            setState(() => _removeBranch = newValue!);
           },
           title: Text("Remove Source Branch ?"),
         ),
         CheckboxListTile(
           value: _mergeWhenPiplineSuccess,
-          onChanged: (bool newValue) {
-            setState(() => _mergeWhenPiplineSuccess = newValue);
+          onChanged: (bool? newValue) {
+            setState(() => _mergeWhenPiplineSuccess = newValue!);
           },
           title: Text("Merge When Pipeline Success ?"),
         ),
         CheckboxListTile(
           value: _squashCommit,
-          onChanged: (bool newValue) {
-            setState(() => _squashCommit = newValue);
+          onChanged: (bool? newValue) {
+            setState(() => _squashCommit = newValue!);
           },
           title: Text("Squashed into a single commit ?"),
         ),

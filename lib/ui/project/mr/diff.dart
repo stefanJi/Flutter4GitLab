@@ -7,7 +7,7 @@ class CodeDiff extends StatelessWidget {
   final Color normalColor;
 
   const CodeDiff(this.diff, this.deleteColor, this.addColor, this.normalColor,
-      {Key key})
+      {Key? key})
       : super(key: key);
 
   @override
@@ -21,7 +21,7 @@ class CodeDiff extends StatelessWidget {
 
 List<Text> diffToText(
     String diff, Color deleteColor, Color addColor, Color normalColor,
-    {double fontSize}) {
+    {double? fontSize}) {
   final lines = diff.split("\n");
   return lines.map<Text>((line) {
     final remove = line.indexOf("-") == 0;

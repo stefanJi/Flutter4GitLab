@@ -1,33 +1,30 @@
-
 class Group {
-  int id;
-  String name;
-  String path;
-  String description;
-  String visibility;
-  bool lfsEnabled;
-  String avatarUrl;
-  String webUrl;
-  bool requestAccessEnabled;
-  String fullName;
-  String fullPath;
-  int fileTemplateProjectId;
-  int parentId;
+  late int id;
+  late String name;
+  late String path;
+  late String description;
+  late String visibility;
+  late bool lfsEnabled;
+  String? avatarUrl;
+  late String webUrl;
+  late bool requestAccessEnabled;
+  late String fullName;
+  late String fullPath;
+  int? parentId;
 
   Group(
-      {this.id,
-        this.name,
-        this.path,
-        this.description,
-        this.visibility,
-        this.lfsEnabled,
-        this.avatarUrl,
-        this.webUrl,
-        this.requestAccessEnabled,
-        this.fullName,
-        this.fullPath,
-        this.fileTemplateProjectId,
-        this.parentId});
+      {required this.id,
+      required this.name,
+      required this.path,
+      required this.description,
+      required this.visibility,
+      required this.lfsEnabled,
+      this.avatarUrl,
+      required this.webUrl,
+      required this.requestAccessEnabled,
+      required this.fullName,
+      required this.fullPath,
+      this.parentId});
 
   Group.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -41,7 +38,6 @@ class Group {
     requestAccessEnabled = json['request_access_enabled'];
     fullName = json['full_name'];
     fullPath = json['full_path'];
-    fileTemplateProjectId = json['file_template_project_id'];
     parentId = json['parent_id'];
   }
 
@@ -58,7 +54,6 @@ class Group {
     data['request_access_enabled'] = this.requestAccessEnabled;
     data['full_name'] = this.fullName;
     data['full_path'] = this.fullPath;
-    data['file_template_project_id'] = this.fileTemplateProjectId;
     data['parent_id'] = this.parentId;
     return data;
   }

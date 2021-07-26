@@ -15,7 +15,7 @@ class PageCommitDiff extends StatefulWidget {
 }
 
 class _DiffState extends State<PageCommitDiff> {
-  List<Diff> diffs;
+  List<Diff> diffs = [];
   double _codeFontSize = 14.0;
 
   _loadDiffs() async {
@@ -23,7 +23,7 @@ class _DiffState extends State<PageCommitDiff> {
         await ApiService.commitDiff(widget.projectId, widget.commit.id);
     if (resp.success) {
       if (mounted) {
-        setState(() => diffs = resp.data);
+        setState(() => diffs = resp.data ?? []);
       }
     }
   }
@@ -40,11 +40,11 @@ class _DiffState extends State<PageCommitDiff> {
         Text(
           "Code Size: $_codeFontSize",
         ),
-        OutlineButton(
+        OutlinedButton(
           child: Text("-"),
           onPressed: () => setState(() => _codeFontSize -= 1),
         ),
-        OutlineButton(
+        OutlinedButton(
           child: Text("+"),
           onPressed: () => setState(() => _codeFontSize += 1),
         )
@@ -79,8 +79,7 @@ class _DiffState extends State<PageCommitDiff> {
             scrollDirection: Axis.horizontal,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: diffToText(item.diff, Colors.red, Colors.green,
-                  Theme.of(context).textTheme.title.color,
+              children: diffToText(item.diff, Colors.red, Colors.green, Colors.black,
                   fontSize: _codeFontSize),
             ),
           ),

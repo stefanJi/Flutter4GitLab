@@ -1,64 +1,64 @@
 class User {
-  int id;
-  String username;
-  String email;
-  String name;
-  String state;
-  String avatarUrl;
-  String webUrl;
-  String createdAt;
-  String bio;
-  String location;
-  String publicEmail;
-  String skype;
-  String linkedin;
-  String twitter;
-  String websiteUrl;
-  String organization;
-  String lastSignInAt;
-  String confirmedAt;
-  int themeId;
-  String lastActivityOn;
-  int colorSchemeId;
-  int projectsLimit;
-  String currentSignInAt;
-  List<Identities> identities;
-  bool canCreateGroup;
-  bool canCreateProject;
-  bool twoFactorEnabled;
-  bool external;
-  bool privateProfile;
+  late int id;
+  late String username;
+  late String email;
+  late String name;
+  late String state;
+  late String avatarUrl;
+  late String webUrl;
+  late String createdAt;
+  late String bio;
+  late String location;
+  late String publicEmail;
+  late String skype;
+  late String linkedin;
+  late String twitter;
+  late String websiteUrl;
+  late String organization;
+  late String lastSignInAt;
+  late String confirmedAt;
+  late int themeId;
+  late String lastActivityOn;
+  late int colorSchemeId;
+  late int projectsLimit;
+  late String currentSignInAt;
+  List<Identities> identities = [];
+  late bool canCreateGroup;
+  late bool canCreateProject;
+  late bool twoFactorEnabled;
+  late bool external;
+  late bool privateProfile;
 
   User(
-      {this.id,
-      this.username,
-      this.email,
-      this.name,
-      this.state,
-      this.avatarUrl,
-      this.webUrl,
-      this.createdAt,
-      this.bio,
-      this.location,
-      this.publicEmail,
-      this.skype,
-      this.linkedin,
-      this.twitter,
-      this.websiteUrl,
-      this.organization,
-      this.lastSignInAt,
-      this.confirmedAt,
-      this.themeId,
-      this.lastActivityOn,
-      this.colorSchemeId,
-      this.projectsLimit,
-      this.currentSignInAt,
-      this.identities,
-      this.canCreateGroup,
-      this.canCreateProject,
-      this.twoFactorEnabled,
-      this.external,
-      this.privateProfile});
+      {required this.id,
+      required this.username,
+      required this.email,
+      required this.name,
+      required this.state,
+      required this.avatarUrl,
+      required this.webUrl,
+      required this.createdAt,
+      required this.bio,
+      required this.location,
+      required this.publicEmail,
+      required this.skype,
+      required this.linkedin,
+      required this.twitter,
+      required this.websiteUrl,
+      required this.organization,
+      required this.lastSignInAt,
+      required this.confirmedAt,
+      required this.themeId,
+      required this.lastActivityOn,
+      required this.colorSchemeId,
+      required this.projectsLimit,
+      required this.currentSignInAt,
+      required this.identities,
+      required this.canCreateGroup,
+      required this.canCreateProject,
+      required this.twoFactorEnabled,
+      required this.external,
+      required this.privateProfile});
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -85,7 +85,7 @@ class User {
     projectsLimit = json['projects_limit'];
     currentSignInAt = json['current_sign_in_at'];
     if (json['identities'] != null) {
-      identities = new List<Identities>();
+      identities = [];
       json['identities'].forEach((v) {
         identities.add(new Identities.fromJson(v));
       });
@@ -178,10 +178,10 @@ class User {
 }
 
 class Identities {
-  String provider;
-  String externUid;
+  late String provider;
+  late String externUid;
 
-  Identities({this.provider, this.externUid});
+  Identities({required this.provider, required this.externUid});
 
   Identities.fromJson(Map<String, dynamic> json) {
     provider = json['provider'];

@@ -7,9 +7,8 @@ class PackageInfoProvider extends ChangeNotifier {
       PackageInfo(appName: "", packageName: "", version: "", buildNumber: "");
 
   PackageInfo get packageInfo {
-    if (_packageInfo.appName == null) {
-      sentry.captureException(
-          exception: Exception("PackageInfo get null appName"));
+    if (_packageInfo.appName.isEmpty) {
+      sentry.captureException(Exception("PackageInfo get null appName"));
       _packageInfo = PackageInfo(
           appName: "",
           packageName: _packageInfo.packageName,

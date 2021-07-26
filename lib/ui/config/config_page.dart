@@ -11,8 +11,8 @@ class ConfigPage extends StatefulWidget {
 }
 
 class _ConfigState extends State<ConfigPage> {
-  String _token, _host, _version;
-  UserProvider userProvider;
+  String? _token, _host, _version;
+  late UserProvider userProvider;
 
   @override
   void initState() {
@@ -68,7 +68,7 @@ class _ConfigState extends State<ConfigPage> {
                     onChanged: (v) => _version = v,
                   ),
                   userProvider.testErr != null
-                      ? Text(userProvider.testErr,
+                      ? Text(userProvider.testErr ?? "",
                           style: TextStyle(color: Colors.red))
                       : const IgnorePointer(ignoring: true),
                   userProvider.testing
@@ -91,13 +91,10 @@ class _ConfigState extends State<ConfigPage> {
                 child: Row(
                   children: <Widget>[
                     Expanded(
-                      child: OutlineButton(
+                      child: OutlinedButton(
                         child: Text("Test&Save"),
                         onPressed: () {
-                          if (_token == null ||
-                              _host == null ||
-                              _token.isEmpty ||
-                              _host.isEmpty) {
+                          if (_token == null || _host == null) {
                             return;
                           }
                           _testConfig(context);
@@ -106,7 +103,7 @@ class _ConfigState extends State<ConfigPage> {
                       flex: 2,
                     ),
                     Expanded(
-                      child: OutlineButton(
+                      child: OutlinedButton(
                         child: Text("Reset"),
                         onPressed: () => _reset(),
                       ),
@@ -119,7 +116,7 @@ class _ConfigState extends State<ConfigPage> {
   }
 
   void _testConfig(BuildContext context) {
-    userProvider.testConfig(_host, _token, _version);
+    userProvider.testConfig(_host!, _token!, _version);
   }
 
   void _loadConfig() async {

@@ -1,41 +1,40 @@
-
 class Project {
-  int id;
-  String description;
-  String defaultBranch;
-  String sshUrlToRepo;
-  String httpUrlToRepo;
-  String webUrl;
-  String readmeUrl;
-  List<String> tagList;
-  String name;
-  String nameWithNamespace;
-  String path;
-  String pathWithNamespace;
-  String createdAt;
-  String lastActivityAt;
-  int forksCount;
-  String avatarUrl;
-  int starCount;
+  late int id;
+  late String description;
+  late String defaultBranch;
+  late String sshUrlToRepo;
+  late String httpUrlToRepo;
+  late String webUrl;
+  String? readmeUrl;
+  late List<String> tagList;
+  late String name;
+  late String nameWithNamespace;
+  late String path;
+  late String pathWithNamespace;
+  late String createdAt;
+  late String lastActivityAt;
+  late int forksCount;
+  String? avatarUrl;
+  late int starCount;
 
   Project(
-      {this.id,
-        this.description,
-        this.defaultBranch,
-        this.sshUrlToRepo,
-        this.httpUrlToRepo,
-        this.webUrl,
-        this.readmeUrl,
-        this.tagList,
-        this.name,
-        this.nameWithNamespace,
-        this.path,
-        this.pathWithNamespace,
-        this.createdAt,
-        this.lastActivityAt,
-        this.forksCount,
-        this.avatarUrl,
-        this.starCount});
+      {required this.id,
+      required this.description,
+      required this.defaultBranch,
+      required this.sshUrlToRepo,
+      required this.httpUrlToRepo,
+      required this.webUrl,
+      this.readmeUrl,
+      required this.tagList,
+      required this.name,
+      required this.nameWithNamespace,
+      required this.path,
+      required this.pathWithNamespace,
+      required this.createdAt,
+      required this.lastActivityAt,
+      required this.forksCount,
+      this.avatarUrl,
+      required this.starCount});
 
   Project.fromJson(Map<String, dynamic> json) {
     id = json['id'];

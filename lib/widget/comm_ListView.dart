@@ -20,15 +20,15 @@ abstract class CommListWidget extends StatefulWidget {
 
 abstract class CommListState<T extends CommListWidget> extends State<T>
     with AutomaticKeepAliveClientMixin {
-  List<dynamic> data;
-  int page;
-  int total;
-  int next;
+  List<dynamic> data = [];
+  late int page;
+  late int total;
+  late int next;
 
   RefreshController _refreshController = RefreshController();
 
   /// eg: merge_request?status=open
-  String endPoint();
+  String? endPoint();
 
   loadData({nextPage: 1}) async {
     Dio dio = GitlabClient.buildDio();
@@ -48,9 +48,9 @@ abstract class CommListState<T extends CommListWidget> extends State<T>
     final remoteData = await dio
         .get<dynamic>(url)
         .then((resp) {
-          page = int.tryParse(resp.headers['x-page'][0] ?? 0);
-          total = int.tryParse(resp.headers['x-total-pages'][0] ?? 0);
-          next = int.tryParse(resp.headers['x-next-page'][0] ?? 0);
+          page = int.tryParse(resp.headers['x-page']![0]) ?? 0;
+          total = int.tryParse(resp.headers['x-total-pages']![0]) ?? 0;
+          next = int.tryParse(resp.headers['x-next-page']![0]) ?? 0;
           return resp;
         })
         .then((resp) => resp.data)
@@ -60,7 +60,7 @@ abstract class CommListState<T extends CommListWidget> extends State<T>
         });
 
     return Future(() {
-      final List<dynamic> _remote = List();
+      final List<dynamic> _remote = [];
       remoteData.forEach((item) {
         if (!itemShouldRemove(item)) {
           _remote.add(item);

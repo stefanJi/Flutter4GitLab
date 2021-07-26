@@ -46,10 +46,10 @@ class ProjectState extends CommListState<ProjectTab> {
     final color = Theme.of(context).primaryColor;
     return Card(
       child: ListTile(
-        leading: loadAvatar(item.avatarUrl ?? null, name, color: color),
+        leading: loadAvatar(item.avatarUrl, name, color: color),
         title: Text(item.nameWithNamespace),
-        subtitle: Text(item.description ?? item.lastActivityAt),
-        trailing: item.defaultBranch != null
+        subtitle: Text(item.description),
+        trailing: true
             ? Chip(
                 label: Text(item.defaultBranch,
                     style: TextStyle(color: Theme.of(context).primaryColor)),

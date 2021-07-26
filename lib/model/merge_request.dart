@@ -1,84 +1,82 @@
 class MergeRequest {
-  int id;
-  int iid;
-  int projectId;
-  String title;
-  String description;
-  String state;
-  MergedBy mergedBy;
-  String mergedAt;
-  Author closedBy;
-  String closedAt;
-  String createdAt;
-  String updatedAt;
-  String targetBranch;
-  String sourceBranch;
-  int upvotes;
-  int downvotes;
-  Author author;
-  Assignee assignee;
-  int sourceProjectId;
-  int targetProjectId;
-  List<String> labels;
-  bool workInProgress;
-  Milestone milestone;
-  bool mergeWhenPipelineSucceeds;
-  String mergeStatus;
-  String sha;
-  String mergeCommitSha;
-  int userNotesCount;
-  String discussionLocked;
-  bool shouldRemoveSourceBranch;
-  bool forceRemoveSourceBranch;
-  bool allowCollaboration;
-  bool allowMaintainerToPush;
-  String webUrl;
-  TimeStats timeStats;
-  bool squash;
-  int approvalsBeforeMerge;
-  int divergedCommitsCount;
-  bool rebaseInProgress;
+  late int id;
+  late int iid;
+  late int projectId;
+  late String title;
+  late String description;
+  late String state;
+  MergedBy? mergedBy;
+  late String? mergedAt;
+  Author? closedBy;
+  late String? closedAt;
+  late String createdAt;
+  late String updatedAt;
+  late String targetBranch;
+  late String sourceBranch;
+  late int upvotes;
+  late int downvotes;
+  Author? author;
+  Assignee? assignee;
+  late int sourceProjectId;
+  late int targetProjectId;
+  late List<String> labels;
+  late bool workInProgress;
+  Milestone? milestone;
+  late bool mergeWhenPipelineSucceeds;
+  late String mergeStatus;
+  late String sha;
+  String? mergeCommitSha;
+  late int userNotesCount;
+  String? discussionLocked;
+  bool? shouldRemoveSourceBranch;
+  late bool forceRemoveSourceBranch;
+  late bool allowCollaboration;
+  late bool allowMaintainerToPush;
+  late String webUrl;
+  TimeStats? timeStats;
+  late bool squash;
+  late int divergedCommitsCount;
+  late bool rebaseInProgress;
 
   MergeRequest(
-      {this.id,
-      this.iid,
-      this.projectId,
-      this.title,
-      this.description,
-      this.state,
+      {required this.id,
+      required this.iid,
+      required this.projectId,
+      required this.title,
+      required this.description,
+      required this.state,
       this.mergedBy,
-      this.mergedAt,
+      required this.mergedAt,
       this.closedBy,
       this.closedAt,
-      this.createdAt,
-      this.updatedAt,
-      this.targetBranch,
-      this.sourceBranch,
-      this.upvotes,
-      this.downvotes,
+      required this.createdAt,
+      required this.updatedAt,
+      required this.targetBranch,
+      required this.sourceBranch,
+      required this.upvotes,
+      required this.downvotes,
       this.author,
       this.assignee,
-      this.sourceProjectId,
-      this.targetProjectId,
-      this.labels,
-      this.workInProgress,
+      required this.sourceProjectId,
+      required this.targetProjectId,
+      required this.labels,
+      required this.workInProgress,
       this.milestone,
-      this.mergeWhenPipelineSucceeds,
-      this.mergeStatus,
-      this.sha,
+      required this.mergeWhenPipelineSucceeds,
+      required this.mergeStatus,
+      required this.sha,
       this.mergeCommitSha,
-      this.userNotesCount,
+      required this.userNotesCount,
       this.discussionLocked,
       this.shouldRemoveSourceBranch,
-      this.forceRemoveSourceBranch,
-      this.allowCollaboration,
-      this.allowMaintainerToPush,
-      this.webUrl,
+      required this.forceRemoveSourceBranch,
+      required this.allowCollaboration,
+      required this.allowMaintainerToPush,
+      required this.webUrl,
       this.timeStats,
-      this.squash,
-      this.approvalsBeforeMerge,
-      this.divergedCommitsCount,
-      this.rebaseInProgress});
+      required this.squash,
+      required this.divergedCommitsCount,
+      required this.rebaseInProgress});
 
   MergeRequest.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -107,7 +105,7 @@ class MergeRequest {
         : null;
     sourceProjectId = json['source_project_id'];
     targetProjectId = json['target_project_id'];
-    labels = json['labels'].cast<String>();
+    labels = (json['labels'] ?? []).cast<String>();
     workInProgress = json['work_in_progress'];
     milestone = json['milestone'] != null
         ? new Milestone.fromJson(json['milestone'])
@@ -120,34 +118,33 @@ class MergeRequest {
     discussionLocked = json['discussion_locked'];
     shouldRemoveSourceBranch = json['should_remove_source_branch'];
     forceRemoveSourceBranch = json['force_remove_source_branch'];
-    allowCollaboration = json['allow_collaboration'];
-    allowMaintainerToPush = json['allow_maintainer_to_push'];
     webUrl = json['web_url'];
     timeStats = json['time_stats'] != null
         ? new TimeStats.fromJson(json['time_stats'])
         : null;
     squash = json['squash'];
-    approvalsBeforeMerge = json['approvals_before_merge'] ?? 0;
-    divergedCommitsCount = json['diverged_commits_count'] ?? 0;
+    divergedCommitsCount = json['diverged_commits_count'] != null
+        ? json['diverged_commits_count']
+        : 0;
     rebaseInProgress = json['rebase_in_progress'] ?? false;
   }
 }
 
 class MergedBy {
-  int id;
-  String name;
-  String username;
-  String state;
-  String avatarUrl;
-  String webUrl;
+  late int id;
+  late String name;
+  late String username;
+  late String state;
+  late String avatarUrl;
+  late String webUrl;
 
   MergedBy(
-      {this.id,
-      this.name,
-      this.username,
-      this.state,
-      this.avatarUrl,
-      this.webUrl});
+      {required this.id,
+      required this.name,
+      required this.username,
+      required this.state,
+      required this.avatarUrl,
+      required this.webUrl});
 
   MergedBy.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -171,20 +168,20 @@ class MergedBy {
 }
 
 class Author {
-  int id;
-  String name;
-  String username;
-  String state;
-  String avatarUrl;
-  String webUrl;
+  late int id;
+  late String name;
+  late String username;
+  late String state;
+  late String avatarUrl;
+  late String webUrl;
 
   Author(
-      {this.id,
-      this.name,
-      this.username,
-      this.state,
-      this.avatarUrl,
-      this.webUrl});
+      {required this.id,
+      required this.name,
+      required this.username,
+      required this.state,
+      required this.avatarUrl,
+      required this.webUrl});
 
   Author.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -208,20 +205,20 @@ class Author {
 }
 
 class Assignee {
-  int id;
-  String name;
-  String username;
-  String state;
-  String avatarUrl;
-  String webUrl;
+  late int id;
+  late String name;
+  late String username;
+  late String state;
+  late String avatarUrl;
+  late String webUrl;
 
   Assignee(
-      {this.id,
-      this.name,
-      this.username,
-      this.state,
-      this.avatarUrl,
-      this.webUrl});
+      {required this.id,
+      required this.name,
+      required this.username,
+      required this.state,
+      required this.avatarUrl,
+      required this.webUrl});
 
   Assignee.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -245,30 +242,30 @@ class Assignee {
 }
 
 class Milestone {
-  int id;
-  int iid;
-  int projectId;
-  String title;
-  String description;
-  String state;
-  String createdAt;
-  String updatedAt;
-  String dueDate;
-  String startDate;
-  String webUrl;
+  late int id;
+  late int iid;
+  late int projectId;
+  late String title;
+  late String description;
+  late String state;
+  late String createdAt;
+  late String updatedAt;
+  late String dueDate;
+  late String startDate;
+  late String webUrl;
 
   Milestone(
-      {this.id,
-      this.iid,
-      this.projectId,
-      this.title,
-      this.description,
-      this.state,
-      this.createdAt,
-      this.updatedAt,
-      this.dueDate,
-      this.startDate,
-      this.webUrl});
+      {required this.id,
+      required this.iid,
+      required this.projectId,
+      required this.title,
+      required this.description,
+      required this.state,
+      required this.createdAt,
+      required this.updatedAt,
+      required this.dueDate,
+      required this.startDate,
+      required this.webUrl});
 
   Milestone.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -302,14 +299,14 @@ class Milestone {
 }
 
 class TimeStats {
-  int timeEstimate;
-  int totalTimeSpent;
-  int humanTimeEstimate;
-  int humanTotalTimeSpent;
+  late int timeEstimate;
+  late int totalTimeSpent;
+  int? humanTimeEstimate;
+  int? humanTotalTimeSpent;
 
   TimeStats(
-      {this.timeEstimate,
-      this.totalTimeSpent,
+      {required this.timeEstimate,
+      required this.totalTimeSpent,
       this.humanTimeEstimate,
       this.humanTotalTimeSpent});
 

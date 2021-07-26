@@ -5,17 +5,17 @@ import 'package:F4Lab/model/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserHelper {
-  static User _user;
+  static User? _user;
 
-  static void setUser(User u) {
+  static void setUser(User? u) {
     _user = u;
   }
 
-  static User getUser() {
+  static User? getUser() {
     return _user;
   }
 
-  static Future<String> initUser() async {
+  static Future<String?> initUser() async {
     final SharedPreferences sp = await SharedPreferences.getInstance();
     final token = sp.getString(KEY_ACCESS_TOKEN) ?? null;
     final host = sp.getString(KEY_HOST) ?? null;

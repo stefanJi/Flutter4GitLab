@@ -1,22 +1,22 @@
 import 'package:F4Lab/util/date_util.dart';
 
 class Commit {
-  String id;
-  String shortId;
-  String title;
-  String authorName;
-  String authorEmail;
-  DateTime createdAt;
-  String message;
+  late String id;
+  late String shortId;
+  late String title;
+  late String authorName;
+  late String authorEmail;
+  late DateTime createdAt;
+  late String message;
 
   Commit(
-      {this.id,
-      this.shortId,
-      this.title,
-      this.authorName,
-      this.authorEmail,
-      this.createdAt,
-      this.message});
+      {required this.id,
+      required this.shortId,
+      required this.title,
+      required this.authorName,
+      required this.authorEmail,
+      required this.createdAt,
+      required this.message});
 
   Commit.fromJson(Map<String, dynamic> json) {
     id = json['id'];

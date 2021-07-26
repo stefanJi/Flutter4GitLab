@@ -1,40 +1,40 @@
 import 'package:F4Lab/model/user.dart';
 
 class Pipeline {
-  int id;
-  String sha;
-  String ref;
-  String status;
-  String webUrl;
-  String beforeSha;
-  bool tag;
-  String yamlErrors;
-  User user;
-  String createdAt;
-  String updatedAt;
-  String startedAt;
-  String finishedAt;
-  String committedAt;
-  int duration;
-  String coverage;
+  late int id;
+  late String sha;
+  late String ref;
+  late String status;
+  late String webUrl;
+  late String beforeSha;
+  late bool tag;
+  late String yamlErrors;
+  User? user;
+  late String createdAt;
+  late String updatedAt;
+  late String startedAt;
+  late String finishedAt;
+  late String committedAt;
+  late int duration;
+  late String coverage;
 
   Pipeline(
-      {this.id,
-      this.sha,
-      this.ref,
-      this.status,
-      this.webUrl,
-      this.beforeSha,
-      this.tag,
-      this.yamlErrors,
+      {required this.id,
+      required this.sha,
+      required this.ref,
+      required this.status,
+      required this.webUrl,
+      required this.beforeSha,
+      required this.tag,
+      required this.yamlErrors,
       this.user,
-      this.createdAt,
-      this.updatedAt,
-      this.startedAt,
-      this.finishedAt,
-      this.committedAt,
-      this.duration,
-      this.coverage});
+      required this.createdAt,
+      required this.updatedAt,
+      required this.startedAt,
+      required this.finishedAt,
+      required this.committedAt,
+      required this.duration,
+      required this.coverage});
 
   Pipeline.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -66,7 +66,7 @@ class Pipeline {
     data['tag'] = this.tag;
     data['yaml_errors'] = this.yamlErrors;
     if (this.user != null) {
-      data['user'] = this.user.toJson();
+      data['user'] = this.user?.toJson();
     }
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;

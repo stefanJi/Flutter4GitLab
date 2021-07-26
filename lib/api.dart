@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:F4Lab/gitlab_client.dart';
@@ -6,12 +7,13 @@ import 'package:F4Lab/model/diff.dart';
 import 'package:F4Lab/model/jobs.dart';
 import 'package:F4Lab/model/merge_request.dart';
 import 'package:F4Lab/model/user.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 
 class ApiResp<T> {
   bool success;
-  T data;
-  String err;
+  T? data;
+  String? err;
 
   ApiResp(this.success, [this.data, this.err]);
 }
@@ -24,7 +26,8 @@ class ApiEndPoint {
   /// [state] one of [merge_request_states]
   /// [scope] one of [merge_request_scopes]
   ///
-  static String mergeRequests(int projectId, {String state, String scope}) =>
+  static String mergeRequests(int projectId,
+          {required String state, required String scope}) =>
       "projects/$projectId/merge_requests?state=${state ?? "opened"}&scope=${scope ?? "all"}";
 
   static String singleMergeRequest(int projectId, int mrIId) =>
@@ -56,13 +59,13 @@ class ApiEndPoint {
     bool shouldRemoveSourceBranch = false,
     bool mergeMrWhenPipelineSuccess = false,
     bool squash = false,
-    String mergeCommitMessage,
+    String mergeCommitMessage = "",
   }) =>
       'projects/$projectId/merge_requests/$mrIId/merge?' +
       'should_remove_source_branch=$shouldRemoveSourceBranch' +
       '&merge_when_pipeline_succeeds=$mergeMrWhenPipelineSuccess' +
       '&squash=$squash' +
-      '${mergeCommitMessage ?? '&merge_commit_message=$mergeCommitMessage'}';
+      '$mergeCommitMessage';
 
   static String cancelMergeMrWhenPipelineSuccess(int projectId, int mrIId) =>
       "projects/$projectId/merge_requests/$mrIId/cancel_merge_when_pipeline_succeeds";
@@ -99,19 +102,20 @@ class ApiService {
 
   static Future<ApiResp<User>> getAuthUser() async {
     return GitlabClient.buildDio().get('user').then((resp) {
-      final ok = respStatusIsOk(resp.statusCode);
+      debugPrint(resp.toString());
+      final ok = respStatusIsOk(resp.statusCode!);
       return ApiResp(ok, User.fromJson(resp.data));
-    }).catchError((err) => ApiResp(false, null, err.toString()));
+    }).catchError((err) => ApiResp<User>(false, null, err.toString()));
   }
 
   static Future<ApiResp<MergeRequest>> getSingleMR(int projectId, int mrIId) {
     final endPoint = ApiEndPoint.singleMergeRequest(projectId, mrIId);
     final client = GitlabClient.newInstance();
-    return client.get(endPoint).then((resp) {
+    return client.get(Uri.parse(endPoint)).then((resp) {
       return ApiResp(respStatusIsOk(resp.statusCode),
           MergeRequest.fromJson(respConvertToMap(resp)));
     }).catchError((err) {
-      return ApiResp(false, null, err?.toString());
+      return ApiResp<MergeRequest>(false, null, err?.toString());
     }).whenComplete(client.close);
   }
 
@@ -120,11 +124,11 @@ class ApiService {
     final endPoint =
         ApiEndPoint.approveMergeRequest(projectId, mrIId, isApprove);
     final client = GitlabClient.newInstance();
-    return client.post(endPoint).then((resp) {
+    return client.post(Uri.parse(endPoint)).then((resp) {
       return ApiResp<String>(respStatusIsOk(resp.statusCode), resp.body,
           respStatusIsOk(resp.statusCode) ? "" : resp.body);
     }).catchError((err) {
-      return ApiResp(false, null, err?.toString());
+      return ApiResp<String>(false, null, err?.toString());
     }).whenComplete(client.close);
   }
 
@@ -132,9 +136,8 @@ class ApiService {
     final endPoint = ApiEndPoint.rebaseMR(projectId, mrIId);
     final client = GitlabClient.newInstance();
     return client
-        .put(endPoint)
+        .put(Uri.parse(endPoint))
         .then((resp) => ApiResp<void>(respStatusIsOk(resp.statusCode)))
-        .catchError(print)
         .whenComplete(client.close);
   }
 
@@ -142,12 +145,12 @@ class ApiService {
     final endPoint = ApiEndPoint.mrApproveData(projectId, mrIId);
     final client = GitlabClient.newInstance();
     return client
-        .get(endPoint)
+        .get(Uri.parse(endPoint))
         .then((resp) {
           return ApiResp(respStatusIsOk(resp.statusCode),
               Approvals.fromJson(respConvertToMap(resp)));
         })
-        .catchError((err) => ApiResp(false, null, err?.toString()))
+        .catchError((err) => ApiResp<Approvals>(false, null, err?.toString()))
         .whenComplete(client.close);
   }
 
@@ -155,17 +158,17 @@ class ApiService {
       {bool shouldRemoveSourceBranch = false,
       bool mergeMrWhenPipelineSuccess = false,
       bool squash = false,
-      String mergeCommitMessage}) {
+      String? mergeCommitMessage}) {
     final endPoint = ApiEndPoint.mergeMR(projectId, mrIId,
         shouldRemoveSourceBranch: shouldRemoveSourceBranch,
         mergeMrWhenPipelineSuccess: mergeMrWhenPipelineSuccess,
-        mergeCommitMessage: mergeCommitMessage,
+        mergeCommitMessage: mergeCommitMessage ?? "",
         squash: squash);
     final client = GitlabClient.newInstance();
-    return client.put(endPoint).then((resp) {
+    return client.put(Uri.parse(endPoint)).then((resp) {
       return ApiResp(respStatusIsOk(resp.statusCode));
     }).catchError((err) {
-      return ApiResp(false, null, err?.toString());
+      return ApiResp<String>(false, null, err?.toString());
     }).whenComplete(client.close);
   }
 
@@ -175,8 +178,8 @@ class ApiService {
     return GitlabClient.buildDio()
         .get<List>(endPoint)
         .then((resp) =>
-            ApiResp(true, resp.data.map((it) => Jobs.fromJson(it)).toList()))
-        .catchError((err) => ApiResp(false, null, err));
+            ApiResp(true, resp.data!.map((it) => Jobs.fromJson(it)).toList()))
+        .catchError((err) => ApiResp<List<Jobs>>(false, null, err));
   }
 
   static Future<ApiResp> triggerPipelineJob(
@@ -184,9 +187,9 @@ class ApiService {
     final endPoint = ApiEndPoint.triggerPipelineJob(projectId, jobId, action);
     final client = GitlabClient.newInstance();
     return client
-        .post(endPoint)
+        .post(Uri.parse(endPoint))
         .then((resp) => ApiResp(respStatusIsOk(resp.statusCode)))
-        .catchError((err) => ApiResp(false, null, err?.toString()))
+        .catchError((err) => ApiResp<ApiResp>(false, null, err?.toString()))
         .whenComplete(client.close);
   }
 
@@ -195,7 +198,7 @@ class ApiService {
     return GitlabClient.buildDio()
         .get<List>(endPoint)
         .then((resp) => ApiResp(
-            true, resp.data.map((item) => Diff.fromJson(item)).toList()))
-        .catchError((err) => ApiResp(false, null, err));
+            true, resp.data!.map((item) => Diff.fromJson(item)).toList()))
+        .catchError((err) => ApiResp<List<Diff>>(false, null, err));
   }
 }

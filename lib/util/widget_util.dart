@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-Widget loadAvatar(String url, String name, {Color color = Colors.teal}) {
+Widget loadAvatar(String? url, String? name, {Color color = Colors.teal}) {
   assert(name != null);
   if (url != null) {
     debugPrint("[loadAvatar] Start load: $url");
@@ -13,7 +13,7 @@ Widget loadAvatar(String url, String name, {Color color = Colors.teal}) {
   }
   return new CircleAvatar(
     child: Text(
-      name,
+      name ?? "",
       textAlign: TextAlign.center,
       overflow: TextOverflow.ellipsis,
       softWrap: true,

@@ -28,7 +28,7 @@ class TabItem {
 
 class _State extends State<HomeNav> {
   int _currentTab = 0;
-  List<TabItem> _items;
+  List<TabItem> _items = [];
 
   @override
   void initState() {
@@ -56,26 +56,26 @@ class _State extends State<HomeNav> {
     );
   }
 
-  Drawer _buildNav(BuildContext context, User user, ThemeProvider themeProvider,
-      List<TabItem> items) {
-    var widgets = List<Widget>();
+  Drawer _buildNav(BuildContext context, User? user,
+      ThemeProvider themeProvider, List<TabItem> items) {
+    List<Widget> widgets = [];
 
     final header = UserAccountsDrawerHeader(
       decoration:
           BoxDecoration(color: Theme.of(context).scaffoldBackgroundColor),
       accountName: Text(
-        user.name,
+        user?.name ?? "",
         style: TextStyle(
           color: Theme.of(context).accentColor,
         ),
       ),
       accountEmail: Text(
-        user.email,
+        user?.email ?? "",
         style: TextStyle(
           color: Theme.of(context).highlightColor,
         ),
       ),
-      currentAccountPicture: loadAvatar(user.avatarUrl, user.name),
+      currentAccountPicture: loadAvatar(user?.avatarUrl, user?.name),
     );
     final tabs = _buildTabNav(items, context);
     final config = ListTile(
@@ -96,11 +96,11 @@ class _State extends State<HomeNav> {
         height: 60,
       ),
       aboutBoxChildren: <Widget>[
-        OutlineButton(
+        OutlinedButton(
           child: Text("FeedBack"),
           onPressed: () => launch(APP_FEED_BACK_URL),
         ),
-        OutlineButton(
+        OutlinedButton(
           child: Text("See in GitHub"),
           onPressed: () => launch(APP_REPO_URL),
         )

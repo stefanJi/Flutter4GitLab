@@ -1,27 +1,24 @@
 class Runner {
-  bool active;
-  String description;
-  int id;
-  bool isShared;
-  String ipAddress;
-  String name;
-  bool online;
-  String status;
+  late bool active;
+  late String description;
+  late int id;
+  late bool isShared;
+  late String ipAddress;
+  late String name;
+  late bool online;
+  late String status;
 
   Runner(
-      {this.active,
-      this.description,
-      this.id,
-      this.isShared,
-      this.ipAddress,
-      this.name,
-      this.online,
-      this.status});
+      {required this.active,
+      required this.description,
+      required this.id,
+      required this.isShared,
+      required this.ipAddress,
+      required this.name,
+      required this.online,
+      required this.status});
 
   Runner.fromJson(Map<String, dynamic> json) {
-    if (json == null) {
-      return;
-    }
     active = json['active'];
     description = json['description'];
     id = json['id'];

@@ -40,7 +40,7 @@ class _PipelineJobs extends StatefulWidget {
 
 class _PipelineJobsState extends State<_PipelineJobs> {
   bool _loading = true;
-  List<Jobs> _jobs;
+  List<Jobs> _jobs = [];
 
   final colors = {
     'created': Colors.teal,
@@ -56,15 +56,18 @@ class _PipelineJobsState extends State<_PipelineJobs> {
   _loadJobs() async {
     setState(() {
       _loading = true;
-      _jobs = null;
+      _jobs = [];
     });
     final apiResp =
         await ApiService.pipelineJobs(widget.projectId, widget.pipelineId);
     if (mounted) {
       setState(() {
         _loading = false;
-        _jobs = apiResp.data
-          ..sort((j1, j2) => j2.createdAt.compareTo(j1.createdAt));
+        final data = apiResp.data
+          ?..sort((j1, j2) => j2.createdAt.compareTo(j1.createdAt));
+        data?.forEach((element) {
+          _jobs.add(element);
+        });
       });
     }
   }
@@ -91,18 +94,18 @@ class _PipelineJobsState extends State<_PipelineJobs> {
         case 'pending':
           return IgnorePointer();
         case 'running':
-          return OutlineButton(
+          return OutlinedButton(
               child: const Text("cancel"),
               onPressed: () => _doAction(widget.projectId, item.id, 'cancel'));
         case 'failed':
         case 'success':
-          return OutlineButton(
+          return OutlinedButton(
               child: const Text("retry"),
               onPressed: () => _doAction(widget.projectId, item.id, 'retry'));
         case 'created':
         case 'canceled':
         case 'manual':
-          return OutlineButton(
+          return OutlinedButton(
               child: const Text("play"),
               onPressed: () => _doAction(widget.projectId, item.id, 'play'));
       }
@@ -151,7 +154,7 @@ class _PipelineJobsState extends State<_PipelineJobs> {
                                           CrossAxisAlignment.start,
                                       children: <Widget>[
                                         Text(
-                                          "${job.commit.title.substring(0, 1).toUpperCase()}${job.commit.title.substring(1)}",
+                                          "${job.commit?.title.substring(0, 1).toUpperCase()}${job.commit?.title.substring(1)}",
                                           style: const TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 18),
@@ -162,7 +165,7 @@ class _PipelineJobsState extends State<_PipelineJobs> {
                                           padding: const EdgeInsets.all(5),
                                         ),
                                         Padding(
-                                          child: Text(job.user.name),
+                                          child: Text(job.user?.name ?? ""),
                                           padding: const EdgeInsets.all(5),
                                         ),
                                       ])),

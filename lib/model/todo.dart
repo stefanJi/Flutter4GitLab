@@ -1,26 +1,26 @@
 class Todo {
-  int id;
-  Project project;
-  Author author;
-  String actionName;
-  String targetType;
-  Target target;
-  String targetUrl;
-  String body;
-  String state;
-  String createdAt;
+  late int id;
+  Project? project;
+  Author? author;
+  late String actionName;
+  late String targetType;
+  Target? target;
+  late String targetUrl;
+  late String body;
+  late String state;
+  late String createdAt;
 
   Todo(
-      {this.id,
+      {required this.id,
       this.project,
       this.author,
-      this.actionName,
-      this.targetType,
+      required this.actionName,
+      required this.targetType,
       this.target,
-      this.targetUrl,
-      this.body,
-      this.state,
-      this.createdAt});
+      required this.targetUrl,
+      required this.body,
+      required this.state,
+      required this.createdAt});
 
   Todo.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -42,15 +42,15 @@ class Todo {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     if (this.project != null) {
-      data['project'] = this.project.toJson();
+      data['project'] = this.project?.toJson();
     }
     if (this.author != null) {
-      data['author'] = this.author.toJson();
+      data['author'] = this.author?.toJson();
     }
     data['action_name'] = this.actionName;
     data['target_type'] = this.targetType;
     if (this.target != null) {
-      data['target'] = this.target.toJson();
+      data['target'] = this.target?.toJson();
     }
     data['target_url'] = this.targetUrl;
     data['body'] = this.body;
@@ -61,18 +61,18 @@ class Todo {
 }
 
 class Project {
-  int id;
-  String name;
-  String nameWithNamespace;
-  String path;
-  String pathWithNamespace;
+  late int id;
+  late String name;
+  late String nameWithNamespace;
+  late String path;
+  late String pathWithNamespace;
 
   Project(
-      {this.id,
-      this.name,
-      this.nameWithNamespace,
-      this.path,
-      this.pathWithNamespace});
+      {required this.id,
+      required this.name,
+      required this.nameWithNamespace,
+      required this.path,
+      required this.pathWithNamespace});
 
   Project.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -94,20 +94,20 @@ class Project {
 }
 
 class Author {
-  String name;
-  String username;
-  int id;
-  String state;
-  String avatarUrl;
-  String webUrl;
+  late String name;
+  late String username;
+  late int id;
+  late String state;
+  late String avatarUrl;
+  late String webUrl;
 
   Author(
-      {this.name,
-      this.username,
-      this.id,
-      this.state,
-      this.avatarUrl,
-      this.webUrl});
+      {required this.name,
+      required this.username,
+      required this.id,
+      required this.state,
+      required this.avatarUrl,
+      required this.webUrl});
 
   Author.fromJson(Map<String, dynamic> json) {
     name = json['name'];
@@ -131,54 +131,54 @@ class Author {
 }
 
 class Target {
-  int id;
-  int iid;
-  int projectId;
-  String title;
-  String description;
-  String state;
-  String createdAt;
-  String updatedAt;
-  String targetBranch;
-  String sourceBranch;
-  int upvotes;
-  int downvotes;
-  Author author;
-  Assignee assignee;
-  int sourceProjectId;
-  int targetProjectId;
-  List<String> labels;
-  bool workInProgress;
-  Milestone milestone;
-  bool mergeWhenPipelineSucceeds;
-  String mergeStatus;
-  bool subscribed;
-  int userNotesCount;
+  late int id;
+  late int iid;
+  late int projectId;
+  late String title;
+  late String description;
+  late String state;
+  late String createdAt;
+  late String updatedAt;
+  late String targetBranch;
+  late String sourceBranch;
+  late int upvotes;
+  late int downvotes;
+  Author? author;
+  Assignee? assignee;
+  late int sourceProjectId;
+  late int targetProjectId;
+  late List<String> labels;
+  late bool workInProgress;
+  Milestone? milestone;
+  late bool mergeWhenPipelineSucceeds;
+  late String mergeStatus;
+  late bool subscribed;
+  late int userNotesCount;
 
   Target(
-      {this.id,
-      this.iid,
-      this.projectId,
-      this.title,
-      this.description,
-      this.state,
-      this.createdAt,
-      this.updatedAt,
-      this.targetBranch,
-      this.sourceBranch,
-      this.upvotes,
-      this.downvotes,
+      {required this.id,
+      required this.iid,
+      required this.projectId,
+      required this.title,
+      required this.description,
+      required this.state,
+      required this.createdAt,
+      required this.updatedAt,
+      required this.targetBranch,
+      required this.sourceBranch,
+      required this.upvotes,
+      required this.downvotes,
       this.author,
       this.assignee,
-      this.sourceProjectId,
-      this.targetProjectId,
-      this.labels,
-      this.workInProgress,
+      required this.sourceProjectId,
+      required this.targetProjectId,
+      required this.labels,
+      required this.workInProgress,
       this.milestone,
-      this.mergeWhenPipelineSucceeds,
-      this.mergeStatus,
-      this.subscribed,
-      this.userNotesCount});
+      required this.mergeWhenPipelineSucceeds,
+      required this.mergeStatus,
+      required this.subscribed,
+      required this.userNotesCount});
 
   Target.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -226,17 +226,17 @@ class Target {
     data['upvotes'] = this.upvotes;
     data['downvotes'] = this.downvotes;
     if (this.author != null) {
-      data['author'] = this.author.toJson();
+      data['author'] = this.author?.toJson();
     }
     if (this.assignee != null) {
-      data['assignee'] = this.assignee.toJson();
+      data['assignee'] = this.assignee?.toJson();
     }
     data['source_project_id'] = this.sourceProjectId;
     data['target_project_id'] = this.targetProjectId;
     data['labels'] = this.labels;
     data['work_in_progress'] = this.workInProgress;
     if (this.milestone != null) {
-      data['milestone'] = this.milestone.toJson();
+      data['milestone'] = this.milestone?.toJson();
     }
     data['merge_when_pipeline_succeeds'] = this.mergeWhenPipelineSucceeds;
     data['merge_status'] = this.mergeStatus;
@@ -247,20 +247,20 @@ class Target {
 }
 
 class Assignee {
-  String name;
-  String username;
-  int id;
-  String state;
-  String avatarUrl;
-  String webUrl;
+  late String name;
+  late String username;
+  late int id;
+  late String state;
+  late String avatarUrl;
+  late String webUrl;
 
   Assignee(
-      {this.name,
-      this.username,
-      this.id,
-      this.state,
-      this.avatarUrl,
-      this.webUrl});
+      {required this.name,
+      required this.username,
+      required this.id,
+      required this.state,
+      required this.avatarUrl,
+      required this.webUrl});
 
   Assignee.fromJson(Map<String, dynamic> json) {
     name = json['name'];
@@ -284,26 +284,26 @@ class Assignee {
 }
 
 class Milestone {
-  int id;
-  int iid;
-  int projectId;
-  String title;
-  String description;
-  String state;
-  String createdAt;
-  String updatedAt;
-  String dueDate;
+  late int id;
+  late int iid;
+  late int projectId;
+  late String title;
+  late String description;
+  late String state;
+  late String createdAt;
+  late String updatedAt;
+  late String dueDate;
 
   Milestone(
-      {this.id,
-      this.iid,
-      this.projectId,
-      this.title,
-      this.description,
-      this.state,
-      this.createdAt,
-      this.updatedAt,
-      this.dueDate});
+      {required this.id,
+      required this.iid,
+      required this.projectId,
+      required this.title,
+      required this.description,
+      required this.state,
+      required this.createdAt,
+      required this.updatedAt,
+      required this.dueDate});
 
   Milestone.fromJson(Map<String, dynamic> json) {
     id = json['id'];

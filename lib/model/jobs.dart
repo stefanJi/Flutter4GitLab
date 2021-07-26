@@ -4,43 +4,43 @@ import 'package:F4Lab/model/user.dart';
 import 'package:F4Lab/util/date_util.dart';
 
 class Jobs {
-  Commit commit;
-  String coverage;
-  DateTime createdAt;
-  String startedAt;
-  String finishedAt;
-  double duration;
-  String artifactsExpireAt;
-  int id;
-  String name;
-  Pipeline pipeline;
-  String ref;
-  List<String> artifacts;
-  Runner runner;
-  String stage;
-  String status;
-  bool tag;
-  String webUrl;
-  User user;
+  Commit? commit;
+  late String coverage;
+  late DateTime createdAt;
+  late String startedAt;
+  late String finishedAt;
+  late double duration;
+  late String artifactsExpireAt;
+  late int id;
+  late String name;
+  Pipeline? pipeline;
+  late String ref;
+  late List<String> artifacts;
+  late Runner runner;
+  late String stage;
+  late String status;
+  late bool tag;
+  late String webUrl;
+  User? user;
 
   Jobs(
-      {this.commit,
-      this.coverage,
-      this.createdAt,
-      this.startedAt,
-      this.finishedAt,
-      this.duration,
-      this.artifactsExpireAt,
-      this.id,
-      this.name,
+      {required this.commit,
+      required this.coverage,
+      required this.createdAt,
+      required this.startedAt,
+      required this.finishedAt,
+      required this.duration,
+      required this.artifactsExpireAt,
+      required this.id,
+      required this.name,
       this.pipeline,
-      this.ref,
-      this.artifacts,
-      this.runner,
-      this.stage,
-      this.status,
-      this.tag,
-      this.webUrl,
+      required this.ref,
+      required this.artifacts,
+      required this.runner,
+      required this.stage,
+      required this.status,
+      required this.tag,
+      required this.webUrl,
       this.user});
 
   Jobs.fromJson(Map<String, dynamic> json) {
@@ -70,7 +70,7 @@ class Jobs {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.commit != null) {
-      data['commit'] = this.commit.toJson();
+      data['commit'] = this.commit?.toJson();
     }
     data['coverage'] = this.coverage;
     data['created_at'] = this.createdAt;
@@ -81,7 +81,7 @@ class Jobs {
     data['id'] = this.id;
     data['name'] = this.name;
     if (this.pipeline != null) {
-      data['pipeline'] = this.pipeline.toJson();
+      data['pipeline'] = this.pipeline?.toJson();
     }
     data['ref'] = this.ref;
     data['artifacts'] = this.artifacts;
@@ -91,29 +91,29 @@ class Jobs {
     data['tag'] = this.tag;
     data['web_url'] = this.webUrl;
     if (this.user != null) {
-      data['user'] = this.user.toJsonInJobs();
+      data['user'] = this.user?.toJsonInJobs();
     }
     return data;
   }
 }
 
 class Commit {
-  String authorEmail;
-  String authorName;
-  String createdAt;
-  String id;
-  String message;
-  String shortId;
-  String title;
+  late String authorEmail;
+  late String authorName;
+  late String createdAt;
+  late String id;
+  late String message;
+  late String shortId;
+  late String title;
 
   Commit(
-      {this.authorEmail,
-      this.authorName,
-      this.createdAt,
-      this.id,
-      this.message,
-      this.shortId,
-      this.title});
+      {required this.authorEmail,
+      required this.authorName,
+      required this.createdAt,
+      required this.id,
+      required this.message,
+      required this.shortId,
+      required this.title});
 
   Commit.fromJson(Map<String, dynamic> json) {
     authorEmail = json['author_email'];

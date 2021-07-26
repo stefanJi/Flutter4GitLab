@@ -26,7 +26,7 @@ class _State extends CommListState<JobsTab> {
 class JobWidget extends StatelessWidget {
   final Jobs job;
 
-  const JobWidget({Key key, this.job}) : super(key: key);
+  const JobWidget({Key? key, required this.job}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,8 @@ class JobWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(job.commit.title, style: TextStyle(fontWeight: FontWeight.bold)),
+        Text(job.commit?.title ?? "",
+            style: TextStyle(fontWeight: FontWeight.bold)),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[

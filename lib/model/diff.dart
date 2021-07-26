@@ -1,22 +1,22 @@
 class Diff {
-  String oldPath;
-  String newPath;
-  String aMode;
-  String bMode;
-  bool newFile;
-  bool renamedFile;
-  bool deletedFile;
-  String diff;
+  late String oldPath;
+  late String newPath;
+  late String aMode;
+  late String bMode;
+  late bool newFile;
+  late bool renamedFile;
+  late bool deletedFile;
+  late String diff;
 
   Diff(
-      {this.oldPath,
-      this.newPath,
-      this.aMode,
-      this.bMode,
-      this.newFile,
-      this.renamedFile,
-      this.deletedFile,
-      this.diff});
+      {required this.oldPath,
+      required this.newPath,
+      required this.aMode,
+      required this.bMode,
+      required this.newFile,
+      required this.renamedFile,
+      required this.deletedFile,
+      required this.diff});
 
   Diff.fromJson(Map<String, dynamic> json) {
     oldPath = json['old_path'];

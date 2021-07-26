@@ -53,7 +53,7 @@ class _DiscussionState extends CommListState<DiscussionTab> {
   @override
   Widget childBuild(BuildContext context, int index) {
     final Discussion discussion = Discussion.fromJson(data[index]);
-    final List<Notes> notes = List();
+    final List<Notes> notes = [];
     discussion.notes.forEach((note) {
       if (!note.system) {
         notes.add(note);
@@ -63,9 +63,9 @@ class _DiscussionState extends CommListState<DiscussionTab> {
     final items = notes.map<Widget>((item) {
       return ListTile(
         isThreeLine: true,
-        title: Text(item.body ?? ""),
-        subtitle: Text(item.author.name ?? ""),
-        leading: loadAvatar(item.author.avatarUrl, item.author.name),
+        title: Text(item.body),
+        subtitle: Text(item.author?.name ?? ""),
+        leading: loadAvatar(item.author?.avatarUrl, item.author?.name),
         trailing: Icon(
           item.resolved ? Icons.check_circle : Icons.error_outline,
           color: item.resolved ? Colors.green : Colors.redAccent,

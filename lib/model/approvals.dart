@@ -1,30 +1,30 @@
 class Approvals {
-  int id;
-  int iid;
-  int projectId;
-  String title;
-  String description;
-  String state;
-  String createdAt;
-  String updatedAt;
-  String mergeStatus;
-  int approvalsRequired;
-  int approvalsLeft;
-  List<ApprovedBy> approvedBy;
+  late int id;
+  late int iid;
+  late int projectId;
+  late String title;
+  late String description;
+  late String state;
+  late String createdAt;
+  late String updatedAt;
+  late String mergeStatus;
+  late int approvalsRequired;
+  late int approvalsLeft;
+  late List<ApprovedBy> approvedBy = [];
 
   Approvals(
-      {this.id,
-        this.iid,
-        this.projectId,
-        this.title,
-        this.description,
-        this.state,
-        this.createdAt,
-        this.updatedAt,
-        this.mergeStatus,
-        this.approvalsRequired,
-        this.approvalsLeft,
-        this.approvedBy});
+      {required this.id,
+      required this.iid,
+      required this.projectId,
+      required this.title,
+      required this.description,
+      required this.state,
+      required this.createdAt,
+      required this.updatedAt,
+      required this.mergeStatus,
+      required this.approvalsRequired,
+      required this.approvalsLeft,
+      required this.approvedBy});
 
   Approvals.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -39,7 +39,7 @@ class Approvals {
     approvalsRequired = json['approvals_required'];
     approvalsLeft = json['approvals_left'];
     if (json['approved_by'] != null) {
-      approvedBy = new List<ApprovedBy>();
+      approvedBy = [];
       json['approved_by'].forEach((v) {
         approvedBy.add(new ApprovedBy.fromJson(v));
       });
@@ -67,7 +67,7 @@ class Approvals {
 }
 
 class ApprovedBy {
-  User user;
+  User? user;
 
   ApprovedBy({this.user});
 
@@ -78,27 +78,27 @@ class ApprovedBy {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.user != null) {
-      data['user'] = this.user.toJson();
+      data['user'] = this.user!.toJson();
     }
     return data;
   }
 }
 
 class User {
-  String name;
-  String username;
-  int id;
-  String state;
-  String avatarUrl;
-  String webUrl;
+  late String name;
+  late String username;
+  late int id;
+  late String state;
+  late String avatarUrl;
+  late String webUrl;
 
   User(
-      {this.name,
-        this.username,
-        this.id,
-        this.state,
-        this.avatarUrl,
-        this.webUrl});
+      {required this.name,
+      required this.username,
+      required this.id,
+      required this.state,
+      required this.avatarUrl,
+      required this.webUrl});
 
   User.fromJson(Map<String, dynamic> json) {
     name = json['name'];

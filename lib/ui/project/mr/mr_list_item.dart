@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 class MrListItem extends StatelessWidget {
   final MergeRequest mr;
 
-  const MrListItem({Key key, this.mr}) : super(key: key);
+  const MrListItem({Key? key, required this.mr}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,10 +16,10 @@ class MrListItem extends StatelessWidget {
     bool hadDescription = mr.description != null && (mr.description.isNotEmpty);
     String branch = "${mr.sourceBranch} → ${mr.targetBranch}";
     String uName = "";
-    String avatarUrl;
+    String? avatarUrl;
     if (assigned) {
-      uName = mr.assignee.username;
-      avatarUrl = mr.assignee.avatarUrl;
+      uName = mr.assignee?.username ?? "";
+      avatarUrl = mr.assignee?.avatarUrl;
     }
     var card = Card(
       elevation: 1.0,
@@ -71,7 +71,7 @@ class MrListItem extends StatelessWidget {
                     ),
                   )
                 : IgnorePointer(),
-            MrApprove(mr.projectId, mr.iid)
+            // MrApprove(mr.projectId, mr.iid)
           ],
         ),
       ),

@@ -16,8 +16,8 @@ class MRTab extends StatefulWidget {
 }
 
 class _State extends State<MRTab> {
-  String curState;
-  String curScope;
+  late String curState;
+  late String curScope;
 
   @override
   void initState() {
@@ -54,7 +54,7 @@ class _State extends State<MRTab> {
         onChanged: (value) {
           if (value != curState) {
             setState(() {
-              curState = value;
+              curState = value.toString();
             });
           }
         });
@@ -70,7 +70,7 @@ class _State extends State<MRTab> {
         onChanged: (value) {
           if (value != curScope) {
             setState(() {
-              curScope = value;
+              curScope = value.toString();
             });
           }
         });
@@ -100,7 +100,7 @@ class MrTab extends CommListWidget {
   final String scope;
   final Key key;
 
-  MrTab(this.projectId, {this.mrState, this.key, this.scope});
+  MrTab(this.projectId, {required this.mrState, required this.key, required this.scope});
 
   @override
   State<StatefulWidget> createState() => _MrState();

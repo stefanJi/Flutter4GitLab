@@ -50,5 +50,5 @@ class FeedState extends CommListState<TabActivity> {
   }
 
   @override
-  String endPoint() => null;
+  String? endPoint() => null;
 }

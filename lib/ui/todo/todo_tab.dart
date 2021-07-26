@@ -14,9 +14,9 @@ class TodoState extends CommListState<TabTodo> {
     final todoItem = TodoModel.Todo.fromJson(data[index]);
     return Card(
         child: ExpansionTile(
-      leading: loadAvatar(todoItem.author.avatarUrl, todoItem.author.name),
+      leading: loadAvatar(todoItem.author?.avatarUrl, todoItem.author?.name),
       title: Text.rich(TextSpan(
-          text: "${todoItem.author.name} ",
+          text: "${todoItem.author?.name} ",
           style: TextStyle(fontWeight: FontWeight.w100),
           children: [
             TextSpan(
@@ -25,9 +25,9 @@ class TodoState extends CommListState<TabTodo> {
             TextSpan(
                 text: " ${todoItem.targetType} ",
                 style: TextStyle(fontWeight: FontWeight.w400)),
-            TextSpan(text: todoItem.target.title)
+            TextSpan(text: todoItem.target?.title)
           ])),
-      trailing: OutlineButton(
+      trailing: OutlinedButton(
         child: Text("Done"),
         onPressed: () {},
       ),
